@@ -199,13 +199,12 @@ class MithonVisitor(ParseTreeVisitor):
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visitPrimaryExpression(ctx.primaryExpression())
-        else:
-            operator = ctx.getChild(0).getText()
-            operand = self.visit(ctx.unaryExpression())
-            if operator == 'not':
-                return not operand
-            elif operator == '-':
-                return -operand
+        elif ctx.getChild(0).getText() == 'not':
+            operand = self.visitPrimaryExpression(ctx.primaryExpression())
+            return not operand
+        elif ctx.getChild(0).getText() == '-':
+            operand = self.visitPrimaryExpression(ctx.primaryExpression())
+            return -operand
         return None
 
 

@@ -1,4 +1,4 @@
 double x = 5 * 2.2
 
 print(x, 2, 5)
-print((not true))
+print(not (not true))

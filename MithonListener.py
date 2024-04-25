@@ -308,13 +308,12 @@ class MithonListener(ParseTreeListener):
     def exitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
         if ctx.getChildCount() == 1:
             return self.exitPrimaryExpression(ctx.primaryExpression())
-        else:
-            operator = ctx.getChild(0).getText()
-            operand = self.exitUnaryExpression(ctx.primaryExpression())
-            if operator == 'not':
-                return not operand
-            elif operator == '-':
-                return -operand
+        elif ctx.getChild(0).getText() == 'not':
+            operand = self.exitPrimaryExpression(ctx.primaryExpression())
+            return not operand
+        elif ctx.getChild(0).getText() == '-':
+            operand = self.exitPrimaryExpression(ctx.primaryExpression())
+            return -operand
         return None
 
 

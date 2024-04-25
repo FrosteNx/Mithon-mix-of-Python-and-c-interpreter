@@ -85,9 +85,11 @@ multiplicativeExpression:
           ;
 
 unaryExpression:
-            ('not' | '-')? primaryExpression
+          'not' primaryExpression
+          | '-' primaryExpression
+          | primaryExpression
           ;
-
+          
 primaryExpression:
             '(' expression ')'
           | functionCall
