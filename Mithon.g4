@@ -18,7 +18,9 @@ statement:
 
 statement_list: INDENT statement+ DEDENT;
 
-printFunction: 'print' '(' expression ')';
+printFunction: 'print' '(' expressionList ')';
+
+type: 'int' | 'double' | 'bool' | 'string';
 
 varDeclaration: 
                  type IDENTIFIER '=' expression
@@ -31,8 +33,6 @@ varDeclaration:
 constDeclaration: 'const' type IDENTIFIER '=' expression;
 
 tempDeclaration: 'temp' type IDENTIFIER '=' expression;
-
-type: 'int' | 'double' | 'bool' | 'string';
 
 forLoop: 
        'for' '(' type IDENTIFIER '=' expression ';' expression ';' expression ')' ':' statement_list
@@ -92,7 +92,8 @@ primaryExpression:
             '(' expression ')'
           | functionCall
           | IDENTIFIER
-          | NUMBER
+          | INTEGER
+          | DOUBLE
           | STRING
           | 'true'
           | 'false'
@@ -101,7 +102,8 @@ primaryExpression:
 INDENT: '    ';
 DEDENT: '\n';
 IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
-NUMBER: [0-9]+;
+INTEGER: [0-9]+;
+DOUBLE: [0-9]+'.'[0-9]+;
 STRING: '"' .*? '"';
 COMMENT: '//' .*? '\n' -> skip; 
 WS: [ \t\r\n]+ -> skip;

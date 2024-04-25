@@ -9,6 +9,10 @@ else:
 
 class MithonVisitor(ParseTreeVisitor):
 
+    def __init__(self, variables):
+        self.variables = variables
+        super().__init__()
+
     # self.visit(obiekt) -> self.visit[typ obiektu](context)
 
     # Visit a parse tree produced by MithonParser#program.
@@ -31,14 +35,17 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#printFunction.
     def visitPrintFunction(self, ctx:MithonParser.PrintFunctionContext):
-        text = self.visitExpression(ctx.expression())
-        print(text)
+
+        expressions = ctx.expressionList().expression()
+        for expr in expressions:
+            value = self.visit(expr)
+            print(value, end=' ')
+        print()
 
 
     # Visit a parse tree produced by MithonParser#varDeclaration.
     def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by MithonParser#constDeclaration.
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
@@ -204,8 +211,10 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#primaryExpression.
     def visitPrimaryExpression(self, ctx:MithonParser.PrimaryExpressionContext):
-        if ctx.NUMBER():
-            return int(ctx.NUMBER().getText())
+        if ctx.INTEGER():
+            return int(ctx.INTEGER().getText())
+        elif ctx.DOUBLE():
+            return float(ctx.DOUBLE().getText())
         elif ctx.STRING():
             return ctx.STRING().getText()[1:-1]  # Usunięcie cudzysłowów
         elif ctx.getText() == 'true':
@@ -213,7 +222,12 @@ class MithonVisitor(ParseTreeVisitor):
         elif ctx.getText() == 'false':
             return False
         elif ctx.IDENTIFIER():
-            return ctx.IDENTIFIER().getText()
+            #var_type = ctx.TYPE().getText()
+            var_name = ctx.IDENTIFIER().getText()
+            if var_name in self.variables:
+                return self.variables[var_name][1]
+            else:
+                raise Exception(f"Undefined variable '{var_name}'")
         elif ctx.expression():
             return self.visit(ctx.expression()) 
         else:
@@ -222,4 +236,3 @@ class MithonVisitor(ParseTreeVisitor):
 
 
 del MithonParser
-

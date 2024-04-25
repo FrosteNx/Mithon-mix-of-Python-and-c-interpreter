@@ -10,15 +10,15 @@ else:
 
 def serializedATN():
     return [
-        4,1,52,295,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,53,296,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
         7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,1,0,5,0,52,8,0,10,0,
         12,0,55,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
         3,1,70,8,1,1,2,1,2,4,2,74,8,2,11,2,12,2,75,1,2,1,2,1,3,1,3,1,3,1,
-        3,1,3,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,
-        4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,
-        4,3,4,116,8,4,1,5,1,5,1,5,1,5,1,5,1,5,1,6,1,6,1,6,1,6,1,6,1,6,1,
+        3,1,3,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+        5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+        5,1,5,1,5,3,5,118,8,5,1,6,1,6,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,
         7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,
         8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,3,8,155,8,8,1,9,1,9,1,9,1,9,1,
         9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,5,9,170,8,9,10,9,12,9,173,9,9,
@@ -32,39 +32,39 @@ def serializedATN():
         253,8,20,10,20,12,20,256,9,20,1,21,1,21,1,21,1,21,1,21,5,21,263,
         8,21,10,21,12,21,266,9,21,1,22,1,22,1,22,1,22,1,22,5,22,273,8,22,
         10,22,12,22,276,9,22,1,23,3,23,279,8,23,1,23,1,23,1,24,1,24,1,24,
-        1,24,1,24,1,24,1,24,1,24,1,24,1,24,3,24,293,8,24,1,24,0,0,25,0,2,
-        4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,
-        0,8,1,0,12,15,1,0,29,30,1,0,31,34,1,0,35,36,1,0,37,38,1,0,39,40,
-        1,0,41,42,2,0,36,36,43,43,306,0,53,1,0,0,0,2,69,1,0,0,0,4,71,1,0,
-        0,0,6,79,1,0,0,0,8,115,1,0,0,0,10,117,1,0,0,0,12,123,1,0,0,0,14,
-        129,1,0,0,0,16,154,1,0,0,0,18,156,1,0,0,0,20,179,1,0,0,0,22,189,
+        1,24,1,24,1,24,1,24,1,24,1,24,1,24,1,24,3,24,294,8,24,1,24,0,0,25,
+        0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,
+        46,48,0,8,1,0,5,8,1,0,29,30,1,0,31,34,1,0,35,36,1,0,37,38,1,0,39,
+        40,1,0,41,42,2,0,36,36,43,43,308,0,53,1,0,0,0,2,69,1,0,0,0,4,71,
+        1,0,0,0,6,79,1,0,0,0,8,84,1,0,0,0,10,117,1,0,0,0,12,119,1,0,0,0,
+        14,125,1,0,0,0,16,154,1,0,0,0,18,156,1,0,0,0,20,179,1,0,0,0,22,189,
         1,0,0,0,24,200,1,0,0,0,26,205,1,0,0,0,28,213,1,0,0,0,30,221,1,0,
         0,0,32,223,1,0,0,0,34,225,1,0,0,0,36,233,1,0,0,0,38,241,1,0,0,0,
-        40,249,1,0,0,0,42,257,1,0,0,0,44,267,1,0,0,0,46,278,1,0,0,0,48,292,
+        40,249,1,0,0,0,42,257,1,0,0,0,44,267,1,0,0,0,46,278,1,0,0,0,48,293,
         1,0,0,0,50,52,3,2,1,0,51,50,1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,
         53,54,1,0,0,0,54,56,1,0,0,0,55,53,1,0,0,0,56,57,5,0,0,1,57,1,1,0,
-        0,0,58,70,3,4,2,0,59,70,3,8,4,0,60,70,3,10,5,0,61,70,3,12,6,0,62,
+        0,0,58,70,3,4,2,0,59,70,3,10,5,0,60,70,3,12,6,0,61,70,3,14,7,0,62,
         70,3,16,8,0,63,70,3,18,9,0,64,70,3,20,10,0,65,70,3,6,3,0,66,70,3,
-        30,15,0,67,70,5,51,0,0,68,70,5,1,0,0,69,58,1,0,0,0,69,59,1,0,0,0,
+        30,15,0,67,70,5,52,0,0,68,70,5,1,0,0,69,58,1,0,0,0,69,59,1,0,0,0,
         69,60,1,0,0,0,69,61,1,0,0,0,69,62,1,0,0,0,69,63,1,0,0,0,69,64,1,
         0,0,0,69,65,1,0,0,0,69,66,1,0,0,0,69,67,1,0,0,0,69,68,1,0,0,0,70,
         3,1,0,0,0,71,73,5,46,0,0,72,74,3,2,1,0,73,72,1,0,0,0,74,75,1,0,0,
         0,75,73,1,0,0,0,75,76,1,0,0,0,76,77,1,0,0,0,77,78,5,47,0,0,78,5,
-        1,0,0,0,79,80,5,2,0,0,80,81,5,3,0,0,81,82,3,32,16,0,82,83,5,4,0,
-        0,83,7,1,0,0,0,84,85,3,14,7,0,85,86,5,48,0,0,86,87,5,5,0,0,87,88,
-        3,32,16,0,88,116,1,0,0,0,89,90,5,6,0,0,90,91,5,7,0,0,91,92,3,14,
-        7,0,92,93,5,8,0,0,93,94,5,48,0,0,94,95,5,5,0,0,95,96,5,7,0,0,96,
-        97,3,28,14,0,97,98,5,8,0,0,98,116,1,0,0,0,99,100,5,9,0,0,100,101,
-        5,7,0,0,101,102,3,14,7,0,102,103,5,8,0,0,103,104,5,48,0,0,104,105,
-        5,5,0,0,105,106,5,7,0,0,106,107,3,28,14,0,107,108,5,8,0,0,108,116,
-        1,0,0,0,109,110,5,48,0,0,110,111,5,5,0,0,111,116,3,32,16,0,112,113,
-        3,14,7,0,113,114,5,48,0,0,114,116,1,0,0,0,115,84,1,0,0,0,115,89,
-        1,0,0,0,115,99,1,0,0,0,115,109,1,0,0,0,115,112,1,0,0,0,116,9,1,0,
-        0,0,117,118,5,10,0,0,118,119,3,14,7,0,119,120,5,48,0,0,120,121,5,
-        5,0,0,121,122,3,32,16,0,122,11,1,0,0,0,123,124,5,11,0,0,124,125,
-        3,14,7,0,125,126,5,48,0,0,126,127,5,5,0,0,127,128,3,32,16,0,128,
-        13,1,0,0,0,129,130,7,0,0,0,130,15,1,0,0,0,131,132,5,16,0,0,132,133,
-        5,3,0,0,133,134,3,14,7,0,134,135,5,48,0,0,135,136,5,5,0,0,136,137,
+        1,0,0,0,79,80,5,2,0,0,80,81,5,3,0,0,81,82,3,28,14,0,82,83,5,4,0,
+        0,83,7,1,0,0,0,84,85,7,0,0,0,85,9,1,0,0,0,86,87,3,8,4,0,87,88,5,
+        48,0,0,88,89,5,9,0,0,89,90,3,32,16,0,90,118,1,0,0,0,91,92,5,10,0,
+        0,92,93,5,11,0,0,93,94,3,8,4,0,94,95,5,12,0,0,95,96,5,48,0,0,96,
+        97,5,9,0,0,97,98,5,11,0,0,98,99,3,28,14,0,99,100,5,12,0,0,100,118,
+        1,0,0,0,101,102,5,13,0,0,102,103,5,11,0,0,103,104,3,8,4,0,104,105,
+        5,12,0,0,105,106,5,48,0,0,106,107,5,9,0,0,107,108,5,11,0,0,108,109,
+        3,28,14,0,109,110,5,12,0,0,110,118,1,0,0,0,111,112,5,48,0,0,112,
+        113,5,9,0,0,113,118,3,32,16,0,114,115,3,8,4,0,115,116,5,48,0,0,116,
+        118,1,0,0,0,117,86,1,0,0,0,117,91,1,0,0,0,117,101,1,0,0,0,117,111,
+        1,0,0,0,117,114,1,0,0,0,118,11,1,0,0,0,119,120,5,14,0,0,120,121,
+        3,8,4,0,121,122,5,48,0,0,122,123,5,9,0,0,123,124,3,32,16,0,124,13,
+        1,0,0,0,125,126,5,15,0,0,126,127,3,8,4,0,127,128,5,48,0,0,128,129,
+        5,9,0,0,129,130,3,32,16,0,130,15,1,0,0,0,131,132,5,16,0,0,132,133,
+        5,3,0,0,133,134,3,8,4,0,134,135,5,48,0,0,135,136,5,9,0,0,136,137,
         3,32,16,0,137,138,5,17,0,0,138,139,3,32,16,0,139,140,5,17,0,0,140,
         141,3,32,16,0,141,142,5,4,0,0,142,143,5,18,0,0,143,144,3,4,2,0,144,
         155,1,0,0,0,145,146,5,16,0,0,146,147,5,3,0,0,147,148,5,19,0,0,148,
@@ -78,40 +78,40 @@ def serializedATN():
         175,5,23,0,0,175,176,5,18,0,0,176,178,3,4,2,0,177,174,1,0,0,0,177,
         178,1,0,0,0,178,19,1,0,0,0,179,180,5,24,0,0,180,181,5,48,0,0,181,
         182,5,3,0,0,182,183,3,22,11,0,183,184,5,4,0,0,184,185,5,25,0,0,185,
-        186,3,14,7,0,186,187,5,18,0,0,187,188,3,4,2,0,188,21,1,0,0,0,189,
-        190,3,14,7,0,190,197,5,48,0,0,191,192,5,26,0,0,192,193,3,14,7,0,
-        193,194,5,48,0,0,194,196,1,0,0,0,195,191,1,0,0,0,196,199,1,0,0,0,
-        197,195,1,0,0,0,197,198,1,0,0,0,198,23,1,0,0,0,199,197,1,0,0,0,200,
-        201,5,48,0,0,201,202,5,3,0,0,202,203,3,26,13,0,203,204,5,4,0,0,204,
-        25,1,0,0,0,205,210,3,32,16,0,206,207,5,26,0,0,207,209,3,32,16,0,
-        208,206,1,0,0,0,209,212,1,0,0,0,210,208,1,0,0,0,210,211,1,0,0,0,
-        211,27,1,0,0,0,212,210,1,0,0,0,213,218,3,32,16,0,214,215,5,26,0,
-        0,215,217,3,32,16,0,216,214,1,0,0,0,217,220,1,0,0,0,218,216,1,0,
-        0,0,218,219,1,0,0,0,219,29,1,0,0,0,220,218,1,0,0,0,221,222,3,32,
-        16,0,222,31,1,0,0,0,223,224,3,34,17,0,224,33,1,0,0,0,225,230,3,36,
-        18,0,226,227,5,27,0,0,227,229,3,36,18,0,228,226,1,0,0,0,229,232,
-        1,0,0,0,230,228,1,0,0,0,230,231,1,0,0,0,231,35,1,0,0,0,232,230,1,
-        0,0,0,233,238,3,38,19,0,234,235,5,28,0,0,235,237,3,38,19,0,236,234,
-        1,0,0,0,237,240,1,0,0,0,238,236,1,0,0,0,238,239,1,0,0,0,239,37,1,
-        0,0,0,240,238,1,0,0,0,241,246,3,40,20,0,242,243,7,1,0,0,243,245,
-        3,40,20,0,244,242,1,0,0,0,245,248,1,0,0,0,246,244,1,0,0,0,246,247,
-        1,0,0,0,247,39,1,0,0,0,248,246,1,0,0,0,249,254,3,42,21,0,250,251,
-        7,2,0,0,251,253,3,42,21,0,252,250,1,0,0,0,253,256,1,0,0,0,254,252,
-        1,0,0,0,254,255,1,0,0,0,255,41,1,0,0,0,256,254,1,0,0,0,257,264,3,
-        44,22,0,258,259,7,3,0,0,259,263,3,44,22,0,260,261,7,4,0,0,261,263,
-        3,32,16,0,262,258,1,0,0,0,262,260,1,0,0,0,263,266,1,0,0,0,264,262,
-        1,0,0,0,264,265,1,0,0,0,265,43,1,0,0,0,266,264,1,0,0,0,267,274,3,
-        46,23,0,268,269,7,5,0,0,269,273,3,46,23,0,270,271,7,6,0,0,271,273,
-        3,32,16,0,272,268,1,0,0,0,272,270,1,0,0,0,273,276,1,0,0,0,274,272,
-        1,0,0,0,274,275,1,0,0,0,275,45,1,0,0,0,276,274,1,0,0,0,277,279,7,
-        7,0,0,278,277,1,0,0,0,278,279,1,0,0,0,279,280,1,0,0,0,280,281,3,
-        48,24,0,281,47,1,0,0,0,282,283,5,3,0,0,283,284,3,32,16,0,284,285,
-        5,4,0,0,285,293,1,0,0,0,286,293,3,24,12,0,287,293,5,48,0,0,288,293,
-        5,49,0,0,289,293,5,50,0,0,290,293,5,44,0,0,291,293,5,45,0,0,292,
-        282,1,0,0,0,292,286,1,0,0,0,292,287,1,0,0,0,292,288,1,0,0,0,292,
-        289,1,0,0,0,292,290,1,0,0,0,292,291,1,0,0,0,293,49,1,0,0,0,20,53,
-        69,75,115,154,171,177,197,210,218,230,238,246,254,262,264,272,274,
-        278,292
+        186,3,8,4,0,186,187,5,18,0,0,187,188,3,4,2,0,188,21,1,0,0,0,189,
+        190,3,8,4,0,190,197,5,48,0,0,191,192,5,26,0,0,192,193,3,8,4,0,193,
+        194,5,48,0,0,194,196,1,0,0,0,195,191,1,0,0,0,196,199,1,0,0,0,197,
+        195,1,0,0,0,197,198,1,0,0,0,198,23,1,0,0,0,199,197,1,0,0,0,200,201,
+        5,48,0,0,201,202,5,3,0,0,202,203,3,26,13,0,203,204,5,4,0,0,204,25,
+        1,0,0,0,205,210,3,32,16,0,206,207,5,26,0,0,207,209,3,32,16,0,208,
+        206,1,0,0,0,209,212,1,0,0,0,210,208,1,0,0,0,210,211,1,0,0,0,211,
+        27,1,0,0,0,212,210,1,0,0,0,213,218,3,32,16,0,214,215,5,26,0,0,215,
+        217,3,32,16,0,216,214,1,0,0,0,217,220,1,0,0,0,218,216,1,0,0,0,218,
+        219,1,0,0,0,219,29,1,0,0,0,220,218,1,0,0,0,221,222,3,32,16,0,222,
+        31,1,0,0,0,223,224,3,34,17,0,224,33,1,0,0,0,225,230,3,36,18,0,226,
+        227,5,27,0,0,227,229,3,36,18,0,228,226,1,0,0,0,229,232,1,0,0,0,230,
+        228,1,0,0,0,230,231,1,0,0,0,231,35,1,0,0,0,232,230,1,0,0,0,233,238,
+        3,38,19,0,234,235,5,28,0,0,235,237,3,38,19,0,236,234,1,0,0,0,237,
+        240,1,0,0,0,238,236,1,0,0,0,238,239,1,0,0,0,239,37,1,0,0,0,240,238,
+        1,0,0,0,241,246,3,40,20,0,242,243,7,1,0,0,243,245,3,40,20,0,244,
+        242,1,0,0,0,245,248,1,0,0,0,246,244,1,0,0,0,246,247,1,0,0,0,247,
+        39,1,0,0,0,248,246,1,0,0,0,249,254,3,42,21,0,250,251,7,2,0,0,251,
+        253,3,42,21,0,252,250,1,0,0,0,253,256,1,0,0,0,254,252,1,0,0,0,254,
+        255,1,0,0,0,255,41,1,0,0,0,256,254,1,0,0,0,257,264,3,44,22,0,258,
+        259,7,3,0,0,259,263,3,44,22,0,260,261,7,4,0,0,261,263,3,32,16,0,
+        262,258,1,0,0,0,262,260,1,0,0,0,263,266,1,0,0,0,264,262,1,0,0,0,
+        264,265,1,0,0,0,265,43,1,0,0,0,266,264,1,0,0,0,267,274,3,46,23,0,
+        268,269,7,5,0,0,269,273,3,46,23,0,270,271,7,6,0,0,271,273,3,32,16,
+        0,272,268,1,0,0,0,272,270,1,0,0,0,273,276,1,0,0,0,274,272,1,0,0,
+        0,274,275,1,0,0,0,275,45,1,0,0,0,276,274,1,0,0,0,277,279,7,7,0,0,
+        278,277,1,0,0,0,278,279,1,0,0,0,279,280,1,0,0,0,280,281,3,48,24,
+        0,281,47,1,0,0,0,282,283,5,3,0,0,283,284,3,32,16,0,284,285,5,4,0,
+        0,285,294,1,0,0,0,286,294,3,24,12,0,287,294,5,48,0,0,288,294,5,49,
+        0,0,289,294,5,50,0,0,290,294,5,51,0,0,291,294,5,44,0,0,292,294,5,
+        45,0,0,293,282,1,0,0,0,293,286,1,0,0,0,293,287,1,0,0,0,293,288,1,
+        0,0,0,293,289,1,0,0,0,293,290,1,0,0,0,293,291,1,0,0,0,293,292,1,
+        0,0,0,294,49,1,0,0,0,20,53,69,75,117,154,171,177,197,210,218,230,
+        238,246,254,262,264,272,274,278,293
     ]
 
 class MithonParser ( Parser ):
@@ -124,9 +124,9 @@ class MithonParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'pass'", "'print'", "'('", "')'", "'='", 
-                     "'List'", "'['", "']'", "'ndList'", "'const'", "'temp'", 
-                     "'int'", "'double'", "'bool'", "'string'", "'for'", 
+    literalNames = [ "<INVALID>", "'pass'", "'print'", "'('", "')'", "'int'", 
+                     "'double'", "'bool'", "'string'", "'='", "'List'", 
+                     "'['", "']'", "'ndList'", "'const'", "'temp'", "'for'", 
                      "';'", "':'", "'auto'", "'in'", "'if'", "'elif'", "'else'", 
                      "'def'", "'->'", "','", "'or'", "'and'", "'=='", "'!='", 
                      "'<'", "'>'", "'<='", "'>='", "'+'", "'-'", "'+='", 
@@ -145,16 +145,16 @@ class MithonParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "INDENT", "DEDENT", "IDENTIFIER", 
-                      "NUMBER", "STRING", "COMMENT", "WS" ]
+                      "INTEGER", "DOUBLE", "STRING", "COMMENT", "WS" ]
 
     RULE_program = 0
     RULE_statement = 1
     RULE_statement_list = 2
     RULE_printFunction = 3
-    RULE_varDeclaration = 4
-    RULE_constDeclaration = 5
-    RULE_tempDeclaration = 6
-    RULE_type = 7
+    RULE_type = 4
+    RULE_varDeclaration = 5
+    RULE_constDeclaration = 6
+    RULE_tempDeclaration = 7
     RULE_forLoop = 8
     RULE_ifStatement = 9
     RULE_functionDeclaration = 10
@@ -174,13 +174,12 @@ class MithonParser ( Parser ):
     RULE_primaryExpression = 24
 
     ruleNames =  [ "program", "statement", "statement_list", "printFunction", 
-                   "varDeclaration", "constDeclaration", "tempDeclaration", 
-                   "type", "forLoop", "ifStatement", "functionDeclaration", 
-                   "parameterList", "functionCall", "argumentList", "expressionList", 
-                   "expressionStatement", "expression", "logicalOrExpression", 
-                   "logicalAndExpression", "equalityExpression", "relationalExpression", 
-                   "additiveExpression", "multiplicativeExpression", "unaryExpression", 
-                   "primaryExpression" ]
+                   "type", "varDeclaration", "constDeclaration", "tempDeclaration", 
+                   "forLoop", "ifStatement", "functionDeclaration", "parameterList", 
+                   "functionCall", "argumentList", "expressionList", "expressionStatement", 
+                   "expression", "logicalOrExpression", "logicalAndExpression", 
+                   "equalityExpression", "relationalExpression", "additiveExpression", 
+                   "multiplicativeExpression", "unaryExpression", "primaryExpression" ]
 
     EOF = Token.EOF
     T__0=1
@@ -231,10 +230,11 @@ class MithonParser ( Parser ):
     INDENT=46
     DEDENT=47
     IDENTIFIER=48
-    NUMBER=49
-    STRING=50
-    COMMENT=51
-    WS=52
+    INTEGER=49
+    DOUBLE=50
+    STRING=51
+    COMMENT=52
+    WS=53
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -292,7 +292,7 @@ class MithonParser ( Parser ):
             self.state = 53
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 4354134784474702) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 8857734411838958) != 0):
                 self.state = 50
                 self.statement()
                 self.state = 55
@@ -518,7 +518,7 @@ class MithonParser ( Parser ):
                 self.state = 75 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 4354134784474702) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 8857734411838958) != 0)):
                     break
 
             self.state = 77
@@ -539,8 +539,8 @@ class MithonParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def expression(self):
-            return self.getTypedRuleContext(MithonParser.ExpressionContext,0)
+        def expressionList(self):
+            return self.getTypedRuleContext(MithonParser.ExpressionListContext,0)
 
 
         def getRuleIndex(self):
@@ -574,9 +574,60 @@ class MithonParser ( Parser ):
             self.state = 80
             self.match(MithonParser.T__2)
             self.state = 81
-            self.expression()
+            self.expressionList()
             self.state = 82
             self.match(MithonParser.T__3)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class TypeContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_type
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterType" ):
+                listener.enterType(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitType" ):
+                listener.exitType(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitType" ):
+                return visitor.visitType(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def type_(self):
+
+        localctx = MithonParser.TypeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 8, self.RULE_type)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 84
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 480) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -631,82 +682,82 @@ class MithonParser ( Parser ):
     def varDeclaration(self):
 
         localctx = MithonParser.VarDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_varDeclaration)
+        self.enterRule(localctx, 10, self.RULE_varDeclaration)
         try:
-            self.state = 115
+            self.state = 117
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 84
-                self.type_()
-                self.state = 85
-                self.match(MithonParser.IDENTIFIER)
                 self.state = 86
-                self.match(MithonParser.T__4)
+                self.type_()
                 self.state = 87
+                self.match(MithonParser.IDENTIFIER)
+                self.state = 88
+                self.match(MithonParser.T__8)
+                self.state = 89
                 self.expression()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 89
-                self.match(MithonParser.T__5)
-                self.state = 90
-                self.match(MithonParser.T__6)
                 self.state = 91
-                self.type_()
+                self.match(MithonParser.T__9)
                 self.state = 92
-                self.match(MithonParser.T__7)
+                self.match(MithonParser.T__10)
                 self.state = 93
-                self.match(MithonParser.IDENTIFIER)
+                self.type_()
                 self.state = 94
-                self.match(MithonParser.T__4)
+                self.match(MithonParser.T__11)
                 self.state = 95
-                self.match(MithonParser.T__6)
+                self.match(MithonParser.IDENTIFIER)
                 self.state = 96
-                self.expressionList()
+                self.match(MithonParser.T__8)
                 self.state = 97
-                self.match(MithonParser.T__7)
+                self.match(MithonParser.T__10)
+                self.state = 98
+                self.expressionList()
+                self.state = 99
+                self.match(MithonParser.T__11)
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 99
-                self.match(MithonParser.T__8)
-                self.state = 100
-                self.match(MithonParser.T__6)
                 self.state = 101
-                self.type_()
+                self.match(MithonParser.T__12)
                 self.state = 102
-                self.match(MithonParser.T__7)
+                self.match(MithonParser.T__10)
                 self.state = 103
-                self.match(MithonParser.IDENTIFIER)
+                self.type_()
                 self.state = 104
-                self.match(MithonParser.T__4)
+                self.match(MithonParser.T__11)
                 self.state = 105
-                self.match(MithonParser.T__6)
+                self.match(MithonParser.IDENTIFIER)
                 self.state = 106
-                self.expressionList()
+                self.match(MithonParser.T__8)
                 self.state = 107
-                self.match(MithonParser.T__7)
+                self.match(MithonParser.T__10)
+                self.state = 108
+                self.expressionList()
+                self.state = 109
+                self.match(MithonParser.T__11)
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 109
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 110
-                self.match(MithonParser.T__4)
                 self.state = 111
+                self.match(MithonParser.IDENTIFIER)
+                self.state = 112
+                self.match(MithonParser.T__8)
+                self.state = 113
                 self.expression()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 112
+                self.state = 114
                 self.type_()
-                self.state = 113
+                self.state = 115
                 self.match(MithonParser.IDENTIFIER)
                 pass
 
@@ -761,18 +812,18 @@ class MithonParser ( Parser ):
     def constDeclaration(self):
 
         localctx = MithonParser.ConstDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_constDeclaration)
+        self.enterRule(localctx, 12, self.RULE_constDeclaration)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 117
-            self.match(MithonParser.T__9)
-            self.state = 118
-            self.type_()
             self.state = 119
-            self.match(MithonParser.IDENTIFIER)
+            self.match(MithonParser.T__13)
             self.state = 120
-            self.match(MithonParser.T__4)
+            self.type_()
             self.state = 121
+            self.match(MithonParser.IDENTIFIER)
+            self.state = 122
+            self.match(MithonParser.T__8)
+            self.state = 123
             self.expression()
         except RecognitionException as re:
             localctx.exception = re
@@ -824,70 +875,19 @@ class MithonParser ( Parser ):
     def tempDeclaration(self):
 
         localctx = MithonParser.TempDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_tempDeclaration)
+        self.enterRule(localctx, 14, self.RULE_tempDeclaration)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 123
-            self.match(MithonParser.T__10)
-            self.state = 124
-            self.type_()
             self.state = 125
-            self.match(MithonParser.IDENTIFIER)
+            self.match(MithonParser.T__14)
             self.state = 126
-            self.match(MithonParser.T__4)
+            self.type_()
             self.state = 127
-            self.expression()
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class TypeContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-
-        def getRuleIndex(self):
-            return MithonParser.RULE_type
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterType" ):
-                listener.enterType(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitType" ):
-                listener.exitType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitType" ):
-                return visitor.visitType(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def type_(self):
-
-        localctx = MithonParser.TypeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_type)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
+            self.match(MithonParser.IDENTIFIER)
+            self.state = 128
+            self.match(MithonParser.T__8)
             self.state = 129
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 61440) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
+            self.expression()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -964,7 +964,7 @@ class MithonParser ( Parser ):
                 self.state = 134
                 self.match(MithonParser.IDENTIFIER)
                 self.state = 135
-                self.match(MithonParser.T__4)
+                self.match(MithonParser.T__8)
                 self.state = 136
                 self.expression()
                 self.state = 137
@@ -2086,8 +2086,11 @@ class MithonParser ( Parser ):
         def IDENTIFIER(self):
             return self.getToken(MithonParser.IDENTIFIER, 0)
 
-        def NUMBER(self):
-            return self.getToken(MithonParser.NUMBER, 0)
+        def INTEGER(self):
+            return self.getToken(MithonParser.INTEGER, 0)
+
+        def DOUBLE(self):
+            return self.getToken(MithonParser.DOUBLE, 0)
 
         def STRING(self):
             return self.getToken(MithonParser.STRING, 0)
@@ -2117,7 +2120,7 @@ class MithonParser ( Parser ):
         localctx = MithonParser.PrimaryExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 48, self.RULE_primaryExpression)
         try:
-            self.state = 292
+            self.state = 293
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
             if la_ == 1:
@@ -2145,24 +2148,30 @@ class MithonParser ( Parser ):
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 288
-                self.match(MithonParser.NUMBER)
+                self.match(MithonParser.INTEGER)
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 289
-                self.match(MithonParser.STRING)
+                self.match(MithonParser.DOUBLE)
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
                 self.state = 290
-                self.match(MithonParser.T__43)
+                self.match(MithonParser.STRING)
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
                 self.state = 291
+                self.match(MithonParser.T__43)
+                pass
+
+            elif la_ == 8:
+                self.enterOuterAlt(localctx, 8)
+                self.state = 292
                 self.match(MithonParser.T__44)
                 pass
 

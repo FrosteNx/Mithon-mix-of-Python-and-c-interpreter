@@ -8,6 +8,17 @@ else:
 # This class defines a complete listener for a parse tree produced by MithonParser.
 class MithonListener(ParseTreeListener):
 
+    def __init__(self):
+        self.variables = {}
+
+    @property
+    def variables(self):
+        return self._variables
+    
+    @variables.setter
+    def variables(self, new_variables):
+        self._variables = new_variables
+
     # Enter a parse tree produced by MithonParser#program.
     def enterProgram(self, ctx:MithonParser.ProgramContext):
         pass
@@ -46,8 +57,23 @@ class MithonListener(ParseTreeListener):
 
     # Enter a parse tree produced by MithonParser#varDeclaration.
     def enterVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
-        pass
 
+        var_name = ctx.IDENTIFIER().getText()
+        var_type = ctx.type_().getText() if ctx.type_() else None
+        var_value = None
+        if ctx.expression():
+            var_value = self.exitExpression(ctx.expression())
+
+        if var_type == 'int':
+            if not isinstance(var_value, int):
+                print(f"Warning: Assigned value is not an integer for variable '{var_name}'. It will be auto-casted to int.")
+                var_value = int(var_value)
+        elif var_type == 'double':
+            if not isinstance(var_value, float):
+                print(f"Warning: Assigned value is not a double for variable '{var_name}'")
+
+        self.variables[var_name] = (var_type, var_value)
+        
     # Exit a parse tree produced by MithonParser#varDeclaration.
     def exitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
         pass
@@ -158,7 +184,7 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#expression.
     def exitExpression(self, ctx:MithonParser.ExpressionContext):
-        pass
+        return self.exitLogicalOrExpression(ctx.logicalOrExpression())
 
 
     # Enter a parse tree produced by MithonParser#logicalOrExpression.
@@ -167,7 +193,13 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#logicalOrExpression.
     def exitLogicalOrExpression(self, ctx:MithonParser.LogicalOrExpressionContext):
-        pass
+        if len(ctx.logicalAndExpression()) > 1:
+            result = False
+            for expr in ctx.logicalAndExpression():
+                result = result or self.exitLogicalAndExpression(expr)
+            return result
+        else:
+            return self.exitLogicalAndExpression(ctx.logicalAndExpression(0))
 
 
     # Enter a parse tree produced by MithonParser#logicalAndExpression.
@@ -176,7 +208,13 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#logicalAndExpression.
     def exitLogicalAndExpression(self, ctx:MithonParser.LogicalAndExpressionContext):
-        pass
+        if len(ctx.equalityExpression()) > 1:
+            result = True
+            for expr in ctx.equalityExpression():
+                result = result and self.exitEqualityExpression(expr)
+            return result
+        else:
+            return self.exitEqualityExpression(ctx.equalityExpression(0))
 
 
     # Enter a parse tree produced by MithonParser#equalityExpression.
@@ -185,7 +223,17 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#equalityExpression.
     def exitEqualityExpression(self, ctx:MithonParser.EqualityExpressionContext):
-        pass
+        left = self.exitRelationalExpression(ctx.relationalExpression(0))
+
+        if len(ctx.relationalExpression()) > 1:
+            operator = ctx.getChild(1).getText()
+            right = self.exitRelationalExpression(ctx.relationalExpression(1))
+            if operator == '==':
+                return left == right
+            elif operator == '!=':
+                return left != right
+            
+        return left
 
 
     # Enter a parse tree produced by MithonParser#relationalExpression.
@@ -194,8 +242,22 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#relationalExpression.
     def exitRelationalExpression(self, ctx:MithonParser.RelationalExpressionContext):
-        pass
 
+        left = self.exitAdditiveExpression(ctx.additiveExpression(0))
+
+        if ctx.getChildCount() > 1:
+            operator = ctx.getChild(1).getText()
+            right = self.exitAdditiveExpression(ctx.additiveExpression(1))
+            if operator == '<':
+                return left < right
+            elif operator == '>':
+                return left > right
+            elif operator == '<=':
+                return left <= right
+            elif operator == '>=':
+                return left >= right
+            
+        return left
 
     # Enter a parse tree produced by MithonParser#additiveExpression.
     def enterAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
@@ -203,7 +265,18 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#additiveExpression.
     def exitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
-        pass
+        left = self.exitMultiplicativeExpression(ctx.multiplicativeExpression(0))
+        result = left
+
+        for i in range(1, len(ctx.multiplicativeExpression())):
+            operator = ctx.getChild(2*i - 1).getText()
+            right = self.exitMultiplicativeExpression(ctx.multiplicativeExpression(i))
+            if operator == '+':
+                result += right
+            elif operator == '-':
+                result -= right
+
+        return result
 
 
     # Enter a parse tree produced by MithonParser#multiplicativeExpression.
@@ -212,7 +285,19 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#multiplicativeExpression.
     def exitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
-        pass
+        left = self.exitUnaryExpression(ctx.unaryExpression(0))
+        result = left
+        for i in range(1, len(ctx.unaryExpression())):
+            operator = ctx.getChild(2*i - 1).getText()
+            right = self.exitUnaryExpression(ctx.unaryExpression(i))
+            if operator == '*':
+                result *= right
+            elif operator == '/':
+                if right != 0:
+                    result /= right
+                else:
+                    raise ZeroDivisionError
+        return result
 
 
     # Enter a parse tree produced by MithonParser#unaryExpression.
@@ -221,7 +306,16 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#unaryExpression.
     def exitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
-        pass
+        if ctx.getChildCount() == 1:
+            return self.exitPrimaryExpression(ctx.primaryExpression())
+        else:
+            operator = ctx.getChild(0).getText()
+            operand = self.exitUnaryExpression(ctx.primaryExpression())
+            if operator == 'not':
+                return not operand
+            elif operator == '-':
+                return -operand
+        return None
 
 
     # Enter a parse tree produced by MithonParser#primaryExpression.
@@ -230,8 +324,26 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#primaryExpression.
     def exitPrimaryExpression(self, ctx:MithonParser.PrimaryExpressionContext):
-        pass
-
+        if ctx.INTEGER():
+            return int(ctx.INTEGER().getText())
+        elif ctx.DOUBLE():
+            return float(ctx.DOUBLE().getText())
+        elif ctx.STRING():
+            return ctx.STRING().getText()[1:-1] 
+        elif ctx.getText() == 'true':
+            return True
+        elif ctx.getText() == 'false':
+            return False
+        elif ctx.IDENTIFIER():
+            var_name = ctx.IDENTIFIER().getText()
+            if var_name in self.variables:
+                return self.variables[var_name][1]
+            else:
+                raise Exception(f"Undefined variable '{var_name}'")
+        elif ctx.expression():
+            return self.exitExpression(ctx.expression()) 
+        else:
+            return self.visitChildren(ctx)
 
 
 del MithonParser
