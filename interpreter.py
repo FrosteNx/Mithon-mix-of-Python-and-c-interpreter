@@ -24,13 +24,7 @@ def main():
         print(e)
         exit(1)
 
-    variable_listener = MithonListener()
-    walker = ParseTreeWalker()
-    walker.walk(variable_listener, tree)
-    
-    variables = variable_listener.variables
-
-    visitor = MithonVisitor(variables)
+    visitor = MithonVisitor()
     visitor.visit(tree)
 
 if __name__ == '__main__':

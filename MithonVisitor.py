@@ -9,24 +9,37 @@ else:
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self, variables):
-        self.variables = variables
+    def __init__(self):
+        self.scopes = [{}]
         super().__init__()
+        
+    def pushScope(self):
+        self.scopes.append({})
+
+    def popScope(self):
+        if len(self.scopes) > 1:
+            self.scopes.pop()
+
+    def addVariable(self, name, type, value):
+        self.scopes[-1][name] = (type, value)
+
+    def lookupVariable(self, name):
+        for scope in reversed(self.scopes):
+            if name in scope:
+                return scope[name]
+        raise Exception(f"Undefined variable '{name}'")
 
     # self.visit(obiekt) -> self.visit[typ obiektu](context)
 
-    # Visit a parse tree produced by MithonParser#program.
     def visitProgram(self, ctx:MithonParser.ProgramContext):
-        
-        for statment in ctx.statement():
-            self.visitStatement(statment)
+        for statement in ctx.statement():
+            self.visit(statement)
 
-
-    # Visit a parse tree produced by MithonParser#statement.
     def visitStatement(self, ctx:MithonParser.StatementContext):
-        
-        if ctx.printFunction():
-            self.visit(ctx.printFunction())
+        if ctx.varDeclaration():
+            self.visitVarDeclaration(ctx.varDeclaration())
+        elif ctx.printFunction():
+            self.visitPrintFunction(ctx.printFunction())
 
     # Visit a parse tree produced by MithonParser#statement_list.
     def visitStatement_list(self, ctx:MithonParser.Statement_listContext):
@@ -35,7 +48,6 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#printFunction.
     def visitPrintFunction(self, ctx:MithonParser.PrintFunctionContext):
-
         expressions = ctx.expressionList().expression()
         for expr in expressions:
             value = self.visit(expr)
@@ -43,9 +55,32 @@ class MithonVisitor(ParseTreeVisitor):
         print()
 
 
-    # Visit a parse tree produced by MithonParser#varDeclaration.
     def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
-        return self.visitChildren(ctx)
+        var_name = None
+        var_type = None
+        expression_result = None
+        
+        if ctx.type_() and ctx.IDENTIFIER() and ctx.expression():
+            var_type = ctx.type_().getText()
+            var_name = ctx.IDENTIFIER().getText()
+            expression_result = self.visit(ctx.expression())
+        elif ctx.IDENTIFIER() and ctx.expression() and not ctx.type_():
+            var_name = ctx.IDENTIFIER().getText()
+            expression_result = self.visit(ctx.expression())
+            if var_name in self.scopes[-1]:
+                var_type = self.scopes[-1][var_name][0]
+            else:
+                var_type = 'defaultType' 
+        elif ctx.type_() and ctx.IDENTIFIER() and not ctx.expression():
+            var_type = ctx.type_().getText()
+            var_name = ctx.IDENTIFIER().getText()
+            expression_result = None 
+
+        if var_name:
+            self.addVariable(var_name, var_type, expression_result)
+        else:
+            raise Exception("Invalid variable declaration")
+
 
     # Visit a parse tree produced by MithonParser#constDeclaration.
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
@@ -74,8 +109,8 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#functionDeclaration.
     def visitFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
-        return self.visitChildren(ctx)
-
+        self.pushScope() 
+        self.popScope()  
 
     # Visit a parse tree produced by MithonParser#parameterList.
     def visitParameterList(self, ctx:MithonParser.ParameterListContext):
@@ -221,12 +256,9 @@ class MithonVisitor(ParseTreeVisitor):
         elif ctx.getText() == 'false':
             return False
         elif ctx.IDENTIFIER():
-            #var_type = ctx.TYPE().getText()
             var_name = ctx.IDENTIFIER().getText()
-            if var_name in self.variables:
-                return self.variables[var_name][1]
-            else:
-                raise Exception(f"Undefined variable '{var_name}'")
+            var_type, var_value = self.lookupVariable(var_name)
+            return var_value
         elif ctx.expression():
             return self.visit(ctx.expression()) 
         else:

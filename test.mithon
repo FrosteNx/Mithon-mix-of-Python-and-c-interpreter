@@ -1,4 +1,7 @@
-double x = 5 * 2.2
-
-print(x, 2, 5)
-print(not (not true))
+int x = 2
+print(x)
+x = 4
+int y = 4
+int z 
+z = y * x
+print(z)
