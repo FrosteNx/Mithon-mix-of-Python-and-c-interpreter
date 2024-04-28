@@ -59,7 +59,7 @@ class MithonVisitor(ParseTreeVisitor):
         var_name = None
         var_type = None
         expression_result = None
-        
+
         if ctx.type_() and ctx.IDENTIFIER() and ctx.expression():
             var_type = ctx.type_().getText()
             var_name = ctx.IDENTIFIER().getText()
@@ -67,19 +67,18 @@ class MithonVisitor(ParseTreeVisitor):
         elif ctx.IDENTIFIER() and ctx.expression() and not ctx.type_():
             var_name = ctx.IDENTIFIER().getText()
             expression_result = self.visit(ctx.expression())
-            if var_name in self.scopes[-1]:
-                var_type = self.scopes[-1][var_name][0]
-            else:
-                var_type = 'defaultType' 
+            var_type = type(expression_result).__name__  
         elif ctx.type_() and ctx.IDENTIFIER() and not ctx.expression():
             var_type = ctx.type_().getText()
             var_name = ctx.IDENTIFIER().getText()
             expression_result = None 
+        else:
+            raise Exception("Invalid variable declaration. Must include a type or initialization.")
 
         if var_name:
             self.addVariable(var_name, var_type, expression_result)
         else:
-            raise Exception("Invalid variable declaration")
+            raise Exception("Variable declaration error: Name required")
 
 
     # Visit a parse tree produced by MithonParser#constDeclaration.

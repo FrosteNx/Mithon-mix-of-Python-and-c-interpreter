@@ -1,7 +1,1 @@
-int x = 2
 print(x)
-x = 4
-int y = 4
-int z 
-z = y * x
-print(z)
