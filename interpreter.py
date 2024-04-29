@@ -1,22 +1,21 @@
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
-from MithonLexer import MithonLexer
-from MithonParser import MithonParser
-from MithonVisitor import MithonVisitor
-from MithonListener import MithonListener
+from freshLexer import freshLexer
+from freshParser import freshParser
+from freshVisitor import freshVisitor
 
-class MyErrorListener(ErrorListener):
+class freshErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         raise SyntaxError(f"Błąd w linii: {line}. Treść błędu: {msg}")
 
 def main():
-    input_stream = FileStream("test.mithon")
-    lexer = MithonLexer(input_stream)
+    input_stream = FileStream("test.fresh")
+    lexer = freshLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
-    parser = MithonParser(token_stream)
+    parser = freshParser(token_stream)
 
     parser.removeErrorListeners()
-    parser.addErrorListener(MyErrorListener())
+    parser.addErrorListener(freshErrorListener())
 
     try:
         tree = parser.program()
@@ -24,7 +23,7 @@ def main():
         print(e)
         exit(1)
 
-    visitor = MithonVisitor()
+    visitor = freshVisitor()
     visitor.visit(tree)
 
 if __name__ == '__main__':
