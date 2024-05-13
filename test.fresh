@@ -1,15 +1,17 @@
-def test1() int;
+def test1() -> int;
 
-def main() None {
+def main() -> None {
     print("siema");
     var zmienna int = 5;
 
-    for (int i = 0; i < 5; i++){
+    for (int iter = 0; iter < 5; iter++){
         print(i);
     }
+
+    test();
 }
 
-def test() int {
+def test() -> int {
     if (1 < 2){
         print("elo");
     }

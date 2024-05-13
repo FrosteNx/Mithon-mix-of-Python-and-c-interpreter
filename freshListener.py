@@ -116,6 +116,15 @@ class freshListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by freshParser#for_loop_declaration.
+    def enterFor_loop_declaration(self, ctx:freshParser.For_loop_declarationContext):
+        pass
+
+    # Exit a parse tree produced by freshParser#for_loop_declaration.
+    def exitFor_loop_declaration(self, ctx:freshParser.For_loop_declarationContext):
+        pass
+
+
     # Enter a parse tree produced by freshParser#print.
     def enterPrint(self, ctx:freshParser.PrintContext):
         pass

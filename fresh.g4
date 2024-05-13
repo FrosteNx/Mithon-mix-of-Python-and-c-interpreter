@@ -4,11 +4,11 @@ program: function_list? main_function function_list? EOF;
 
 function_list: function+;
 
-main_function: 'def' 'main' '(' ')' 'None' '{' statements '}';
+main_function: 'def' 'main' '(' ')' '->' 'None' '{' statements '}';
 
-function: 'def' NAME '(' argument_list? ')' type (';' |'{' statements '}');
+function: 'def' NAME '(' argument_list? ')' '->' type (';' |'{' statements '}');
 
-function_call: NAME '(' (expression (',' expression)*)? ')';
+function_call: NAME '(' (expression (',' expression)*)? ')' ';';
 
 argument_list: argument (',' argument)*;
 
@@ -20,6 +20,7 @@ statement
     : if_statement
     | for_loop_statement
     | var_declaration 
+    | function_call
     | print;
 
 var_declaration
@@ -31,8 +32,10 @@ if_statement
     : 'if' '(' expression ')' '{' statements '}' ('elif' '(' expression ')' '{' statements '}')* ('else' '{' statements '}')?;
 
 for_loop_statement
-    : 'for' '(' type NAME '=' expression ';' expression ';' expression ')' '{' statements '}'
+    : 'for' '(' for_loop_declaration ';' expression ';' expression ')' '{' statements '}'
     | 'for' '(' type NAME 'in' NAME ')' '{' statements '}';
+
+for_loop_declaration: type NAME '=' expression;
 
 print: 'print' '(' expression_list ')' ';';
 
