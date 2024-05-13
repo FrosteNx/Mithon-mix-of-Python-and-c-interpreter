@@ -10,110 +10,107 @@ else:
 
 def serializedATN():
     return [
-        4,1,49,290,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,52,292,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
-        2,14,7,14,1,0,5,0,32,8,0,10,0,12,0,35,9,0,1,0,1,0,1,1,1,1,1,1,1,
-        1,1,1,1,1,1,1,1,1,1,1,3,1,48,8,1,1,2,1,2,1,2,1,2,1,2,1,3,1,3,1,3,
-        1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,
-        1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3,3,3,86,8,3,1,4,1,
-        4,1,4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,6,1,6,1,7,1,7,1,7,1,
-        7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,5,7,115,8,7,10,7,12,7,118,
-        9,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,5,7,129,8,7,10,7,12,7,132,
-        9,7,3,7,134,8,7,1,8,1,8,1,8,1,8,1,8,1,8,5,8,142,8,8,10,8,12,8,145,
-        9,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,153,8,8,10,8,12,8,156,9,8,5,8,158,
-        8,8,10,8,12,8,161,9,8,1,8,1,8,1,8,5,8,166,8,8,10,8,12,8,169,9,8,
-        3,8,171,8,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,5,9,182,8,9,10,9,
-        12,9,185,9,9,1,10,1,10,1,10,1,10,1,10,1,10,5,10,193,8,10,10,10,12,
-        10,196,9,10,1,11,1,11,1,11,1,11,1,11,1,12,1,12,1,12,5,12,206,8,12,
-        10,12,12,12,209,9,12,1,13,1,13,1,13,5,13,214,8,13,10,13,12,13,217,
-        9,13,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
-        1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
-        1,14,1,14,1,14,1,14,1,14,1,14,3,14,250,8,14,1,14,1,14,1,14,1,14,
-        1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
-        1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,1,14,
-        1,14,1,14,1,14,5,14,285,8,14,10,14,12,14,288,9,14,1,14,0,1,28,15,
-        0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,0,1,1,0,11,14,323,0,33,1,
-        0,0,0,2,47,1,0,0,0,4,49,1,0,0,0,6,85,1,0,0,0,8,87,1,0,0,0,10,93,
-        1,0,0,0,12,99,1,0,0,0,14,133,1,0,0,0,16,135,1,0,0,0,18,172,1,0,0,
-        0,20,186,1,0,0,0,22,197,1,0,0,0,24,202,1,0,0,0,26,210,1,0,0,0,28,
-        249,1,0,0,0,30,32,3,2,1,0,31,30,1,0,0,0,32,35,1,0,0,0,33,31,1,0,
-        0,0,33,34,1,0,0,0,34,36,1,0,0,0,35,33,1,0,0,0,36,37,5,0,0,1,37,1,
-        1,0,0,0,38,48,3,6,3,0,39,48,3,8,4,0,40,48,3,10,5,0,41,48,3,14,7,
-        0,42,48,3,16,8,0,43,48,3,18,9,0,44,48,3,4,2,0,45,48,3,28,14,0,46,
-        48,5,48,0,0,47,38,1,0,0,0,47,39,1,0,0,0,47,40,1,0,0,0,47,41,1,0,
-        0,0,47,42,1,0,0,0,47,43,1,0,0,0,47,44,1,0,0,0,47,45,1,0,0,0,47,46,
-        1,0,0,0,48,3,1,0,0,0,49,50,5,1,0,0,50,51,5,2,0,0,51,52,3,28,14,0,
-        52,53,5,3,0,0,53,5,1,0,0,0,54,55,3,12,6,0,55,56,5,45,0,0,56,57,5,
-        4,0,0,57,58,3,28,14,0,58,86,1,0,0,0,59,60,5,5,0,0,60,61,5,6,0,0,
-        61,62,3,12,6,0,62,63,5,7,0,0,63,64,5,45,0,0,64,65,5,4,0,0,65,66,
-        5,6,0,0,66,67,3,26,13,0,67,68,5,7,0,0,68,86,1,0,0,0,69,70,5,8,0,
-        0,70,71,5,6,0,0,71,72,3,12,6,0,72,73,5,7,0,0,73,74,5,45,0,0,74,75,
-        5,4,0,0,75,76,5,6,0,0,76,77,3,26,13,0,77,78,5,7,0,0,78,86,1,0,0,
-        0,79,80,5,45,0,0,80,81,5,4,0,0,81,86,3,28,14,0,82,83,3,12,6,0,83,
-        84,5,45,0,0,84,86,1,0,0,0,85,54,1,0,0,0,85,59,1,0,0,0,85,69,1,0,
-        0,0,85,79,1,0,0,0,85,82,1,0,0,0,86,7,1,0,0,0,87,88,5,9,0,0,88,89,
-        3,12,6,0,89,90,5,45,0,0,90,91,5,4,0,0,91,92,3,28,14,0,92,9,1,0,0,
-        0,93,94,5,10,0,0,94,95,3,12,6,0,95,96,5,45,0,0,96,97,5,4,0,0,97,
-        98,3,28,14,0,98,11,1,0,0,0,99,100,7,0,0,0,100,13,1,0,0,0,101,102,
-        5,15,0,0,102,103,5,2,0,0,103,104,3,12,6,0,104,105,5,45,0,0,105,106,
-        5,4,0,0,106,107,3,28,14,0,107,108,5,16,0,0,108,109,3,28,14,0,109,
-        110,5,16,0,0,110,111,3,28,14,0,111,112,5,3,0,0,112,116,5,17,0,0,
-        113,115,3,2,1,0,114,113,1,0,0,0,115,118,1,0,0,0,116,114,1,0,0,0,
-        116,117,1,0,0,0,117,134,1,0,0,0,118,116,1,0,0,0,119,120,5,15,0,0,
-        120,121,5,2,0,0,121,122,5,18,0,0,122,123,5,45,0,0,123,124,5,19,0,
-        0,124,125,5,45,0,0,125,126,5,3,0,0,126,130,5,17,0,0,127,129,3,2,
-        1,0,128,127,1,0,0,0,129,132,1,0,0,0,130,128,1,0,0,0,130,131,1,0,
-        0,0,131,134,1,0,0,0,132,130,1,0,0,0,133,101,1,0,0,0,133,119,1,0,
-        0,0,134,15,1,0,0,0,135,136,5,20,0,0,136,137,5,2,0,0,137,138,3,28,
-        14,0,138,139,5,3,0,0,139,143,5,17,0,0,140,142,3,2,1,0,141,140,1,
-        0,0,0,142,145,1,0,0,0,143,141,1,0,0,0,143,144,1,0,0,0,144,159,1,
-        0,0,0,145,143,1,0,0,0,146,147,5,21,0,0,147,148,5,2,0,0,148,149,3,
-        28,14,0,149,150,5,3,0,0,150,154,5,17,0,0,151,153,3,2,1,0,152,151,
-        1,0,0,0,153,156,1,0,0,0,154,152,1,0,0,0,154,155,1,0,0,0,155,158,
-        1,0,0,0,156,154,1,0,0,0,157,146,1,0,0,0,158,161,1,0,0,0,159,157,
-        1,0,0,0,159,160,1,0,0,0,160,170,1,0,0,0,161,159,1,0,0,0,162,163,
-        5,22,0,0,163,167,5,17,0,0,164,166,3,2,1,0,165,164,1,0,0,0,166,169,
-        1,0,0,0,167,165,1,0,0,0,167,168,1,0,0,0,168,171,1,0,0,0,169,167,
-        1,0,0,0,170,162,1,0,0,0,170,171,1,0,0,0,171,17,1,0,0,0,172,173,5,
-        23,0,0,173,174,5,45,0,0,174,175,5,2,0,0,175,176,3,20,10,0,176,177,
-        5,3,0,0,177,178,5,24,0,0,178,179,3,12,6,0,179,183,5,17,0,0,180,182,
-        3,2,1,0,181,180,1,0,0,0,182,185,1,0,0,0,183,181,1,0,0,0,183,184,
-        1,0,0,0,184,19,1,0,0,0,185,183,1,0,0,0,186,187,3,12,6,0,187,194,
-        5,45,0,0,188,189,5,25,0,0,189,190,3,12,6,0,190,191,5,45,0,0,191,
-        193,1,0,0,0,192,188,1,0,0,0,193,196,1,0,0,0,194,192,1,0,0,0,194,
-        195,1,0,0,0,195,21,1,0,0,0,196,194,1,0,0,0,197,198,5,45,0,0,198,
-        199,5,2,0,0,199,200,3,24,12,0,200,201,5,3,0,0,201,23,1,0,0,0,202,
-        207,3,28,14,0,203,204,5,25,0,0,204,206,3,28,14,0,205,203,1,0,0,0,
-        206,209,1,0,0,0,207,205,1,0,0,0,207,208,1,0,0,0,208,25,1,0,0,0,209,
-        207,1,0,0,0,210,215,3,28,14,0,211,212,5,25,0,0,212,214,3,28,14,0,
-        213,211,1,0,0,0,214,217,1,0,0,0,215,213,1,0,0,0,215,216,1,0,0,0,
-        216,27,1,0,0,0,217,215,1,0,0,0,218,219,6,14,-1,0,219,220,5,45,0,
-        0,220,221,5,30,0,0,221,250,3,28,14,20,222,223,5,45,0,0,223,224,5,
-        31,0,0,224,250,3,28,14,19,225,226,5,45,0,0,226,227,5,32,0,0,227,
-        250,3,28,14,18,228,229,5,45,0,0,229,230,5,33,0,0,230,250,3,28,14,
-        17,231,232,5,45,0,0,232,233,5,34,0,0,233,250,3,28,14,16,234,235,
-        5,45,0,0,235,236,5,35,0,0,236,250,3,28,14,15,237,238,5,42,0,0,238,
-        250,3,28,14,8,239,240,5,2,0,0,240,241,3,28,14,0,241,242,5,3,0,0,
-        242,250,1,0,0,0,243,250,3,22,11,0,244,250,5,45,0,0,245,250,5,46,
-        0,0,246,250,5,47,0,0,247,250,5,43,0,0,248,250,5,44,0,0,249,218,1,
-        0,0,0,249,222,1,0,0,0,249,225,1,0,0,0,249,228,1,0,0,0,249,231,1,
-        0,0,0,249,234,1,0,0,0,249,237,1,0,0,0,249,239,1,0,0,0,249,243,1,
-        0,0,0,249,244,1,0,0,0,249,245,1,0,0,0,249,246,1,0,0,0,249,247,1,
-        0,0,0,249,248,1,0,0,0,250,286,1,0,0,0,251,252,10,25,0,0,252,253,
-        5,26,0,0,253,285,3,28,14,26,254,255,10,24,0,0,255,256,5,27,0,0,256,
-        285,3,28,14,25,257,258,10,23,0,0,258,259,5,28,0,0,259,285,3,28,14,
-        24,260,261,10,22,0,0,261,262,5,29,0,0,262,285,3,28,14,23,263,264,
-        10,21,0,0,264,265,5,30,0,0,265,285,3,28,14,22,266,267,10,14,0,0,
-        267,268,5,36,0,0,268,285,3,28,14,15,269,270,10,13,0,0,270,271,5,
-        37,0,0,271,285,3,28,14,14,272,273,10,12,0,0,273,274,5,38,0,0,274,
-        285,3,28,14,13,275,276,10,11,0,0,276,277,5,39,0,0,277,285,3,28,14,
-        12,278,279,10,10,0,0,279,280,5,40,0,0,280,285,3,28,14,11,281,282,
-        10,9,0,0,282,283,5,41,0,0,283,285,3,28,14,10,284,251,1,0,0,0,284,
-        254,1,0,0,0,284,257,1,0,0,0,284,260,1,0,0,0,284,263,1,0,0,0,284,
-        266,1,0,0,0,284,269,1,0,0,0,284,272,1,0,0,0,284,275,1,0,0,0,284,
-        278,1,0,0,0,284,281,1,0,0,0,285,288,1,0,0,0,286,284,1,0,0,0,286,
-        287,1,0,0,0,287,29,1,0,0,0,288,286,1,0,0,0,18,33,47,85,116,130,133,
-        143,154,159,167,170,183,194,207,215,249,284,286
+        2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
+        7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,1,0,5,0,52,8,0,10,0,
+        12,0,55,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+        3,1,70,8,1,1,2,1,2,4,2,74,8,2,11,2,12,2,75,1,2,1,2,1,3,1,3,1,3,1,
+        3,1,3,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+        5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+        5,1,5,1,5,3,5,118,8,5,1,6,1,6,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,
+        7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,
+        8,1,8,1,8,1,8,1,8,1,8,1,8,3,8,153,8,8,1,9,1,9,1,9,1,9,1,9,1,9,1,
+        9,1,9,1,9,1,9,1,9,5,9,166,8,9,10,9,12,9,169,9,9,1,9,1,9,3,9,173,
+        8,9,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,11,1,11,1,11,
+        1,11,1,11,1,11,5,11,190,8,11,10,11,12,11,193,9,11,1,12,1,12,1,12,
+        1,12,1,12,1,13,1,13,1,13,5,13,203,8,13,10,13,12,13,206,9,13,1,14,
+        1,14,1,14,5,14,211,8,14,10,14,12,14,214,9,14,1,15,1,15,1,16,1,16,
+        1,17,1,17,1,17,5,17,223,8,17,10,17,12,17,226,9,17,1,18,1,18,1,18,
+        5,18,231,8,18,10,18,12,18,234,9,18,1,19,1,19,1,19,5,19,239,8,19,
+        10,19,12,19,242,9,19,1,20,1,20,1,20,5,20,247,8,20,10,20,12,20,250,
+        9,20,1,21,1,21,1,21,1,21,1,21,5,21,257,8,21,10,21,12,21,260,9,21,
+        1,22,1,22,1,22,1,22,1,22,5,22,267,8,22,10,22,12,22,270,9,22,1,23,
+        1,23,1,23,1,23,1,23,3,23,277,8,23,1,24,1,24,1,24,1,24,1,24,1,24,
+        1,24,1,24,1,24,1,24,1,24,3,24,290,8,24,1,24,0,0,25,0,2,4,6,8,10,
+        12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,0,7,1,0,
+        7,10,1,0,30,31,1,0,32,35,1,0,36,37,1,0,38,39,1,0,40,41,1,0,42,43,
+        305,0,53,1,0,0,0,2,69,1,0,0,0,4,71,1,0,0,0,6,79,1,0,0,0,8,84,1,0,
+        0,0,10,117,1,0,0,0,12,119,1,0,0,0,14,125,1,0,0,0,16,152,1,0,0,0,
+        18,154,1,0,0,0,20,174,1,0,0,0,22,183,1,0,0,0,24,194,1,0,0,0,26,199,
+        1,0,0,0,28,207,1,0,0,0,30,215,1,0,0,0,32,217,1,0,0,0,34,219,1,0,
+        0,0,36,227,1,0,0,0,38,235,1,0,0,0,40,243,1,0,0,0,42,251,1,0,0,0,
+        44,261,1,0,0,0,46,276,1,0,0,0,48,289,1,0,0,0,50,52,3,2,1,0,51,50,
+        1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,53,54,1,0,0,0,54,56,1,0,0,0,
+        55,53,1,0,0,0,56,57,5,0,0,1,57,1,1,0,0,0,58,70,3,4,2,0,59,70,3,10,
+        5,0,60,70,3,12,6,0,61,70,3,14,7,0,62,70,3,16,8,0,63,70,3,18,9,0,
+        64,70,3,20,10,0,65,70,3,6,3,0,66,70,3,30,15,0,67,70,5,51,0,0,68,
+        70,5,1,0,0,69,58,1,0,0,0,69,59,1,0,0,0,69,60,1,0,0,0,69,61,1,0,0,
+        0,69,62,1,0,0,0,69,63,1,0,0,0,69,64,1,0,0,0,69,65,1,0,0,0,69,66,
+        1,0,0,0,69,67,1,0,0,0,69,68,1,0,0,0,70,3,1,0,0,0,71,73,5,2,0,0,72,
+        74,3,2,1,0,73,72,1,0,0,0,74,75,1,0,0,0,75,73,1,0,0,0,75,76,1,0,0,
+        0,76,77,1,0,0,0,77,78,5,3,0,0,78,5,1,0,0,0,79,80,5,4,0,0,80,81,5,
+        5,0,0,81,82,3,28,14,0,82,83,5,6,0,0,83,7,1,0,0,0,84,85,7,0,0,0,85,
+        9,1,0,0,0,86,87,3,8,4,0,87,88,5,47,0,0,88,89,5,11,0,0,89,90,3,32,
+        16,0,90,118,1,0,0,0,91,92,5,12,0,0,92,93,5,13,0,0,93,94,3,8,4,0,
+        94,95,5,14,0,0,95,96,5,47,0,0,96,97,5,11,0,0,97,98,5,13,0,0,98,99,
+        3,28,14,0,99,100,5,14,0,0,100,118,1,0,0,0,101,102,5,15,0,0,102,103,
+        5,13,0,0,103,104,3,8,4,0,104,105,5,14,0,0,105,106,5,47,0,0,106,107,
+        5,11,0,0,107,108,5,13,0,0,108,109,3,28,14,0,109,110,5,14,0,0,110,
+        118,1,0,0,0,111,112,5,47,0,0,112,113,5,11,0,0,113,118,3,32,16,0,
+        114,115,3,8,4,0,115,116,5,47,0,0,116,118,1,0,0,0,117,86,1,0,0,0,
+        117,91,1,0,0,0,117,101,1,0,0,0,117,111,1,0,0,0,117,114,1,0,0,0,118,
+        11,1,0,0,0,119,120,5,16,0,0,120,121,3,8,4,0,121,122,5,47,0,0,122,
+        123,5,11,0,0,123,124,3,32,16,0,124,13,1,0,0,0,125,126,5,17,0,0,126,
+        127,3,8,4,0,127,128,5,47,0,0,128,129,5,11,0,0,129,130,3,32,16,0,
+        130,15,1,0,0,0,131,132,5,18,0,0,132,133,5,5,0,0,133,134,3,8,4,0,
+        134,135,5,47,0,0,135,136,5,11,0,0,136,137,3,32,16,0,137,138,5,19,
+        0,0,138,139,3,32,16,0,139,140,5,19,0,0,140,141,3,32,16,0,141,142,
+        5,6,0,0,142,143,3,4,2,0,143,153,1,0,0,0,144,145,5,18,0,0,145,146,
+        5,5,0,0,146,147,5,20,0,0,147,148,5,47,0,0,148,149,5,21,0,0,149,150,
+        5,47,0,0,150,151,5,6,0,0,151,153,3,4,2,0,152,131,1,0,0,0,152,144,
+        1,0,0,0,153,17,1,0,0,0,154,155,5,22,0,0,155,156,5,5,0,0,156,157,
+        3,32,16,0,157,158,5,6,0,0,158,167,3,4,2,0,159,160,5,23,0,0,160,161,
+        5,5,0,0,161,162,3,32,16,0,162,163,5,6,0,0,163,164,3,4,2,0,164,166,
+        1,0,0,0,165,159,1,0,0,0,166,169,1,0,0,0,167,165,1,0,0,0,167,168,
+        1,0,0,0,168,172,1,0,0,0,169,167,1,0,0,0,170,171,5,24,0,0,171,173,
+        3,4,2,0,172,170,1,0,0,0,172,173,1,0,0,0,173,19,1,0,0,0,174,175,5,
+        25,0,0,175,176,5,47,0,0,176,177,5,5,0,0,177,178,3,22,11,0,178,179,
+        5,6,0,0,179,180,5,26,0,0,180,181,3,8,4,0,181,182,3,4,2,0,182,21,
+        1,0,0,0,183,184,3,8,4,0,184,191,5,47,0,0,185,186,5,27,0,0,186,187,
+        3,8,4,0,187,188,5,47,0,0,188,190,1,0,0,0,189,185,1,0,0,0,190,193,
+        1,0,0,0,191,189,1,0,0,0,191,192,1,0,0,0,192,23,1,0,0,0,193,191,1,
+        0,0,0,194,195,5,47,0,0,195,196,5,5,0,0,196,197,3,26,13,0,197,198,
+        5,6,0,0,198,25,1,0,0,0,199,204,3,32,16,0,200,201,5,27,0,0,201,203,
+        3,32,16,0,202,200,1,0,0,0,203,206,1,0,0,0,204,202,1,0,0,0,204,205,
+        1,0,0,0,205,27,1,0,0,0,206,204,1,0,0,0,207,212,3,32,16,0,208,209,
+        5,27,0,0,209,211,3,32,16,0,210,208,1,0,0,0,211,214,1,0,0,0,212,210,
+        1,0,0,0,212,213,1,0,0,0,213,29,1,0,0,0,214,212,1,0,0,0,215,216,3,
+        32,16,0,216,31,1,0,0,0,217,218,3,34,17,0,218,33,1,0,0,0,219,224,
+        3,36,18,0,220,221,5,28,0,0,221,223,3,36,18,0,222,220,1,0,0,0,223,
+        226,1,0,0,0,224,222,1,0,0,0,224,225,1,0,0,0,225,35,1,0,0,0,226,224,
+        1,0,0,0,227,232,3,38,19,0,228,229,5,29,0,0,229,231,3,38,19,0,230,
+        228,1,0,0,0,231,234,1,0,0,0,232,230,1,0,0,0,232,233,1,0,0,0,233,
+        37,1,0,0,0,234,232,1,0,0,0,235,240,3,40,20,0,236,237,7,1,0,0,237,
+        239,3,40,20,0,238,236,1,0,0,0,239,242,1,0,0,0,240,238,1,0,0,0,240,
+        241,1,0,0,0,241,39,1,0,0,0,242,240,1,0,0,0,243,248,3,42,21,0,244,
+        245,7,2,0,0,245,247,3,42,21,0,246,244,1,0,0,0,247,250,1,0,0,0,248,
+        246,1,0,0,0,248,249,1,0,0,0,249,41,1,0,0,0,250,248,1,0,0,0,251,258,
+        3,44,22,0,252,253,7,3,0,0,253,257,3,44,22,0,254,255,7,4,0,0,255,
+        257,3,32,16,0,256,252,1,0,0,0,256,254,1,0,0,0,257,260,1,0,0,0,258,
+        256,1,0,0,0,258,259,1,0,0,0,259,43,1,0,0,0,260,258,1,0,0,0,261,268,
+        3,46,23,0,262,263,7,5,0,0,263,267,3,46,23,0,264,265,7,6,0,0,265,
+        267,3,32,16,0,266,262,1,0,0,0,266,264,1,0,0,0,267,270,1,0,0,0,268,
+        266,1,0,0,0,268,269,1,0,0,0,269,45,1,0,0,0,270,268,1,0,0,0,271,272,
+        5,44,0,0,272,277,3,48,24,0,273,274,5,37,0,0,274,277,3,48,24,0,275,
+        277,3,48,24,0,276,271,1,0,0,0,276,273,1,0,0,0,276,275,1,0,0,0,277,
+        47,1,0,0,0,278,279,5,5,0,0,279,280,3,32,16,0,280,281,5,6,0,0,281,
+        290,1,0,0,0,282,290,3,24,12,0,283,290,5,47,0,0,284,290,5,48,0,0,
+        285,290,5,49,0,0,286,290,5,50,0,0,287,290,5,45,0,0,288,290,5,46,
+        0,0,289,278,1,0,0,0,289,282,1,0,0,0,289,283,1,0,0,0,289,284,1,0,
+        0,0,289,285,1,0,0,0,289,286,1,0,0,0,289,287,1,0,0,0,289,288,1,0,
+        0,0,290,49,1,0,0,0,20,53,69,75,117,152,167,172,191,204,212,224,232,
+        240,248,256,258,266,268,276,289
     ]
 
 class MithonParser ( Parser ):
@@ -126,13 +123,14 @@ class MithonParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'print'", "'('", "')'", "'='", "'List'", 
-                     "'['", "']'", "'ndList'", "'const'", "'temp'", "'int'", 
-                     "'double'", "'bool'", "'string'", "'for'", "';'", "':'", 
-                     "'auto'", "'in'", "'if'", "'elif'", "'else'", "'def'", 
-                     "'->'", "','", "'+'", "'-'", "'*'", "'/'", "'%'", "'+='", 
-                     "'-='", "'*='", "'/='", "'%='", "'=='", "'!='", "'<'", 
-                     "'>'", "'and'", "'or'", "'not'", "'true'", "'false'" ]
+    literalNames = [ "<INVALID>", "'pass'", "'{'", "'}'", "'print'", "'('", 
+                     "')'", "'int'", "'double'", "'bool'", "'string'", "'='", 
+                     "'List'", "'['", "']'", "'ndList'", "'const'", "'temp'", 
+                     "'for'", "';'", "'auto'", "'in'", "'if'", "'elif'", 
+                     "'else'", "'def'", "'->'", "','", "'or'", "'and'", 
+                     "'=='", "'!='", "'<'", "'>'", "'<='", "'>='", "'+'", 
+                     "'-'", "'+='", "'-='", "'*'", "'/'", "'*='", "'/='", 
+                     "'not'", "'true'", "'false'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -145,29 +143,42 @@ class MithonParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "IDENTIFIER", "NUMBER", "STRING", "COMMENT", 
-                      "WS" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "IDENTIFIER", 
+                      "INTEGER", "DOUBLE", "STRING", "COMMENT", "WS" ]
 
     RULE_program = 0
     RULE_statement = 1
-    RULE_printFunction = 2
-    RULE_varDeclaration = 3
-    RULE_constDeclaration = 4
-    RULE_tempDeclaration = 5
-    RULE_type = 6
-    RULE_forLoop = 7
-    RULE_ifStatement = 8
-    RULE_functionDeclaration = 9
-    RULE_parameterList = 10
-    RULE_functionCall = 11
-    RULE_argumentList = 12
-    RULE_expressionList = 13
-    RULE_expression = 14
+    RULE_statement_list = 2
+    RULE_printFunction = 3
+    RULE_type = 4
+    RULE_varDeclaration = 5
+    RULE_constDeclaration = 6
+    RULE_tempDeclaration = 7
+    RULE_forLoop = 8
+    RULE_ifStatement = 9
+    RULE_functionDeclaration = 10
+    RULE_parameterList = 11
+    RULE_functionCall = 12
+    RULE_argumentList = 13
+    RULE_expressionList = 14
+    RULE_expressionStatement = 15
+    RULE_expression = 16
+    RULE_logicalOrExpression = 17
+    RULE_logicalAndExpression = 18
+    RULE_equalityExpression = 19
+    RULE_relationalExpression = 20
+    RULE_additiveExpression = 21
+    RULE_multiplicativeExpression = 22
+    RULE_unaryExpression = 23
+    RULE_primaryExpression = 24
 
-    ruleNames =  [ "program", "statement", "printFunction", "varDeclaration", 
-                   "constDeclaration", "tempDeclaration", "type", "forLoop", 
-                   "ifStatement", "functionDeclaration", "parameterList", 
-                   "functionCall", "argumentList", "expressionList", "expression" ]
+    ruleNames =  [ "program", "statement", "statement_list", "printFunction", 
+                   "type", "varDeclaration", "constDeclaration", "tempDeclaration", 
+                   "forLoop", "ifStatement", "functionDeclaration", "parameterList", 
+                   "functionCall", "argumentList", "expressionList", "expressionStatement", 
+                   "expression", "logicalOrExpression", "logicalAndExpression", 
+                   "equalityExpression", "relationalExpression", "additiveExpression", 
+                   "multiplicativeExpression", "unaryExpression", "primaryExpression" ]
 
     EOF = Token.EOF
     T__0=1
@@ -214,11 +225,14 @@ class MithonParser ( Parser ):
     T__41=42
     T__42=43
     T__43=44
-    IDENTIFIER=45
-    NUMBER=46
-    STRING=47
-    COMMENT=48
-    WS=49
+    T__44=45
+    T__45=46
+    IDENTIFIER=47
+    INTEGER=48
+    DOUBLE=49
+    STRING=50
+    COMMENT=51
+    WS=52
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -273,17 +287,17 @@ class MithonParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 33
+            self.state = 53
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 558551916412710) != 0):
-                self.state = 30
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 4486144918525878) != 0):
+                self.state = 50
                 self.statement()
-                self.state = 35
+                self.state = 55
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 36
+            self.state = 56
             self.match(MithonParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -300,6 +314,10 @@ class MithonParser ( Parser ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
+
+        def statement_list(self):
+            return self.getTypedRuleContext(MithonParser.Statement_listContext,0)
+
 
         def varDeclaration(self):
             return self.getTypedRuleContext(MithonParser.VarDeclarationContext,0)
@@ -329,8 +347,8 @@ class MithonParser ( Parser ):
             return self.getTypedRuleContext(MithonParser.PrintFunctionContext,0)
 
 
-        def expression(self):
-            return self.getTypedRuleContext(MithonParser.ExpressionContext,0)
+        def expressionStatement(self):
+            return self.getTypedRuleContext(MithonParser.ExpressionStatementContext,0)
 
 
         def COMMENT(self):
@@ -361,64 +379,142 @@ class MithonParser ( Parser ):
         localctx = MithonParser.StatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_statement)
         try:
-            self.state = 47
+            self.state = 69
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 38
-                self.varDeclaration()
+                self.state = 58
+                self.statement_list()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 39
-                self.constDeclaration()
+                self.state = 59
+                self.varDeclaration()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 40
-                self.tempDeclaration()
+                self.state = 60
+                self.constDeclaration()
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 41
-                self.forLoop()
+                self.state = 61
+                self.tempDeclaration()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 42
-                self.ifStatement()
+                self.state = 62
+                self.forLoop()
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 43
-                self.functionDeclaration()
+                self.state = 63
+                self.ifStatement()
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 44
-                self.printFunction()
+                self.state = 64
+                self.functionDeclaration()
                 pass
 
             elif la_ == 8:
                 self.enterOuterAlt(localctx, 8)
-                self.state = 45
-                self.expression(0)
+                self.state = 65
+                self.printFunction()
                 pass
 
             elif la_ == 9:
                 self.enterOuterAlt(localctx, 9)
-                self.state = 46
+                self.state = 66
+                self.expressionStatement()
+                pass
+
+            elif la_ == 10:
+                self.enterOuterAlt(localctx, 10)
+                self.state = 67
                 self.match(MithonParser.COMMENT)
                 pass
 
+            elif la_ == 11:
+                self.enterOuterAlt(localctx, 11)
+                self.state = 68
+                self.match(MithonParser.T__0)
+                pass
 
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Statement_listContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def statement(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.StatementContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.StatementContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_statement_list
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterStatement_list" ):
+                listener.enterStatement_list(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitStatement_list" ):
+                listener.exitStatement_list(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitStatement_list" ):
+                return visitor.visitStatement_list(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def statement_list(self):
+
+        localctx = MithonParser.Statement_listContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 4, self.RULE_statement_list)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 71
+            self.match(MithonParser.T__1)
+            self.state = 73 
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while True:
+                self.state = 72
+                self.statement()
+                self.state = 75 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 4486144918525878) != 0)):
+                    break
+
+            self.state = 77
+            self.match(MithonParser.T__2)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -435,8 +531,8 @@ class MithonParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def expression(self):
-            return self.getTypedRuleContext(MithonParser.ExpressionContext,0)
+        def expressionList(self):
+            return self.getTypedRuleContext(MithonParser.ExpressionListContext,0)
 
 
         def getRuleIndex(self):
@@ -462,17 +558,68 @@ class MithonParser ( Parser ):
     def printFunction(self):
 
         localctx = MithonParser.PrintFunctionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 4, self.RULE_printFunction)
+        self.enterRule(localctx, 6, self.RULE_printFunction)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 49
-            self.match(MithonParser.T__0)
-            self.state = 50
-            self.match(MithonParser.T__1)
-            self.state = 51
-            self.expression(0)
-            self.state = 52
-            self.match(MithonParser.T__2)
+            self.state = 79
+            self.match(MithonParser.T__3)
+            self.state = 80
+            self.match(MithonParser.T__4)
+            self.state = 81
+            self.expressionList()
+            self.state = 82
+            self.match(MithonParser.T__5)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class TypeContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_type
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterType" ):
+                listener.enterType(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitType" ):
+                listener.exitType(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitType" ):
+                return visitor.visitType(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def type_(self):
+
+        localctx = MithonParser.TypeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 8, self.RULE_type)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 84
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 1920) != 0)):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -527,82 +674,82 @@ class MithonParser ( Parser ):
     def varDeclaration(self):
 
         localctx = MithonParser.VarDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_varDeclaration)
+        self.enterRule(localctx, 10, self.RULE_varDeclaration)
         try:
-            self.state = 85
+            self.state = 117
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 54
+                self.state = 86
                 self.type_()
-                self.state = 55
+                self.state = 87
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 56
-                self.match(MithonParser.T__3)
-                self.state = 57
-                self.expression(0)
+                self.state = 88
+                self.match(MithonParser.T__10)
+                self.state = 89
+                self.expression()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 59
-                self.match(MithonParser.T__4)
-                self.state = 60
-                self.match(MithonParser.T__5)
-                self.state = 61
+                self.state = 91
+                self.match(MithonParser.T__11)
+                self.state = 92
+                self.match(MithonParser.T__12)
+                self.state = 93
                 self.type_()
-                self.state = 62
-                self.match(MithonParser.T__6)
-                self.state = 63
+                self.state = 94
+                self.match(MithonParser.T__13)
+                self.state = 95
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 64
-                self.match(MithonParser.T__3)
-                self.state = 65
-                self.match(MithonParser.T__5)
-                self.state = 66
+                self.state = 96
+                self.match(MithonParser.T__10)
+                self.state = 97
+                self.match(MithonParser.T__12)
+                self.state = 98
                 self.expressionList()
-                self.state = 67
-                self.match(MithonParser.T__6)
+                self.state = 99
+                self.match(MithonParser.T__13)
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 69
-                self.match(MithonParser.T__7)
-                self.state = 70
-                self.match(MithonParser.T__5)
-                self.state = 71
+                self.state = 101
+                self.match(MithonParser.T__14)
+                self.state = 102
+                self.match(MithonParser.T__12)
+                self.state = 103
                 self.type_()
-                self.state = 72
-                self.match(MithonParser.T__6)
-                self.state = 73
+                self.state = 104
+                self.match(MithonParser.T__13)
+                self.state = 105
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 74
-                self.match(MithonParser.T__3)
-                self.state = 75
-                self.match(MithonParser.T__5)
-                self.state = 76
+                self.state = 106
+                self.match(MithonParser.T__10)
+                self.state = 107
+                self.match(MithonParser.T__12)
+                self.state = 108
                 self.expressionList()
-                self.state = 77
-                self.match(MithonParser.T__6)
+                self.state = 109
+                self.match(MithonParser.T__13)
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 79
+                self.state = 111
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 80
-                self.match(MithonParser.T__3)
-                self.state = 81
-                self.expression(0)
+                self.state = 112
+                self.match(MithonParser.T__10)
+                self.state = 113
+                self.expression()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 82
+                self.state = 114
                 self.type_()
-                self.state = 83
+                self.state = 115
                 self.match(MithonParser.IDENTIFIER)
                 pass
 
@@ -657,19 +804,19 @@ class MithonParser ( Parser ):
     def constDeclaration(self):
 
         localctx = MithonParser.ConstDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_constDeclaration)
+        self.enterRule(localctx, 12, self.RULE_constDeclaration)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 87
-            self.match(MithonParser.T__8)
-            self.state = 88
+            self.state = 119
+            self.match(MithonParser.T__15)
+            self.state = 120
             self.type_()
-            self.state = 89
+            self.state = 121
             self.match(MithonParser.IDENTIFIER)
-            self.state = 90
-            self.match(MithonParser.T__3)
-            self.state = 91
-            self.expression(0)
+            self.state = 122
+            self.match(MithonParser.T__10)
+            self.state = 123
+            self.expression()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -720,70 +867,19 @@ class MithonParser ( Parser ):
     def tempDeclaration(self):
 
         localctx = MithonParser.TempDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_tempDeclaration)
+        self.enterRule(localctx, 14, self.RULE_tempDeclaration)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 93
-            self.match(MithonParser.T__9)
-            self.state = 94
+            self.state = 125
+            self.match(MithonParser.T__16)
+            self.state = 126
             self.type_()
-            self.state = 95
+            self.state = 127
             self.match(MithonParser.IDENTIFIER)
-            self.state = 96
-            self.match(MithonParser.T__3)
-            self.state = 97
-            self.expression(0)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class TypeContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-
-        def getRuleIndex(self):
-            return MithonParser.RULE_type
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterType" ):
-                listener.enterType(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitType" ):
-                listener.exitType(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitType" ):
-                return visitor.visitType(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def type_(self):
-
-        localctx = MithonParser.TypeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_type)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 99
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 30720) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
+            self.state = 128
+            self.match(MithonParser.T__10)
+            self.state = 129
+            self.expression()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -817,11 +913,8 @@ class MithonParser ( Parser ):
                 return self.getTypedRuleContext(MithonParser.ExpressionContext,i)
 
 
-        def statement(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(MithonParser.StatementContext)
-            else:
-                return self.getTypedRuleContext(MithonParser.StatementContext,i)
+        def statement_list(self):
+            return self.getTypedRuleContext(MithonParser.Statement_listContext,0)
 
 
         def getRuleIndex(self):
@@ -847,79 +940,57 @@ class MithonParser ( Parser ):
     def forLoop(self):
 
         localctx = MithonParser.ForLoopContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_forLoop)
+        self.enterRule(localctx, 16, self.RULE_forLoop)
         try:
-            self.state = 133
+            self.state = 152
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 101
-                self.match(MithonParser.T__14)
-                self.state = 102
-                self.match(MithonParser.T__1)
-                self.state = 103
+                self.state = 131
+                self.match(MithonParser.T__17)
+                self.state = 132
+                self.match(MithonParser.T__4)
+                self.state = 133
                 self.type_()
-                self.state = 104
+                self.state = 134
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 105
-                self.match(MithonParser.T__3)
-                self.state = 106
-                self.expression(0)
-                self.state = 107
-                self.match(MithonParser.T__15)
-                self.state = 108
-                self.expression(0)
-                self.state = 109
-                self.match(MithonParser.T__15)
-                self.state = 110
-                self.expression(0)
-                self.state = 111
-                self.match(MithonParser.T__2)
-                self.state = 112
-                self.match(MithonParser.T__16)
-                self.state = 116
-                self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
-                while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                    if _alt==1:
-                        self.state = 113
-                        self.statement() 
-                    self.state = 118
-                    self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
-
+                self.state = 135
+                self.match(MithonParser.T__10)
+                self.state = 136
+                self.expression()
+                self.state = 137
+                self.match(MithonParser.T__18)
+                self.state = 138
+                self.expression()
+                self.state = 139
+                self.match(MithonParser.T__18)
+                self.state = 140
+                self.expression()
+                self.state = 141
+                self.match(MithonParser.T__5)
+                self.state = 142
+                self.statement_list()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 119
-                self.match(MithonParser.T__14)
-                self.state = 120
-                self.match(MithonParser.T__1)
-                self.state = 121
+                self.state = 144
                 self.match(MithonParser.T__17)
-                self.state = 122
+                self.state = 145
+                self.match(MithonParser.T__4)
+                self.state = 146
+                self.match(MithonParser.T__19)
+                self.state = 147
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 123
-                self.match(MithonParser.T__18)
-                self.state = 124
+                self.state = 148
+                self.match(MithonParser.T__20)
+                self.state = 149
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 125
-                self.match(MithonParser.T__2)
-                self.state = 126
-                self.match(MithonParser.T__16)
-                self.state = 130
-                self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
-                while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                    if _alt==1:
-                        self.state = 127
-                        self.statement() 
-                    self.state = 132
-                    self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
-
+                self.state = 150
+                self.match(MithonParser.T__5)
+                self.state = 151
+                self.statement_list()
                 pass
 
 
@@ -946,11 +1017,11 @@ class MithonParser ( Parser ):
                 return self.getTypedRuleContext(MithonParser.ExpressionContext,i)
 
 
-        def statement(self, i:int=None):
+        def statement_list(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(MithonParser.StatementContext)
+                return self.getTypedRuleContexts(MithonParser.Statement_listContext)
             else:
-                return self.getTypedRuleContext(MithonParser.StatementContext,i)
+                return self.getTypedRuleContext(MithonParser.Statement_listContext,i)
 
 
         def getRuleIndex(self):
@@ -976,79 +1047,46 @@ class MithonParser ( Parser ):
     def ifStatement(self):
 
         localctx = MithonParser.IfStatementContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_ifStatement)
+        self.enterRule(localctx, 18, self.RULE_ifStatement)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 135
-            self.match(MithonParser.T__19)
-            self.state = 136
-            self.match(MithonParser.T__1)
-            self.state = 137
-            self.expression(0)
-            self.state = 138
-            self.match(MithonParser.T__2)
-            self.state = 139
-            self.match(MithonParser.T__16)
-            self.state = 143
+            self.state = 154
+            self.match(MithonParser.T__21)
+            self.state = 155
+            self.match(MithonParser.T__4)
+            self.state = 156
+            self.expression()
+            self.state = 157
+            self.match(MithonParser.T__5)
+            self.state = 158
+            self.statement_list()
+            self.state = 167
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
-                    self.state = 140
-                    self.statement() 
-                self.state = 145
-                self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
-
-            self.state = 159
-            self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
-                    self.state = 146
-                    self.match(MithonParser.T__20)
-                    self.state = 147
-                    self.match(MithonParser.T__1)
-                    self.state = 148
-                    self.expression(0)
-                    self.state = 149
-                    self.match(MithonParser.T__2)
-                    self.state = 150
-                    self.match(MithonParser.T__16)
-                    self.state = 154
-                    self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,7,self._ctx)
-                    while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                        if _alt==1:
-                            self.state = 151
-                            self.statement() 
-                        self.state = 156
-                        self._errHandler.sync(self)
-                        _alt = self._interp.adaptivePredict(self._input,7,self._ctx)
-             
+            _la = self._input.LA(1)
+            while _la==23:
+                self.state = 159
+                self.match(MithonParser.T__22)
+                self.state = 160
+                self.match(MithonParser.T__4)
                 self.state = 161
-                self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
-
-            self.state = 170
-            self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,10,self._ctx)
-            if la_ == 1:
+                self.expression()
                 self.state = 162
-                self.match(MithonParser.T__21)
+                self.match(MithonParser.T__5)
                 self.state = 163
-                self.match(MithonParser.T__16)
-                self.state = 167
+                self.statement_list()
+                self.state = 169
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,9,self._ctx)
-                while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                    if _alt==1:
-                        self.state = 164
-                        self.statement() 
-                    self.state = 169
-                    self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,9,self._ctx)
+                _la = self._input.LA(1)
 
+            self.state = 172
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==24:
+                self.state = 170
+                self.match(MithonParser.T__23)
+                self.state = 171
+                self.statement_list()
 
 
         except RecognitionException as re:
@@ -1078,11 +1116,8 @@ class MithonParser ( Parser ):
             return self.getTypedRuleContext(MithonParser.TypeContext,0)
 
 
-        def statement(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(MithonParser.StatementContext)
-            else:
-                return self.getTypedRuleContext(MithonParser.StatementContext,i)
+        def statement_list(self):
+            return self.getTypedRuleContext(MithonParser.Statement_listContext,0)
 
 
         def getRuleIndex(self):
@@ -1108,36 +1143,25 @@ class MithonParser ( Parser ):
     def functionDeclaration(self):
 
         localctx = MithonParser.FunctionDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_functionDeclaration)
+        self.enterRule(localctx, 20, self.RULE_functionDeclaration)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 172
-            self.match(MithonParser.T__22)
-            self.state = 173
-            self.match(MithonParser.IDENTIFIER)
             self.state = 174
-            self.match(MithonParser.T__1)
+            self.match(MithonParser.T__24)
             self.state = 175
-            self.parameterList()
+            self.match(MithonParser.IDENTIFIER)
             self.state = 176
-            self.match(MithonParser.T__2)
+            self.match(MithonParser.T__4)
             self.state = 177
-            self.match(MithonParser.T__23)
+            self.parameterList()
             self.state = 178
-            self.type_()
+            self.match(MithonParser.T__5)
             self.state = 179
-            self.match(MithonParser.T__16)
-            self.state = 183
-            self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
-                    self.state = 180
-                    self.statement() 
-                self.state = 185
-                self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
-
+            self.match(MithonParser.T__25)
+            self.state = 180
+            self.type_()
+            self.state = 181
+            self.statement_list()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1190,25 +1214,25 @@ class MithonParser ( Parser ):
     def parameterList(self):
 
         localctx = MithonParser.ParameterListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_parameterList)
+        self.enterRule(localctx, 22, self.RULE_parameterList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 186
+            self.state = 183
             self.type_()
-            self.state = 187
+            self.state = 184
             self.match(MithonParser.IDENTIFIER)
-            self.state = 194
+            self.state = 191
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==25:
-                self.state = 188
-                self.match(MithonParser.T__24)
-                self.state = 189
+            while _la==27:
+                self.state = 185
+                self.match(MithonParser.T__26)
+                self.state = 186
                 self.type_()
-                self.state = 190
+                self.state = 187
                 self.match(MithonParser.IDENTIFIER)
-                self.state = 196
+                self.state = 193
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1258,17 +1282,17 @@ class MithonParser ( Parser ):
     def functionCall(self):
 
         localctx = MithonParser.FunctionCallContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_functionCall)
+        self.enterRule(localctx, 24, self.RULE_functionCall)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 197
+            self.state = 194
             self.match(MithonParser.IDENTIFIER)
-            self.state = 198
-            self.match(MithonParser.T__1)
-            self.state = 199
+            self.state = 195
+            self.match(MithonParser.T__4)
+            self.state = 196
             self.argumentList()
-            self.state = 200
-            self.match(MithonParser.T__2)
+            self.state = 197
+            self.match(MithonParser.T__5)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1315,21 +1339,21 @@ class MithonParser ( Parser ):
     def argumentList(self):
 
         localctx = MithonParser.ArgumentListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_argumentList)
+        self.enterRule(localctx, 26, self.RULE_argumentList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 202
-            self.expression(0)
-            self.state = 207
+            self.state = 199
+            self.expression()
+            self.state = 204
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==25:
-                self.state = 203
-                self.match(MithonParser.T__24)
-                self.state = 204
-                self.expression(0)
-                self.state = 209
+            while _la==27:
+                self.state = 200
+                self.match(MithonParser.T__26)
+                self.state = 201
+                self.expression()
+                self.state = 206
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1379,24 +1403,72 @@ class MithonParser ( Parser ):
     def expressionList(self):
 
         localctx = MithonParser.ExpressionListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_expressionList)
+        self.enterRule(localctx, 28, self.RULE_expressionList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 210
-            self.expression(0)
-            self.state = 215
+            self.state = 207
+            self.expression()
+            self.state = 212
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==25:
-                self.state = 211
-                self.match(MithonParser.T__24)
-                self.state = 212
-                self.expression(0)
-                self.state = 217
+            while _la==27:
+                self.state = 208
+                self.match(MithonParser.T__26)
+                self.state = 209
+                self.expression()
+                self.state = 214
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class ExpressionStatementContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def expression(self):
+            return self.getTypedRuleContext(MithonParser.ExpressionContext,0)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_expressionStatement
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterExpressionStatement" ):
+                listener.enterExpressionStatement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitExpressionStatement" ):
+                listener.exitExpressionStatement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressionStatement" ):
+                return visitor.visitExpressionStatement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def expressionStatement(self):
+
+        localctx = MithonParser.ExpressionStatementContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 30, self.RULE_expressionStatement)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 215
+            self.expression()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1413,25 +1485,9 @@ class MithonParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def IDENTIFIER(self):
-            return self.getToken(MithonParser.IDENTIFIER, 0)
+        def logicalOrExpression(self):
+            return self.getTypedRuleContext(MithonParser.LogicalOrExpressionContext,0)
 
-        def expression(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(MithonParser.ExpressionContext)
-            else:
-                return self.getTypedRuleContext(MithonParser.ExpressionContext,i)
-
-
-        def functionCall(self):
-            return self.getTypedRuleContext(MithonParser.FunctionCallContext,0)
-
-
-        def NUMBER(self):
-            return self.getToken(MithonParser.NUMBER, 0)
-
-        def STRING(self):
-            return self.getToken(MithonParser.STRING, 0)
 
         def getRuleIndex(self):
             return MithonParser.RULE_expression
@@ -1452,276 +1508,472 @@ class MithonParser ( Parser ):
 
 
 
-    def expression(self, _p:int=0):
-        _parentctx = self._ctx
-        _parentState = self.state
-        localctx = MithonParser.ExpressionContext(self, self._ctx, _parentState)
-        _prevctx = localctx
-        _startState = 28
-        self.enterRecursionRule(localctx, 28, self.RULE_expression, _p)
+
+    def expression(self):
+
+        localctx = MithonParser.ExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 32, self.RULE_expression)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 249
+            self.state = 217
+            self.logicalOrExpression()
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class LogicalOrExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def logicalAndExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.LogicalAndExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.LogicalAndExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_logicalOrExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterLogicalOrExpression" ):
+                listener.enterLogicalOrExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitLogicalOrExpression" ):
+                listener.exitLogicalOrExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLogicalOrExpression" ):
+                return visitor.visitLogicalOrExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def logicalOrExpression(self):
+
+        localctx = MithonParser.LogicalOrExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 34, self.RULE_logicalOrExpression)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 219
+            self.logicalAndExpression()
+            self.state = 224
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,15,self._ctx)
-            if la_ == 1:
-                self.state = 219
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 220
-                self.match(MithonParser.T__29)
-                self.state = 221
-                self.expression(20)
-                pass
-
-            elif la_ == 2:
-                self.state = 222
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 223
-                self.match(MithonParser.T__30)
-                self.state = 224
-                self.expression(19)
-                pass
-
-            elif la_ == 3:
-                self.state = 225
-                self.match(MithonParser.IDENTIFIER)
+            _alt = self._interp.adaptivePredict(self._input,10,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 220
+                    self.match(MithonParser.T__27)
+                    self.state = 221
+                    self.logicalAndExpression() 
                 self.state = 226
-                self.match(MithonParser.T__31)
-                self.state = 227
-                self.expression(18)
-                pass
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,10,self._ctx)
 
-            elif la_ == 4:
-                self.state = 228
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 229
-                self.match(MithonParser.T__32)
-                self.state = 230
-                self.expression(17)
-                pass
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
 
-            elif la_ == 5:
-                self.state = 231
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 232
-                self.match(MithonParser.T__33)
-                self.state = 233
-                self.expression(16)
-                pass
 
-            elif la_ == 6:
+    class LogicalAndExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def equalityExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.EqualityExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.EqualityExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_logicalAndExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterLogicalAndExpression" ):
+                listener.enterLogicalAndExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitLogicalAndExpression" ):
+                listener.exitLogicalAndExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLogicalAndExpression" ):
+                return visitor.visitLogicalAndExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def logicalAndExpression(self):
+
+        localctx = MithonParser.LogicalAndExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 36, self.RULE_logicalAndExpression)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 227
+            self.equalityExpression()
+            self.state = 232
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 228
+                    self.match(MithonParser.T__28)
+                    self.state = 229
+                    self.equalityExpression() 
                 self.state = 234
-                self.match(MithonParser.IDENTIFIER)
-                self.state = 235
-                self.match(MithonParser.T__34)
-                self.state = 236
-                self.expression(15)
-                pass
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,11,self._ctx)
 
-            elif la_ == 7:
-                self.state = 237
-                self.match(MithonParser.T__41)
-                self.state = 238
-                self.expression(8)
-                pass
-
-            elif la_ == 8:
-                self.state = 239
-                self.match(MithonParser.T__1)
-                self.state = 240
-                self.expression(0)
-                self.state = 241
-                self.match(MithonParser.T__2)
-                pass
-
-            elif la_ == 9:
-                self.state = 243
-                self.functionCall()
-                pass
-
-            elif la_ == 10:
-                self.state = 244
-                self.match(MithonParser.IDENTIFIER)
-                pass
-
-            elif la_ == 11:
-                self.state = 245
-                self.match(MithonParser.NUMBER)
-                pass
-
-            elif la_ == 12:
-                self.state = 246
-                self.match(MithonParser.STRING)
-                pass
-
-            elif la_ == 13:
-                self.state = 247
-                self.match(MithonParser.T__42)
-                pass
-
-            elif la_ == 14:
-                self.state = 248
-                self.match(MithonParser.T__43)
-                pass
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
 
 
-            self._ctx.stop = self._input.LT(-1)
-            self.state = 286
+    class EqualityExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def relationalExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.RelationalExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.RelationalExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_equalityExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterEqualityExpression" ):
+                listener.enterEqualityExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitEqualityExpression" ):
+                listener.exitEqualityExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitEqualityExpression" ):
+                return visitor.visitEqualityExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def equalityExpression(self):
+
+        localctx = MithonParser.EqualityExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 38, self.RULE_equalityExpression)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 235
+            self.relationalExpression()
+            self.state = 240
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 236
+                    _la = self._input.LA(1)
+                    if not(_la==30 or _la==31):
+                        self._errHandler.recoverInline(self)
+                    else:
+                        self._errHandler.reportMatch(self)
+                        self.consume()
+                    self.state = 237
+                    self.relationalExpression() 
+                self.state = 242
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class RelationalExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def additiveExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.AdditiveExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.AdditiveExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_relationalExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterRelationalExpression" ):
+                listener.enterRelationalExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitRelationalExpression" ):
+                listener.exitRelationalExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitRelationalExpression" ):
+                return visitor.visitRelationalExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def relationalExpression(self):
+
+        localctx = MithonParser.RelationalExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 40, self.RULE_relationalExpression)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 243
+            self.additiveExpression()
+            self.state = 248
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 244
+                    _la = self._input.LA(1)
+                    if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 64424509440) != 0)):
+                        self._errHandler.recoverInline(self)
+                    else:
+                        self._errHandler.reportMatch(self)
+                        self.consume()
+                    self.state = 245
+                    self.additiveExpression() 
+                self.state = 250
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,13,self._ctx)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class AdditiveExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def multiplicativeExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.MultiplicativeExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.MultiplicativeExpressionContext,i)
+
+
+        def expression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.ExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.ExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_additiveExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterAdditiveExpression" ):
+                listener.enterAdditiveExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitAdditiveExpression" ):
+                listener.exitAdditiveExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAdditiveExpression" ):
+                return visitor.visitAdditiveExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def additiveExpression(self):
+
+        localctx = MithonParser.AdditiveExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 42, self.RULE_additiveExpression)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 251
+            self.multiplicativeExpression()
+            self.state = 258
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 256
+                    self._errHandler.sync(self)
+                    token = self._input.LA(1)
+                    if token in [36, 37]:
+                        self.state = 252
+                        _la = self._input.LA(1)
+                        if not(_la==36 or _la==37):
+                            self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
+                        self.state = 253
+                        self.multiplicativeExpression()
+                        pass
+                    elif token in [38, 39]:
+                        self.state = 254
+                        _la = self._input.LA(1)
+                        if not(_la==38 or _la==39):
+                            self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
+                        self.state = 255
+                        self.expression()
+                        pass
+                    else:
+                        raise NoViableAltException(self)
+             
+                self.state = 260
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class MultiplicativeExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def unaryExpression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.UnaryExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.UnaryExpressionContext,i)
+
+
+        def expression(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(MithonParser.ExpressionContext)
+            else:
+                return self.getTypedRuleContext(MithonParser.ExpressionContext,i)
+
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_multiplicativeExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterMultiplicativeExpression" ):
+                listener.enterMultiplicativeExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitMultiplicativeExpression" ):
+                listener.exitMultiplicativeExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMultiplicativeExpression" ):
+                return visitor.visitMultiplicativeExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def multiplicativeExpression(self):
+
+        localctx = MithonParser.MultiplicativeExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 44, self.RULE_multiplicativeExpression)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 261
+            self.unaryExpression()
+            self.state = 268
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    if self._parseListeners is not None:
-                        self.triggerExitRuleEvent()
-                    _prevctx = localctx
-                    self.state = 284
+                    self.state = 266
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
-                    if la_ == 1:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 251
-                        if not self.precpred(self._ctx, 25):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 25)")
-                        self.state = 252
-                        self.match(MithonParser.T__25)
-                        self.state = 253
-                        self.expression(26)
-                        pass
-
-                    elif la_ == 2:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 254
-                        if not self.precpred(self._ctx, 24):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 24)")
-                        self.state = 255
-                        self.match(MithonParser.T__26)
-                        self.state = 256
-                        self.expression(25)
-                        pass
-
-                    elif la_ == 3:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 257
-                        if not self.precpred(self._ctx, 23):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 23)")
-                        self.state = 258
-                        self.match(MithonParser.T__27)
-                        self.state = 259
-                        self.expression(24)
-                        pass
-
-                    elif la_ == 4:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 260
-                        if not self.precpred(self._ctx, 22):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 22)")
-                        self.state = 261
-                        self.match(MithonParser.T__28)
+                    token = self._input.LA(1)
+                    if token in [40, 41]:
                         self.state = 262
-                        self.expression(23)
-                        pass
-
-                    elif la_ == 5:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        _la = self._input.LA(1)
+                        if not(_la==40 or _la==41):
+                            self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
                         self.state = 263
-                        if not self.precpred(self._ctx, 21):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 21)")
+                        self.unaryExpression()
+                        pass
+                    elif token in [42, 43]:
                         self.state = 264
-                        self.match(MithonParser.T__29)
+                        _la = self._input.LA(1)
+                        if not(_la==42 or _la==43):
+                            self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
                         self.state = 265
-                        self.expression(22)
+                        self.expression()
                         pass
-
-                    elif la_ == 6:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 266
-                        if not self.precpred(self._ctx, 14):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
-                        self.state = 267
-                        self.match(MithonParser.T__35)
-                        self.state = 268
-                        self.expression(15)
-                        pass
-
-                    elif la_ == 7:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 269
-                        if not self.precpred(self._ctx, 13):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
-                        self.state = 270
-                        self.match(MithonParser.T__36)
-                        self.state = 271
-                        self.expression(14)
-                        pass
-
-                    elif la_ == 8:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 272
-                        if not self.precpred(self._ctx, 12):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
-                        self.state = 273
-                        self.match(MithonParser.T__37)
-                        self.state = 274
-                        self.expression(13)
-                        pass
-
-                    elif la_ == 9:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 275
-                        if not self.precpred(self._ctx, 11):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 11)")
-                        self.state = 276
-                        self.match(MithonParser.T__38)
-                        self.state = 277
-                        self.expression(12)
-                        pass
-
-                    elif la_ == 10:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 278
-                        if not self.precpred(self._ctx, 10):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
-                        self.state = 279
-                        self.match(MithonParser.T__39)
-                        self.state = 280
-                        self.expression(11)
-                        pass
-
-                    elif la_ == 11:
-                        localctx = MithonParser.ExpressionContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 281
-                        if not self.precpred(self._ctx, 9):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
-                        self.state = 282
-                        self.match(MithonParser.T__40)
-                        self.state = 283
-                        self.expression(10)
-                        pass
-
+                    else:
+                        raise NoViableAltException(self)
              
-                self.state = 288
+                self.state = 270
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
 
@@ -1730,65 +1982,196 @@ class MithonParser ( Parser ):
             self._errHandler.reportError(self, re)
             self._errHandler.recover(self, re)
         finally:
-            self.unrollRecursionContexts(_parentctx)
+            self.exitRule()
         return localctx
 
 
+    class UnaryExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
 
-    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
-        if self._predicates == None:
-            self._predicates = dict()
-        self._predicates[14] = self.expression_sempred
-        pred = self._predicates.get(ruleIndex, None)
-        if pred is None:
-            raise Exception("No predicate with index:" + str(ruleIndex))
-        else:
-            return pred(localctx, predIndex)
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
 
-    def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
-            if predIndex == 0:
-                return self.precpred(self._ctx, 25)
-         
+        def primaryExpression(self):
+            return self.getTypedRuleContext(MithonParser.PrimaryExpressionContext,0)
 
-            if predIndex == 1:
-                return self.precpred(self._ctx, 24)
-         
 
-            if predIndex == 2:
-                return self.precpred(self._ctx, 23)
-         
+        def getRuleIndex(self):
+            return MithonParser.RULE_unaryExpression
 
-            if predIndex == 3:
-                return self.precpred(self._ctx, 22)
-         
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterUnaryExpression" ):
+                listener.enterUnaryExpression(self)
 
-            if predIndex == 4:
-                return self.precpred(self._ctx, 21)
-         
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitUnaryExpression" ):
+                listener.exitUnaryExpression(self)
 
-            if predIndex == 5:
-                return self.precpred(self._ctx, 14)
-         
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitUnaryExpression" ):
+                return visitor.visitUnaryExpression(self)
+            else:
+                return visitor.visitChildren(self)
 
-            if predIndex == 6:
-                return self.precpred(self._ctx, 13)
-         
 
-            if predIndex == 7:
-                return self.precpred(self._ctx, 12)
-         
 
-            if predIndex == 8:
-                return self.precpred(self._ctx, 11)
-         
 
-            if predIndex == 9:
-                return self.precpred(self._ctx, 10)
-         
+    def unaryExpression(self):
 
-            if predIndex == 10:
-                return self.precpred(self._ctx, 9)
-         
+        localctx = MithonParser.UnaryExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 46, self.RULE_unaryExpression)
+        try:
+            self.state = 276
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [44]:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 271
+                self.match(MithonParser.T__43)
+                self.state = 272
+                self.primaryExpression()
+                pass
+            elif token in [37]:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 273
+                self.match(MithonParser.T__36)
+                self.state = 274
+                self.primaryExpression()
+                pass
+            elif token in [5, 45, 46, 47, 48, 49, 50]:
+                self.enterOuterAlt(localctx, 3)
+                self.state = 275
+                self.primaryExpression()
+                pass
+            else:
+                raise NoViableAltException(self)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class PrimaryExpressionContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def expression(self):
+            return self.getTypedRuleContext(MithonParser.ExpressionContext,0)
+
+
+        def functionCall(self):
+            return self.getTypedRuleContext(MithonParser.FunctionCallContext,0)
+
+
+        def IDENTIFIER(self):
+            return self.getToken(MithonParser.IDENTIFIER, 0)
+
+        def INTEGER(self):
+            return self.getToken(MithonParser.INTEGER, 0)
+
+        def DOUBLE(self):
+            return self.getToken(MithonParser.DOUBLE, 0)
+
+        def STRING(self):
+            return self.getToken(MithonParser.STRING, 0)
+
+        def getRuleIndex(self):
+            return MithonParser.RULE_primaryExpression
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterPrimaryExpression" ):
+                listener.enterPrimaryExpression(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitPrimaryExpression" ):
+                listener.exitPrimaryExpression(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPrimaryExpression" ):
+                return visitor.visitPrimaryExpression(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def primaryExpression(self):
+
+        localctx = MithonParser.PrimaryExpressionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 48, self.RULE_primaryExpression)
+        try:
+            self.state = 289
+            self._errHandler.sync(self)
+            la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
+            if la_ == 1:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 278
+                self.match(MithonParser.T__4)
+                self.state = 279
+                self.expression()
+                self.state = 280
+                self.match(MithonParser.T__5)
+                pass
+
+            elif la_ == 2:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 282
+                self.functionCall()
+                pass
+
+            elif la_ == 3:
+                self.enterOuterAlt(localctx, 3)
+                self.state = 283
+                self.match(MithonParser.IDENTIFIER)
+                pass
+
+            elif la_ == 4:
+                self.enterOuterAlt(localctx, 4)
+                self.state = 284
+                self.match(MithonParser.INTEGER)
+                pass
+
+            elif la_ == 5:
+                self.enterOuterAlt(localctx, 5)
+                self.state = 285
+                self.match(MithonParser.DOUBLE)
+                pass
+
+            elif la_ == 6:
+                self.enterOuterAlt(localctx, 6)
+                self.state = 286
+                self.match(MithonParser.STRING)
+                pass
+
+            elif la_ == 7:
+                self.enterOuterAlt(localctx, 7)
+                self.state = 287
+                self.match(MithonParser.T__44)
+                pass
+
+            elif la_ == 8:
+                self.enterOuterAlt(localctx, 8)
+                self.state = 288
+                self.match(MithonParser.T__45)
+                pass
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
 
 
 
