@@ -16,7 +16,7 @@ statement:
          | 'pass'
          ;
 
-statement_list: INDENT statement+ DEDENT;
+statement_list: '{' statement+ '}';
 
 printFunction: 'print' '(' expressionList ')';
 
@@ -101,8 +101,6 @@ primaryExpression:
           | 'false'
           ;
 
-INDENT: '    ';
-DEDENT: '\n';
 IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
 INTEGER: [0-9]+;
 DOUBLE: [0-9]+'.'[0-9]+;
