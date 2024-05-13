@@ -103,25 +103,31 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#ifStatement.
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
+        print(3)
         if self.visit(ctx.expression(0)):  # Assuming the first expression corresponds to the 'if' condition
+            print(1)
             self.pushScope()  # Create a new scope for the if block
             self.visit(ctx.statement_list(0))  # Visit the statement list associated with the 'if'
             self.popScope()
         else:
+            print(2)
             handled = False
-            # Process all elif parts
-            for i, elifStatement in enumerate(ctx.elifStatement()):
-                if self.visit(elifStatement.expression()):
-                    self.pushScope()  # Create a new scope for this elif block
-                    self.visit(elifStatement.statement_list())
+            # Assuming 'elifStatement' parts are direct children, manage indexing manually:
+            elif_count = (len(ctx.children) - 2) // 3  # Adjust according to your grammar and generated code
+            for i in range(elif_count):
+                elif_expr = ctx.expression(i + 1)
+                elif_stmt_list = ctx.statement_list(i + 1)
+                if self.visit(elif_expr):
+                    self.pushScope()
+                    self.visit(elif_stmt_list)
                     self.popScope()
                     handled = True
-                    break  # Only the first true condition should be handled
-            
-            # Process the else part if no if or elif conditions were true
-            if not handled and ctx.elseStatement():
-                self.pushScope()  # Create a new scope for the else block
-                self.visit(ctx.elseStatement().statement_list())  # The last statement_list should be the else block
+                    break
+
+            # Handling the else part:
+            if not handled and (len(ctx.children) - 1) % 3 == 0:  # Check if there's an 'else' part
+                self.pushScope()
+                self.visit(ctx.statement_list(-1))  # Visit the last statement_list, which should be the 'else' block
                 self.popScope()
 
     # Visit a parse tree produced by MithonParser#functionDeclaration.
@@ -215,10 +221,9 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#additiveExpression.
     def visitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
-        left = self.visitMultiplicativeExpression(ctx.multiplicativeExpression(0))
+        left = self.visit(ctx.multiplicativeExpression(0))
         result = left
 
-        # drzewo rozkładu wstawia znak (+ / -) w co 2 wyraz stąd getChild(2*i - 1) 
         for i in range(1, len(ctx.multiplicativeExpression())):
             operator = ctx.getChild(2*i - 1).getText()
             right = self.visitMultiplicativeExpression(ctx.multiplicativeExpression(i))
@@ -226,6 +231,13 @@ class MithonVisitor(ParseTreeVisitor):
                 result += right
             elif operator == '-':
                 result -= right
+            elif operator == '+=':
+                # Assuming left is a variable, update it directly
+                left_value = self.lookupVariable(left)
+                self.updateVariable(left, left_value + right)
+            elif operator == '-=':
+                left_value = self.lookupVariable(left)
+                self.updateVariable(left, left_value - right)
 
         return result
 
