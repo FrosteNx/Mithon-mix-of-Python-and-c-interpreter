@@ -21,13 +21,14 @@ class MithonVisitor(ParseTreeVisitor):
             self.scopes.pop()
 
     def addVariable(self, name, type, value):
-        self.scopes[-1][name] = (type, value)
+        self.scopes[-1][name] = (type, value)  # Store as a tuple
 
     def lookupVariable(self, name):
+        # Check from the most recent scope to the outer scopes
         for scope in reversed(self.scopes):
             if name in scope:
                 return scope[name]
-        raise Exception(f"Undefined variable '{name}'")
+        raise Exception(f"Variable {name} not defined")
 
     # self.visit(obiekt) -> self.visit[typ obiektu](context)
 
@@ -100,61 +101,37 @@ class MithonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MithonParser#forLoop.
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         loop_var_name = ctx.IDENTIFIER(0).getText()
-        loop_type = ctx.type_().getText()
-        
-        # Initialize the loop variable
-        init_value = self.visit(ctx.expression(0))
-        self.addVariable(loop_var_name, loop_type, init_value)
 
-        # Enter loop scope
+        init_expr = ctx.expression(0)
+        init_value = self.visit(init_expr)
+        self.addVariable(loop_var_name, type(init_value).__name__, init_value)
+
+        condition_expr = ctx.expression(1)
+        condition = self.visit(condition_expr)
+        
         self.pushScope()
-        
-        while True:
-            condition = self.visit(ctx.expression(1))  # Evaluate the condition
-            if not condition:
-                break
-            self.visit(ctx.statement_list())  # Execute loop body
 
-            # Perform the increment operation and update the variable
-            increment_result = self.visit(ctx.expression(2))  # This should compute the new value for 'i'
-            self.updateVariable(loop_var_name, increment_result)  # Make sure to update 'i' in the current scope
+        while condition:
+            self.visit(ctx.statement_list())
 
-            # Debug: Print the value of 'i' after increment
-            current_value = self.lookupVariable(loop_var_name)
-            print(f"{loop_var_name} after increment: {current_value}")
+            increment_expr = ctx.expression(2)
+            increment_value = self.visit(increment_expr)
+            self.updateVariable(loop_var_name, increment_value)
 
-        # Exit loop scope
+            condition = self.visit(condition_expr)
+
         self.popScope()
+
         
     def updateVariable(self, name, value):
-        # Assuming variables are stored in a dictionary within each scope
         for scope in reversed(self.scopes):
             if name in scope:
-                scope[name] = value  # Update the value
+                var_type = scope[name][0]  
+                scope[name] = (var_type, value) 
                 return
-        raise Exception(f"Variable '{name}' not defined")
-            
-    def visitForEachLoop(self, ctx:MithonParser.ForLoopContext):
-        iterable_name = ctx.IDENTIFIER(1).getText()  # Assuming second IDENTIFIER is the iterable
-        item_name = ctx.IDENTIFIER(0).getText()  # First IDENTIFIER is the loop variable
-        
-        # Retrieve the iterable from variables
-        iterable = self.lookupVariable(iterable_name)
-        if not isinstance(iterable, list):
-            raise Exception(f"{iterable_name} is not iterable")
-        
-        # Enter loop scope
-        self.pushScope()
-        
-        for item in iterable:
-            self.addVariable(item_name, type(item).__name__, item)
-            self.visit(ctx.statement_list())
-        
-        # Exit loop scope
-        self.popScope()
+        raise Exception(f"Variable {name} not defined")
 
     # Visit a parse tree produced by MithonParser#ifStatement.
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
@@ -276,28 +253,39 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#additiveExpression.
     def visitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
-        left = self.visit(ctx.multiplicativeExpression(0))
-        result = left
+        if ctx.getChildCount() == 1:
+            return self.visit(ctx.getChild(0))
 
-        for i in range(1, len(ctx.multiplicativeExpression())):
-            operator = ctx.getChild(2*i - 1).getText()
-            right = self.visitMultiplicativeExpression(ctx.multiplicativeExpression(i))
+        left = ctx.getChild(0).getText()  
+        right = self.visit(ctx.getChild(2))  
+        operator = ctx.getChild(1).getText() 
+
+        if operator in ('+', '-'):
+            left_value = self.visit(ctx.getChild(0)) 
             if operator == '+':
-                result += right
+                return left_value + right
             elif operator == '-':
-                result -= right
-            elif operator == '+=':
-                # Assuming left is a variable, update it directly
-                left_value = self.lookupVariable(left)
-                self.updateVariable(left, left_value + right)
-            elif operator == '-=':
-                left_value = self.lookupVariable(left)
-                self.updateVariable(left, left_value - right)
+                return left_value - right
+        elif operator == '+=':
+            if not isinstance(left, str) or not self.is_variable(left):
+                raise Exception(f"Left-hand side of '+=' must be a variable, got {left}")
+            original_value = self.lookupVariable(left)
+            new_value = original_value[1] + right
+            self.updateVariable(left, new_value)
+            return new_value
+        elif operator == '-=':
+            if not isinstance(left, str) or not self.is_variable(left):
+                raise Exception(f"Left-hand side of '-=' must be a variable, got {left}")
+            original_value = self.lookupVariable(left)
+            new_value = original_value[1] - right
+            self.updateVariable(left, new_value)
+            return new_value
+        else:
+            raise Exception("Unsupported operator: " + operator)
+        
+    def is_variable(self, name):
+        return any(name in scope for scope in self.scopes)
 
-        return result
-
-
-    # Visit a parse tree produced by MithonParser#multiplicativeExpression.
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
         left = self.visitUnaryExpression(ctx.unaryExpression(0))
         result = left
@@ -313,8 +301,6 @@ class MithonVisitor(ParseTreeVisitor):
                     raise ZeroDivisionError
         return result
 
-
-    # Visit a parse tree produced by MithonParser#unaryExpression.
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visitPrimaryExpression(ctx.primaryExpression())
@@ -341,13 +327,16 @@ class MithonVisitor(ParseTreeVisitor):
             return False
         elif ctx.IDENTIFIER():
             var_name = ctx.IDENTIFIER().getText()
-            var_type, var_value = self.lookupVariable(var_name)
-            return var_value
+            var_info = self.lookupVariable(var_name)  
+            if var_info is not None:
+                var_type, var_value = var_info 
+                return var_value
+            else:
+                raise Exception(f"Variable '{var_name}' is not defined or has no value.")
         elif ctx.expression():
             return self.visit(ctx.expression()) 
         else:
             return self.visitChildren(ctx)
-
 
 
 del MithonParser
