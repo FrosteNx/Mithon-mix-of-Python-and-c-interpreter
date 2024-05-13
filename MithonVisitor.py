@@ -42,6 +42,8 @@ class MithonVisitor(ParseTreeVisitor):
             self.visitPrintFunction(ctx.printFunction())
         elif ctx.ifStatement():
             self.visitIfStatement(ctx.ifStatement())
+        elif ctx.forLoop():
+            self.visitForLoop(ctx.forLoop())
 
     # Visit a parse tree produced by MithonParser#statement_list.
     def visitStatement_list(self, ctx:MithonParser.Statement_listContext):
@@ -100,8 +102,59 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#forLoop.
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
-        return self.visitChildren(ctx)
+        loop_var_name = ctx.IDENTIFIER(0).getText()
+        loop_type = ctx.type_().getText()
+        
+        # Initialize the loop variable
+        init_value = self.visit(ctx.expression(0))
+        self.addVariable(loop_var_name, loop_type, init_value)
 
+        # Enter loop scope
+        self.pushScope()
+        
+        while True:
+            condition = self.visit(ctx.expression(1))  # Evaluate the condition
+            if not condition:
+                break
+            self.visit(ctx.statement_list())  # Execute loop body
+
+            # Perform the increment operation and update the variable
+            increment_result = self.visit(ctx.expression(2))  # This should compute the new value for 'i'
+            self.updateVariable(loop_var_name, increment_result)  # Make sure to update 'i' in the current scope
+
+            # Debug: Print the value of 'i' after increment
+            current_value = self.lookupVariable(loop_var_name)
+            print(f"{loop_var_name} after increment: {current_value}")
+
+        # Exit loop scope
+        self.popScope()
+        
+    def updateVariable(self, name, value):
+        # Assuming variables are stored in a dictionary within each scope
+        for scope in reversed(self.scopes):
+            if name in scope:
+                scope[name] = value  # Update the value
+                return
+        raise Exception(f"Variable '{name}' not defined")
+            
+    def visitForEachLoop(self, ctx:MithonParser.ForLoopContext):
+        iterable_name = ctx.IDENTIFIER(1).getText()  # Assuming second IDENTIFIER is the iterable
+        item_name = ctx.IDENTIFIER(0).getText()  # First IDENTIFIER is the loop variable
+        
+        # Retrieve the iterable from variables
+        iterable = self.lookupVariable(iterable_name)
+        if not isinstance(iterable, list):
+            raise Exception(f"{iterable_name} is not iterable")
+        
+        # Enter loop scope
+        self.pushScope()
+        
+        for item in iterable:
+            self.addVariable(item_name, type(item).__name__, item)
+            self.visit(ctx.statement_list())
+        
+        # Exit loop scope
+        self.popScope()
 
     # Visit a parse tree produced by MithonParser#ifStatement.
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
