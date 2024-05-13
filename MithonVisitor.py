@@ -40,6 +40,8 @@ class MithonVisitor(ParseTreeVisitor):
             self.visitVarDeclaration(ctx.varDeclaration())
         elif ctx.printFunction():
             self.visitPrintFunction(ctx.printFunction())
+        elif ctx.ifStatement():
+            self.visitIfStatement(ctx.ifStatement())
 
     # Visit a parse tree produced by MithonParser#statement_list.
     def visitStatement_list(self, ctx:MithonParser.Statement_listContext):
@@ -103,33 +105,33 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#ifStatement.
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
-        print(3)
-        if self.visit(ctx.expression(0)):  # Assuming the first expression corresponds to the 'if' condition
-            print(1)
-            self.pushScope()  # Create a new scope for the if block
-            self.visit(ctx.statement_list(0))  # Visit the statement list associated with the 'if'
+        if_condition = self.visit(ctx.expression(0))
+        
+        if if_condition:
+            self.pushScope()
+            self.visit(ctx.statement_list(0))
             self.popScope()
         else:
-            print(2)
             handled = False
-            # Assuming 'elifStatement' parts are direct children, manage indexing manually:
-            elif_count = (len(ctx.children) - 2) // 3  # Adjust according to your grammar and generated code
-            for i in range(elif_count):
-                elif_expr = ctx.expression(i + 1)
-                elif_stmt_list = ctx.statement_list(i + 1)
-                if self.visit(elif_expr):
+            for i in range(1, len(ctx.expression())):
+                expr = ctx.expression(i)
+                result = self.visit(expr)
+                if result:
                     self.pushScope()
-                    self.visit(elif_stmt_list)
+                    self.visit(ctx.statement_list(i))
                     self.popScope()
                     handled = True
                     break
-
-            # Handling the else part:
-            if not handled and (len(ctx.children) - 1) % 3 == 0:  # Check if there's an 'else' part
-                self.pushScope()
-                self.visit(ctx.statement_list(-1))  # Visit the last statement_list, which should be the 'else' block
-                self.popScope()
-
+            
+            if not handled:
+                else_index = len(ctx.expression()) 
+                else_stmt_list = ctx.statement_list(else_index)
+                
+                if else_stmt_list is not None:
+                    self.pushScope()
+                    self.visit(else_stmt_list)
+                    self.popScope()
+                    
     # Visit a parse tree produced by MithonParser#functionDeclaration.
     def visitFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
         self.pushScope() 
