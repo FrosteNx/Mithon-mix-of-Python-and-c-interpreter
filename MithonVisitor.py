@@ -45,6 +45,8 @@ class MithonVisitor(ParseTreeVisitor):
             self.visitIfStatement(ctx.ifStatement())
         elif ctx.forLoop():
             self.visitForLoop(ctx.forLoop())
+        elif ctx.expressionStatement():
+            self.visitExpressionStatement(ctx.expressionStatement())
 
     # Visit a parse tree produced by MithonParser#statement_list.
     def visitStatement_list(self, ctx:MithonParser.Statement_listContext):
@@ -187,9 +189,20 @@ class MithonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MithonParser#expressionStatement.
     def visitExpressionStatement(self, ctx:MithonParser.ExpressionStatementContext):
-        return self.visitExpression(ctx.expression())
+        expression = ctx.expression()
+        if len(expression.children) > 1:
+            operator = expression.children[1].getText()
+            if operator == '+=':
+                var_name = expression.children[0].getText()
+                if not self.is_variable(var_name):
+                    raise Exception(f"Left-hand side of '+=' must be a variable, got {var_name}")
+                original_value = self.lookupVariable(var_name)
+                new_value = original_value[1] + self.visit(expression.children[2])
+                self.updateVariableValue(var_name, new_value)
+                return new_value
+        # Default behavior for other expression statements
+        self.visit(expression)
 
 
     # Visit a parse tree produced by MithonParser#expression.
@@ -282,6 +295,8 @@ class MithonVisitor(ParseTreeVisitor):
             return new_value
         else:
             raise Exception("Unsupported operator: " + operator)
+
+    
         
     def is_variable(self, name):
         return any(name in scope for scope in self.scopes)
