@@ -11,6 +11,7 @@ statement:
          | ifStatement
          | functionDeclaration
          | printFunction
+         | returnStatement
          | expressionStatement
          | COMMENT
          | 'pass'
@@ -21,6 +22,8 @@ statement_list: '{' statement+ '}';
 printFunction: 'print' '(' expressionList ')';
 
 type: 'int' | 'double' | 'bool' | 'string';
+
+func_return_type: 'int' | 'double' | 'bool' | 'string' | 'None';
 
 varDeclaration: 
                  type IDENTIFIER '=' expression
@@ -44,17 +47,19 @@ ifStatement:
        ;
 
 functionDeclaration: 
-       'def' IDENTIFIER '(' parameterList ')' '->' type statement_list;
+       'def' IDENTIFIER '(' parameterList* ')' '->' func_return_type statement_list;
 
 parameterList: type IDENTIFIER (',' type IDENTIFIER)*;
 
-functionCall: IDENTIFIER '(' argumentList ')';
+functionCall: IDENTIFIER '(' argumentList* ')';
 
 argumentList: expression (',' expression)*;
 
 expressionList: expression (',' expression)*;
 
 expressionStatement: expression;
+
+returnStatement: 'return' expression;
 
 expression: 
             logicalOrExpression

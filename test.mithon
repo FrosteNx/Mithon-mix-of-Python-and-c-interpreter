@@ -1,9 +1,17 @@
-int x = 4
-x += 4
-print(x)
-x = x + 4
-print(x)
-
-for(int i = x; i < 15; i += 1) {
-    print(i)
+def test() -> int {
+    int x = 0
+    for (int i = 0; i < 3; i+=1){
+        x += i
+        print(x)
+        if (x == 1){
+            print("snauifsdgvabkjda")
+            return x
+        }
+        print(x)
+    }
+    print(x)
 }
+
+int y = test()
+
+print(y)

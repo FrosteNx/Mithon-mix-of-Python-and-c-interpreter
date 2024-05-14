@@ -11,6 +11,7 @@ class MithonVisitor(ParseTreeVisitor):
 
     def __init__(self):
         self.scopes = [{}]
+        self.function_declarations = {}
         super().__init__()
         
     def pushScope(self):
@@ -47,10 +48,22 @@ class MithonVisitor(ParseTreeVisitor):
             self.visitForLoop(ctx.forLoop())
         elif ctx.expressionStatement():
             self.visitExpressionStatement(ctx.expressionStatement())
+        elif ctx.functionDeclaration():
+            self.visitFunctionDeclaration(ctx.functionDeclaration())
+        elif ctx.returnStatement():
+            return self.visitReturnStatement(ctx.returnStatement())
 
     # Visit a parse tree produced by MithonParser#statement_list.
-    def visitStatement_list(self, ctx:MithonParser.Statement_listContext):
-        return self.visitChildren(ctx)
+    def visitStatement_list(self, ctx: MithonParser.Statement_listContext):
+        return_value = None 
+        
+        for statement in ctx.statement():
+            return_value = self.visit(statement)
+            
+            if return_value is not None:
+                return return_value
+        
+        return return_value
 
 
     # Visit a parse tree produced by MithonParser#printFunction.
@@ -165,9 +178,33 @@ class MithonVisitor(ParseTreeVisitor):
                     self.popScope()
                     
     # Visit a parse tree produced by MithonParser#functionDeclaration.
-    def visitFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
-        self.pushScope() 
-        self.popScope()  
+    def visitFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
+        function_name = ctx.IDENTIFIER().getText()
+        return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
+        parameter_list_ctx = ctx.parameterList() if ctx.parameterList() else None
+        function_body = ctx.statement_list()
+
+        # Extract return type from context if available
+        return_type = return_type_ctx.getText() if return_type_ctx else None
+
+        # Extract parameter list from context if available
+        parameter_list = [param.getText() for param in parameter_list_ctx.IDENTIFIER()] if parameter_list_ctx else []
+
+        # Store the function declaration information in the function_declarations dictionary
+        self.function_declarations[function_name] = {
+            'return_type': return_type,
+            'parameters': parameter_list,
+            'body': function_body
+        }
+        
+        if return_type != 'None' and not self.doesFunctionReturn(function_body):
+            raise Exception(f"Function '{function_name}' must return a value of type {return_type}")
+
+    def doesFunctionReturn(self, ctx):
+        for statement in ctx.statement():
+            if 'return' in statement.getText():
+                return True
+        return False
 
     # Visit a parse tree produced by MithonParser#parameterList.
     def visitParameterList(self, ctx:MithonParser.ParameterListContext):
@@ -175,9 +212,35 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     # Visit a parse tree produced by MithonParser#functionCall.
-    def visitFunctionCall(self, ctx:MithonParser.FunctionCallContext):
-        return self.visitChildren(ctx)
+    def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
+        function_name = ctx.IDENTIFIER().getText()
+        argument_list = ctx.argumentList().expression() if ctx.argumentList() else []
 
+        if function_name in self.function_declarations:
+            function_info = self.function_declarations[function_name]
+            parameter_list = function_info['parameters']
+            function_body = function_info['body']
+
+            if len(argument_list) != len(parameter_list):
+                raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list)} were provided")
+
+            self.pushScope()
+
+            for parameter, argument in zip(parameter_list, argument_list):
+                arg_value = self.visit(argument)
+                self.addVariable(parameter, None, arg_value)
+
+            return_value = self.visit(function_body)
+
+            self.popScope()
+
+            return return_value  # Return the result of the function call
+        else:
+            raise Exception(f"Function '{function_name}' is not defined")
+
+    def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
+        return_value = self.visit(ctx.expression())
+        return return_value
 
     # Visit a parse tree produced by MithonParser#argumentList.
     def visitArgumentList(self, ctx:MithonParser.ArgumentListContext):
