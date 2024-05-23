@@ -251,7 +251,7 @@ class MithonVisitor(ParseTreeVisitor):
             function_body = function_info['body']
 
             if len(argument_list.expression()) != len(parameter_list):
-                raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list)} were provided")
+                raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
 
             argument_list = argument_list.expression()
 
