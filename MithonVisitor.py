@@ -39,17 +39,17 @@ class MithonVisitor(ParseTreeVisitor):
 
     def visitStatement(self, ctx:MithonParser.StatementContext):
         if ctx.varDeclaration():
-            self.visitVarDeclaration(ctx.varDeclaration())
+            return self.visitVarDeclaration(ctx.varDeclaration())
         elif ctx.printFunction():
-            self.visitPrintFunction(ctx.printFunction())
+            return self.visitPrintFunction(ctx.printFunction())
         elif ctx.ifStatement():
-            self.visitIfStatement(ctx.ifStatement())
+            return self.visitIfStatement(ctx.ifStatement())
         elif ctx.forLoop():
-            self.visitForLoop(ctx.forLoop())
+            return self.visitForLoop(ctx.forLoop())
         elif ctx.expressionStatement():
-            self.visitExpressionStatement(ctx.expressionStatement())
+            return self.visitExpressionStatement(ctx.expressionStatement())
         elif ctx.functionDeclaration():
-            self.visitFunctionDeclaration(ctx.functionDeclaration())
+            return self.visitFunctionDeclaration(ctx.functionDeclaration())
         elif ctx.returnStatement():
             return self.visitReturnStatement(ctx.returnStatement())
 
@@ -60,6 +60,12 @@ class MithonVisitor(ParseTreeVisitor):
         for statement in ctx.statement():
             return_value = self.visit(statement)
             
+            if return_value == 'break':
+                return 'break'
+
+            if return_value == 'continue':
+                return 'continue'
+
             if return_value is not None:
                 return return_value
         
@@ -129,7 +135,17 @@ class MithonVisitor(ParseTreeVisitor):
         self.pushScope()
 
         while condition:
-            self.visit(ctx.statement_list())
+            return_value = self.visit(ctx.statement_list())
+
+            if return_value == 'break':
+                return 'break'
+
+            if return_value == 'continue':
+                return 'continue'
+
+            if return_value is not None:
+                self.popScope()
+                return return_value
 
             increment_expr = ctx.expression(2)
             increment_value = self.visit(increment_expr)
@@ -154,8 +170,10 @@ class MithonVisitor(ParseTreeVisitor):
         
         if if_condition:
             self.pushScope()
-            self.visit(ctx.statement_list(0))
+            return_value = self.visit(ctx.statement_list(0))
             self.popScope()
+            if return_value is not None:
+                return return_value
         else:
             handled = False
             for i in range(1, len(ctx.expression())):
@@ -163,8 +181,10 @@ class MithonVisitor(ParseTreeVisitor):
                 result = self.visit(expr)
                 if result:
                     self.pushScope()
-                    self.visit(ctx.statement_list(i))
+                    return_value = self.visit(ctx.statement_list(i))
                     self.popScope()
+                    if return_value is not None:
+                        return return_value
                     handled = True
                     break
             
@@ -174,8 +194,10 @@ class MithonVisitor(ParseTreeVisitor):
                 
                 if else_stmt_list is not None:
                     self.pushScope()
-                    self.visit(else_stmt_list)
+                    return_value = self.visit(else_stmt_list)
                     self.popScope()
+                    if return_value is not None:
+                        return return_value
                     
     # Visit a parse tree produced by MithonParser#functionDeclaration.
     def visitFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
@@ -403,6 +425,10 @@ class MithonVisitor(ParseTreeVisitor):
             return True
         elif ctx.getText() == 'false':
             return False
+        elif ctx.getText() == 'break':
+            return 'break'
+        elif ctx.getText() == 'continue':
+            return 'continue'
         elif ctx.IDENTIFIER():
             var_name = ctx.IDENTIFIER().getText()
             var_info = self.lookupVariable(var_name)  

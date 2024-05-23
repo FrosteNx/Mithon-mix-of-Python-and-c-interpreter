@@ -1,17 +1,12 @@
 def test() -> int {
-    int x = 0
-    for (int i = 0; i < 3; i+=1){
-        x += i
-        print(x)
-        if (x == 1){
-            print("snauifsdgvabkjda")
-            return x
+    for (int i = 0; i < 3; i += 1){
+        print(i)
+        if (i == 2){
+            return i
         }
-        print(x)
     }
-    print(x)
 }
 
 int y = test()
 
-print(y)
+print("Y value is:",y)

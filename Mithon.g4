@@ -38,9 +38,10 @@ constDeclaration: 'const' type IDENTIFIER '=' expression;
 tempDeclaration: 'temp' type IDENTIFIER '=' expression;
 
 forLoop: 
-       'for' '(' type IDENTIFIER '=' expression ';' expression ';' expression ')' statement_list
-     | 'for' '(' 'auto' IDENTIFIER 'in' IDENTIFIER ')' statement_list
-       ;
+        'for' '(' type IDENTIFIER '=' expression ';' expression ';' expression ')' statement_list
+      | 'for' '(' type* IDENTIFIER 'in' IDENTIFIER ')' statement_list
+      | 'for' statement_list
+      ;
 
 ifStatement: 
        'if' '(' expression ')' statement_list ('elif' '(' expression ')' statement_list)* ('else' statement_list)?
@@ -104,6 +105,8 @@ primaryExpression:
           | STRING
           | 'true'
           | 'false'
+          | 'break'
+          | 'continue'
           ;
 
 IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
