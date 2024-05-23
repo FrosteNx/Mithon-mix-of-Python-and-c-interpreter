@@ -245,6 +245,12 @@ class MithonVisitor(ParseTreeVisitor):
         function_name = ctx.IDENTIFIER().getText()
         argument_list = ctx.argumentList(0) if ctx.argumentList() else []
 
+        if function_name == 'len':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
+            arg_value = self.visit(argument_list.expression(0))
+            return self.handle_len_function(arg_value)
+
         if function_name in self.function_declarations:
             function_info = self.function_declarations[function_name]
             parameter_list = function_info['parameters']
@@ -259,7 +265,7 @@ class MithonVisitor(ParseTreeVisitor):
 
             for parameter, argument in zip(parameter_list, argument_list):
                 arg_value = self.visit(argument)
-                if type(arg_value).__name__ != parameter[0]:
+                if parameter[0] != 'string' and type(arg_value).__name__ != parameter[0]:
                     raise Exception(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
 
@@ -270,6 +276,12 @@ class MithonVisitor(ParseTreeVisitor):
             return return_value
         else:
             raise Exception(f"Function '{function_name}' is not defined")
+    
+    def handle_len_function(self, arg):
+        if isinstance(arg, (str, list)):
+            return len(arg)
+        else:
+            raise Exception(f"Function 'len' is not applicable to type: {type(arg).__name__}")
 
     def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
         return_value = self.visit(ctx.expression())
@@ -410,6 +422,21 @@ class MithonVisitor(ParseTreeVisitor):
                     result /= right
                 else:
                     raise ZeroDivisionError
+            elif operator == '*=':
+                if not isinstance(left, str) or not self.is_variable(left):
+                    raise Exception(f"Left-hand side of '*=' must be a variable, got {left}")
+                original_value = self.lookupVariable(left)
+                new_value = original_value[1] * right
+                self.updateVariable(left, new_value)
+                return new_value
+            elif operator == '/=':
+                if not isinstance(left, str) or not self.is_variable(left):
+                    raise Exception(f"Left-hand side of '/=' must be a variable, got {left}")
+                original_value = self.lookupVariable(left)
+                new_value = original_value[1] / right
+                self.updateVariable(left, new_value)
+                return new_value
+            
         return result
 
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):

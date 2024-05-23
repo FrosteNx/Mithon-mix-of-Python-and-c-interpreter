@@ -1,7 +1,22 @@
-def dodaj(int numer1, int numer2) -> int{
-    return numer1 + numer2
+def generateParenthesis(int n) -> None{
+
+    def dfs(int left, int right, string s) -> None{
+
+        if (len(s) == n * 2){
+            print(s)
+        }
+			
+		if (left < n){
+			dfs(left + 1, right, s + "(")
+        }
+
+		if (right < left){
+            dfs(left, right + 1, s + ")")
+        }
+    }
+		
+	dfs(0, 0, "")
 }
+	
 
-int y = dodaj(2, 3)
-
-print("Y value is:",y)
+generateParenthesis(3)
