@@ -19,4 +19,4 @@ def generateParenthesis(int n) -> None{
 }
 	
 
-generateParenthesis(3)
+generateParenthesis(6)
