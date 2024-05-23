@@ -2,6 +2,6 @@ def dodaj(int numer1, int numer2) -> int{
     return numer1 + numer2
 }
 
-int y = dodaj(2, 3, 4)
+int y = dodaj(2, 3)
 
 print("Y value is:",y)

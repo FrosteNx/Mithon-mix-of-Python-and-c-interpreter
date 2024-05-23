@@ -258,13 +258,10 @@ class MithonVisitor(ParseTreeVisitor):
             self.pushScope()
 
             for parameter, argument in zip(parameter_list, argument_list):
-                print(parameter, argument)
                 arg_value = self.visit(argument)
                 if type(arg_value).__name__ != parameter[0]:
                     raise Exception(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
-            
-            print(self.scopes)
 
             return_value = self.visit(function_body)
 
@@ -290,7 +287,7 @@ class MithonVisitor(ParseTreeVisitor):
 
     def visitExpressionStatement(self, ctx:MithonParser.ExpressionStatementContext):
         expression = ctx.expression()
-        if len(expression.children) > 1:
+        '''if len(expression.children) > 1:
             operator = expression.children[1].getText()
             if operator == '+=':
                 var_name = expression.children[0].getText()
@@ -299,7 +296,7 @@ class MithonVisitor(ParseTreeVisitor):
                 original_value = self.lookupVariable(var_name)
                 new_value = original_value[1] + self.visit(expression.children[2])
                 self.updateVariableValue(var_name, new_value)
-                return new_value
+                return new_value'''
         # Default behavior for other expression statements
         return self.visit(expression)
 
