@@ -1,12 +1,7 @@
-def test() -> int {
-    for (int i = 0; i < 3; i += 1){
-        print(i)
-        if (i == 2){
-            return i
-        }
-    }
+def dodaj(int numer1, int numer2) -> int{
+    return numer1 + numer2
 }
 
-int y = test()
+int y = dodaj(2, "string")
 
 print("Y value is:",y)

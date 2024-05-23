@@ -209,16 +209,15 @@ class MithonVisitor(ParseTreeVisitor):
     def visitFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
         function_name = ctx.IDENTIFIER().getText()
         return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
-        parameter_list_ctx = ctx.parameterList() if ctx.parameterList() else None
+        parameter_list_ctx = ctx.parameterList(0) if ctx.parameterList() else None
+
+        parameter_list = []
+        for i in range(len(parameter_list_ctx.IDENTIFIER())):
+            parameter_list.append((parameter_list_ctx.type_()[i].getText(), parameter_list_ctx.IDENTIFIER()[i].getText()))
 
         function_body = ctx.statement_list()
 
-        # Extract return type from context if available
         return_type = return_type_ctx.getText() if return_type_ctx else None
-
-        # Extract parameter list from context if available
-        parameter_list = [param.getText() for param in parameter_list_ctx] if parameter_list_ctx else []
-        #print(parameter_list)
 
         # Store the function declaration information in the function_declarations dictionary
         self.function_declarations[function_name] = {
@@ -244,28 +243,34 @@ class MithonVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by MithonParser#functionCall.
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
         function_name = ctx.IDENTIFIER().getText()
-        argument_list = ctx.argumentList() if ctx.argumentList() else []
+        argument_list = ctx.argumentList(0) if ctx.argumentList() else []
 
         if function_name in self.function_declarations:
             function_info = self.function_declarations[function_name]
             parameter_list = function_info['parameters']
-            #print(parameter_list)
             function_body = function_info['body']
 
-            if len(argument_list) != len(parameter_list):
+            if len(argument_list.expression()) != len(parameter_list):
                 raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list)} were provided")
+
+            argument_list = argument_list.expression()
 
             self.pushScope()
 
             for parameter, argument in zip(parameter_list, argument_list):
+                print(parameter, argument)
                 arg_value = self.visit(argument)
-                self.addVariable(parameter, None, arg_value)
+                if type(arg_value).__name__ != parameter[0]:
+                    raise Exception(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
+                self.addVariable(parameter[1], parameter[0], arg_value)
+            
+            print(self.scopes)
 
             return_value = self.visit(function_body)
 
             self.popScope()
 
-            return return_value  # Return the result of the function call
+            return return_value
         else:
             raise Exception(f"Function '{function_name}' is not defined")
 
