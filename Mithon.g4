@@ -8,6 +8,7 @@ statement:
          | constDeclaration 
          | tempDeclaration 
          | forLoop
+         | whileLoop
          | ifStatement
          | functionDeclaration
          | printFunction
