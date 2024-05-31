@@ -1,22 +1,28 @@
-def generateParenthesis(int n) -> None{
+int a = 1
+int b = 10
 
-    def dfs(int left, int right, string s) -> None{
-
-        if (len(s) == n * 2){
-            print(s)
-        }
-			
-		if (left < n){
-			dfs(left + 1, right, s + "(")
-        }
-
-		if (right < left){
-            dfs(left, right + 1, s + ")")
-        }
-    }
-		
-	dfs(0, 0, "")
+while(a < b){
+    print(a)
+    a += 1
 }
-	
+print("zadanie 2")
 
-generateParenthesis(6)
+while(a < b){
+    print(a)
+    a = a + 1
+}
+
+print("zadanie 3")
+
+int x = 1
+x = x + 1
+
+print(x)
+
+print("zadanie 4")
+
+int z = 10
+
+z += 1
+
+print(z)

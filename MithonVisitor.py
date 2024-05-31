@@ -48,6 +48,8 @@ class MithonVisitor(ParseTreeVisitor):
             return self.visitIfStatement(ctx.ifStatement())
         elif ctx.forLoop():
             return self.visitForLoop(ctx.forLoop())
+        elif ctx.whileLoop():
+            return self.visitWhileLoop(ctx.whileLoop())
         elif ctx.expressionStatement():
             return self.visitExpressionStatement(ctx.expressionStatement())
         elif ctx.functionDeclaration():
@@ -161,6 +163,29 @@ class MithonVisitor(ParseTreeVisitor):
         self.popScope()
         self.loop_depth -= 1 
 
+    def visitWhileLoop(self, ctx: MithonParser.WhileLoopContext):
+            self.loop_depth += 1
+            condition = self.visit(ctx.expression())
+            self.pushScope()
+
+            while condition:
+                return_value = self.visit(ctx.statement_list())
+
+                if return_value == 'break':
+                    break
+
+                if return_value == 'continue':
+                    continue
+
+                if return_value is not None:
+                    self.popScope()
+                    self.loop_depth -= 1
+                    return return_value
+
+                condition = self.visit(ctx.expression())
+
+            self.popScope()
+            self.loop_depth -= 1
         
     def updateVariable(self, name, value):
         for scope in reversed(self.scopes):
