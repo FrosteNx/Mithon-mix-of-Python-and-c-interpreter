@@ -43,6 +43,8 @@ forLoop:
       | 'for' statement_list
       ;
 
+whileLoop: 'while' '(' expression ')' statement_list;
+
 ifStatement: 
        'if' '(' expression ')' statement_list ('elif' '(' expression ')' statement_list)* ('else' statement_list)?
        ;
