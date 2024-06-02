@@ -14,6 +14,7 @@ statement:
          | printFunction
          | returnStatement
          | expressionStatement
+         | augAssignment
          | COMMENT
          | 'pass'
          ;
@@ -22,16 +23,17 @@ statement_list: '{' statement+ '}';
 
 printFunction: 'print' '(' expressionList ')';
 
-type: 'int' | 'double' | 'bool' | 'string';
+type: 'int' | 'double' | 'bool' | 'string' | complexType;
 
-func_return_type: 'int' | 'double' | 'bool' | 'string' | 'None';
+complexType: 'List' '[' type ']' | 'Matrix' '[' type ']' | 'Array' '[' INTEGER ',' type ']';
+
+func_return_type: 'int' | 'double' | 'bool' | 'string' | 'None' | complexType;
 
 varDeclaration: 
                  type IDENTIFIER '=' expression
-              | 'List' '[' type ']' IDENTIFIER '=' '[' expressionList ']'
-              | 'ndList' '[' type ']' IDENTIFIER '=' '[' expressionList ']'
-              | IDENTIFIER '=' expression
-              | type IDENTIFIER
+              | complexType IDENTIFIER '=' list
+              | IDENTIFIER '=' (expression|list)
+              | (type|complexType) IDENTIFIER
               ;
 
 constDeclaration: 'const' type IDENTIFIER '=' expression;
@@ -86,11 +88,11 @@ relationalExpression:
           ;
 
 additiveExpression:
-            multiplicativeExpression ((('+' | '-') multiplicativeExpression) | (('+=' | '-=') expression))* 
+            multiplicativeExpression (('+' | '-') multiplicativeExpression)* 
           ;
 
 multiplicativeExpression:
-            unaryExpression ((('*' | '/') unaryExpression) | (('*=' | '/=') expression))* 
+            unaryExpression (('*' | '/') unaryExpression)* 
           ;
 
 unaryExpression:
@@ -106,10 +108,21 @@ primaryExpression:
           | INTEGER
           | DOUBLE
           | STRING
+          | list
           | 'true'
           | 'false'
           | 'break'
           | 'continue'
+          ;
+
+list: '[' expressionList ']';
+
+augAssignment:
+            IDENTIFIER '+=' expression
+          | IDENTIFIER '-=' expression
+          | IDENTIFIER '*=' expression
+          | IDENTIFIER '/=' expression
+          | IDENTIFIER '%=' expression
           ;
 
 IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
