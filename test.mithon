@@ -1,15 +1,1 @@
-def f(int a, float b) -> None{
-    print(a, b)
-}
-
-def f(float a, int b) -> None{
-    print(a, b)
-}
-
-print("halo")
-
-f(0.0, 1)
-
-print("halo")
-
-f(1.1, 2)
+int x  = 2;
