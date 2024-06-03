@@ -357,6 +357,32 @@ class MithonVisitor(ParseTreeVisitor):
                 raise Exception(f"Function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_len_function(arg_value)
+        
+        elif function_name == 'append':
+            if len(argument_list.expression()) != 2:
+                raise Exception(f"Function 'append' expects 2 arguments, but {len(argument_list.expression())} were provided")
+            
+            var = argument_list.expression()[0].getText()
+
+            if not self.is_variable(var):
+                raise Exception("variable not defined")
+
+            t, values, modifier = self.lookupVariable(var)
+
+            if not isinstance(values, list):
+                raise TypeError("cannot append to a non-complex type")
+            
+            if modifier == 'const':
+                raise TypeError("cannot modify const variable")
+            
+            new_value = self.visit(argument_list.expression()[1])
+
+            if type(new_value).__name__ != t.split('[')[1][:-1]:
+                raise TypeError(f"cannot append {type(new_value)} to sequence of type: {t}")
+            
+            values.append(new_value)
+
+            self.updateVariable(var, values)
 
         elif (function_name, argument_count) in self.function_declarations:
             function_info = self.function_declarations[function_name, argument_count]
@@ -373,7 +399,7 @@ class MithonVisitor(ParseTreeVisitor):
 
             for parameter, argument in zip(parameter_list, argument_list):
                 arg_value = self.visit(argument)
-                if parameter[0] != 'string' and type(arg_value).__name__ != parameter[0]:
+                if type(arg_value).__name__ != parameter[0]:
                     raise Exception(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
 

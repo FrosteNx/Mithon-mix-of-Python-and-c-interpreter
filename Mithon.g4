@@ -57,7 +57,7 @@ functionCall: IDENTIFIER '(' argumentList* ')';
 
 argumentList: expression (',' expression)*;
 
-expressionList: expression (',' expression)*;
+expressionList: expression* (',' expression)*;
 
 expressionStatement: expression;
 
