@@ -22,7 +22,7 @@ statement_list: '{' statement+ '}';
 
 printFunction: 'print' '(' expressionList ')';
 
-type: 'int' | 'double' | 'bool' | 'string';
+type: 'int' | 'float' | 'bool' | 'str';
 
 complexType: 'List' '[' type ']' | 'Matrix' '[' type ']' | 'Array' '[' INTEGER ',' type ']';
 

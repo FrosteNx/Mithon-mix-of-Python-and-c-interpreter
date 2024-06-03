@@ -288,16 +288,21 @@ class MithonVisitor(ParseTreeVisitor):
         return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
         parameter_list_ctx = ctx.parameterList(0) if ctx.parameterList() else None
 
-        parameter_list = []
-        for i in range(len(parameter_list_ctx.IDENTIFIER())):
-            parameter_list.append((parameter_list_ctx.type_()[i].getText(), parameter_list_ctx.IDENTIFIER()[i].getText()))
+        parameter_list, parameters_count = [], []
+        if parameter_list_ctx:
+            for i in range(len(parameter_list_ctx.IDENTIFIER())):
+                parameter_list.append((parameter_list_ctx.type_()[i].getText(), parameter_list_ctx.IDENTIFIER()[i].getText()))
+                parameters_count.append(parameter_list_ctx.type_()[i].getText())
+
+        if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
+            raise SyntaxError("Cannot declare 2 functions with identic names")
 
         function_body = ctx.statement_list()
 
         return_type = return_type_ctx.getText() if return_type_ctx else None
 
         # Store the function declaration information in the function_declarations dictionary
-        self.function_declarations[function_name] = {
+        self.function_declarations[tuple([function_name, tuple(parameters_count)])] = {
             'return_type': return_type,
             'parameters': parameter_list,
             'body': function_body
@@ -319,8 +324,11 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#functionCall.
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
+
         function_name = ctx.IDENTIFIER().getText()
         argument_list = ctx.argumentList(0) if ctx.argumentList() else []
+
+        argument_count = tuple([type(self.visit(arg)).__name__ for arg in argument_list.expression()]) if argument_list else ()
 
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
@@ -328,15 +336,16 @@ class MithonVisitor(ParseTreeVisitor):
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_len_function(arg_value)
 
-        if function_name in self.function_declarations:
-            function_info = self.function_declarations[function_name]
+        elif (function_name, argument_count) in self.function_declarations:
+            function_info = self.function_declarations[function_name, argument_count]
             parameter_list = function_info['parameters']
             function_body = function_info['body']
 
-            if len(argument_list.expression()) != len(parameter_list):
+            if (not argument_list and parameter_list) or (argument_list and len(argument_list.expression()) != len(parameter_list)):
                 raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
 
-            argument_list = argument_list.expression()
+            if argument_list:
+                argument_list = argument_list.expression()
 
             self.pushScope()
 

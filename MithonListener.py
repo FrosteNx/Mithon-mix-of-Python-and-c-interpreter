@@ -53,6 +53,15 @@ class MithonListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MithonParser#complexType.
+    def enterComplexType(self, ctx:MithonParser.ComplexTypeContext):
+        pass
+
+    # Exit a parse tree produced by MithonParser#complexType.
+    def exitComplexType(self, ctx:MithonParser.ComplexTypeContext):
+        pass
+
+
     # Enter a parse tree produced by MithonParser#func_return_type.
     def enterFunc_return_type(self, ctx:MithonParser.Func_return_typeContext):
         pass
@@ -77,15 +86,6 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#constDeclaration.
     def exitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
-        pass
-
-
-    # Enter a parse tree produced by MithonParser#tempDeclaration.
-    def enterTempDeclaration(self, ctx:MithonParser.TempDeclarationContext):
-        pass
-
-    # Exit a parse tree produced by MithonParser#tempDeclaration.
-    def exitTempDeclaration(self, ctx:MithonParser.TempDeclarationContext):
         pass
 
 
@@ -257,6 +257,33 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#primaryExpression.
     def exitPrimaryExpression(self, ctx:MithonParser.PrimaryExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by MithonParser#list.
+    def enterList(self, ctx:MithonParser.ListContext):
+        pass
+
+    # Exit a parse tree produced by MithonParser#list.
+    def exitList(self, ctx:MithonParser.ListContext):
+        pass
+
+
+    # Enter a parse tree produced by MithonParser#listIndexation.
+    def enterListIndexation(self, ctx:MithonParser.ListIndexationContext):
+        pass
+
+    # Exit a parse tree produced by MithonParser#listIndexation.
+    def exitListIndexation(self, ctx:MithonParser.ListIndexationContext):
+        pass
+
+
+    # Enter a parse tree produced by MithonParser#augAssignment.
+    def enterAugAssignment(self, ctx:MithonParser.AugAssignmentContext):
+        pass
+
+    # Exit a parse tree produced by MithonParser#augAssignment.
+    def exitAugAssignment(self, ctx:MithonParser.AugAssignmentContext):
         pass
 
 

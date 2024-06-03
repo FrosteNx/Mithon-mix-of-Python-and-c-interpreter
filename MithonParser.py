@@ -151,7 +151,7 @@ class MithonParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'pass'", "'{'", "'}'", "'print'", "'('", 
-                     "')'", "'int'", "'double'", "'bool'", "'string'", "'List'", 
+                     "')'", "'int'", "'float'", "'bool'", "'str'", "'List'", 
                      "'['", "']'", "'Matrix'", "'Array'", "','", "'None'", 
                      "'='", "'const'", "'for'", "';'", "'in'", "'while'", 
                      "'if'", "'elif'", "'else'", "'def'", "'->'", "'return'", 

@@ -1,8 +1,15 @@
-List[int] a = [1,2,3]
-
-for (int i = 0; i < 3; i += 1){
-    a[i] = 0
+def f(int a, float b) -> None{
+    print(a, b)
 }
 
-print(a)
+def f(float a, int b) -> None{
+    print(a, b)
+}
 
+print("halo")
+
+f(0.0, 1)
+
+print("halo")
+
+f(1.1, 2)
