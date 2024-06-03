@@ -1,28 +1,7 @@
 int a = 1
-int b = 10
 
-while(a < b){
-    print(a)
-    a += 1
-}
-print("zadanie 2")
+print(a)
 
-while(a < b){
-    print(a)
-    a = a + 1
-}
+a += 10
 
-print("zadanie 3")
-
-int x = 1
-x = x + 1
-
-print(x)
-
-print("zadanie 4")
-
-int z = 10
-
-z += 1
-
-print(z)
+print(a)

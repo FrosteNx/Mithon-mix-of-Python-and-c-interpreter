@@ -56,6 +56,37 @@ class MithonVisitor(ParseTreeVisitor):
             return self.visitFunctionDeclaration(ctx.functionDeclaration())
         elif ctx.returnStatement():
             return self.visitReturnStatement(ctx.returnStatement())
+        elif ctx.augAssignment():
+            return self.visitAugAssignment(ctx.augAssignment())
+        
+    def visitAugAssignment(self, ctx: MithonParser.augAssignment):
+
+        left = ctx.getChild(0).getText()
+        operator = ctx.getChild(1).getText()
+        right_value = self.visitExpression(ctx.getChild(2))
+
+        left_value = self.lookupVariable(left)[1]
+
+        if type(left_value) != type(right_value):
+            raise TypeError(f"unsupported operand type(s) for {operator}: {type(left_value).__name__} and {type(right_value).__name__}")
+
+        match operator:
+            case "+=":
+                self.updateVariable(left, left_value + right_value)
+            case "-=":
+                self.updateVariable(left, left_value - right_value)
+            case "*=":
+                self.updateVariable(left, left_value - right_value)
+            case "/=":
+                if right_value != 0:
+                    self.updateVariable(left, left_value - right_value)
+                else:
+                    raise ZeroDivisionError("division by zero")
+            case "%=":
+                if right_value != 0:
+                    self.updateVariable(left, left_value % right_value)
+                else:
+                    raise ZeroDivisionError("integer modulo by zero")
 
     # Visit a parse tree produced by MithonParser#statement_list.
     def visitStatement_list(self, ctx: MithonParser.Statement_listContext):
@@ -324,16 +355,6 @@ class MithonVisitor(ParseTreeVisitor):
 
     def visitExpressionStatement(self, ctx:MithonParser.ExpressionStatementContext):
         expression = ctx.expression()
-        '''if len(expression.children) > 1:
-            operator = expression.children[1].getText()
-            if operator == '+=':
-                var_name = expression.children[0].getText()
-                if not self.is_variable(var_name):
-                    raise Exception(f"Left-hand side of '+=' must be a variable, got {var_name}")
-                original_value = self.lookupVariable(var_name)
-                new_value = original_value[1] + self.visit(expression.children[2])
-                self.updateVariableValue(var_name, new_value)
-                return new_value'''
         # Default behavior for other expression statements
         return self.visit(expression)
 
@@ -412,20 +433,6 @@ class MithonVisitor(ParseTreeVisitor):
                 return left_value + right
             elif operator == '-':
                 return left_value - right
-        elif operator == '+=':
-            if not isinstance(left, str) or not self.is_variable(left):
-                raise Exception(f"Left-hand side of '+=' must be a variable, got {left}")
-            original_value = self.lookupVariable(left)
-            new_value = original_value[1] + right
-            self.updateVariable(left, new_value)
-            return new_value
-        elif operator == '-=':
-            if not isinstance(left, str) or not self.is_variable(left):
-                raise Exception(f"Left-hand side of '-=' must be a variable, got {left}")
-            original_value = self.lookupVariable(left)
-            new_value = original_value[1] - right
-            self.updateVariable(left, new_value)
-            return new_value
         else:
             raise Exception("Unsupported operator: " + operator)
 
@@ -447,20 +454,6 @@ class MithonVisitor(ParseTreeVisitor):
                     result /= right
                 else:
                     raise ZeroDivisionError
-            elif operator == '*=':
-                if not isinstance(left, str) or not self.is_variable(left):
-                    raise Exception(f"Left-hand side of '*=' must be a variable, got {left}")
-                original_value = self.lookupVariable(left)
-                new_value = original_value[1] * right
-                self.updateVariable(left, new_value)
-                return new_value
-            elif operator == '/=':
-                if not isinstance(left, str) or not self.is_variable(left):
-                    raise Exception(f"Left-hand side of '/=' must be a variable, got {left}")
-                original_value = self.lookupVariable(left)
-                new_value = original_value[1] / right
-                self.updateVariable(left, new_value)
-                return new_value
             
         return result
 
