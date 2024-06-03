@@ -61,29 +61,51 @@ class MithonVisitor(ParseTreeVisitor):
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
 
         left = ctx.getChild(0).getText()
+
+        if '[' in left:
+            variable_name = left.split('[')[0]
+            variable_values = self.lookupVariable(variable_name)[1]
+            index = self.visit(ctx.getChild(0).listIndexation().expression())
+
+            if index > len(variable_values):
+                raise IndexError("index out of range")
+            
+            left_value = variable_values[index]
+        
+        else:
+            left_value = self.lookupVariable(left)[1]
+
         operator = ctx.getChild(1).getText()
-        right_value = self.visitExpression(ctx.getChild(2))
-
-        left_value = self.lookupVariable(left)[1]
-
+        right_value = self.visitExpression(ctx.getChild(2))    
+           
         if type(left_value) != type(right_value):
             raise TypeError(f"unsupported operand type(s) for {operator}: {type(left_value).__name__} and {type(right_value).__name__}")
+        
+        new_value = self.augAssignmentResult(operator, left_value, right_value)
 
+        if '[' in left:
+            variable_values[index] = new_value
+            self.updateVariable(variable_name, variable_values)
+        else:
+            self.updateVariable(left, new_value)
+
+
+    def augAssignmentResult(self, operator, left_value, right_value):
         match operator:
             case "+=":
-                self.updateVariable(left, left_value + right_value)
+                return left_value + right_value
             case "-=":
-                self.updateVariable(left, left_value - right_value)
+                return left_value - right_value
             case "*=":
-                self.updateVariable(left, left_value - right_value)
+                return left_value * right_value
             case "/=":
                 if right_value != 0:
-                    self.updateVariable(left, left_value - right_value)
+                    return left_value / right_value
                 else:
                     raise ZeroDivisionError("division by zero")
             case "%=":
                 if right_value != 0:
-                    self.updateVariable(left, left_value % right_value)
+                    return left_value % right_value
                 else:
                     raise ZeroDivisionError("integer modulo by zero")
 

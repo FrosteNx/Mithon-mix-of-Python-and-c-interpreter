@@ -30,7 +30,7 @@ func_return_type: type | 'None' | complexType;
 
 varDeclaration: 
                 (type|complexType) IDENTIFIER '=' expression
-              | IDENTIFIER '=' expression
+              | name '=' expression
               | (type|complexType) IDENTIFIER
               ;
 
@@ -115,14 +115,16 @@ primaryExpression:
 
 list: '[' expressionList ']';
 
+name: listIndexation | IDENTIFIER;
+
 listIndexation: IDENTIFIER '[' expression ']';
 
 augAssignment:
-            IDENTIFIER '+=' expression
-          | IDENTIFIER '-=' expression
-          | IDENTIFIER '*=' expression
-          | IDENTIFIER '/=' expression
-          | IDENTIFIER '%=' expression
+            name '+=' expression
+          | name '-=' expression
+          | name '*=' expression
+          | name '/=' expression
+          | name '%=' expression
           ;
 
 IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
