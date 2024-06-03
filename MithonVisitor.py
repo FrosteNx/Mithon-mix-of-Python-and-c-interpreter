@@ -7,6 +7,9 @@ else:
 
 # This class defines a complete generic visitor for a parse tree produced by MithonParser.
 
+class DeclarationError(Exception):
+    pass
+
 class MithonVisitor(ParseTreeVisitor):
 
     def __init__(self):
@@ -22,8 +25,8 @@ class MithonVisitor(ParseTreeVisitor):
         if len(self.scopes) > 1:
             self.scopes.pop()
 
-    def addVariable(self, name, type, value):
-        self.scopes[-1][name] = (type, value)  # Store as a tuple
+    def addVariable(self, name, type, value, modifier=None):
+        self.scopes[-1][name] = (type, value, modifier)  # Store as a tuple
 
     def lookupVariable(self, name):
         #print(self.scopes)
@@ -42,6 +45,8 @@ class MithonVisitor(ParseTreeVisitor):
     def visitStatement(self, ctx:MithonParser.StatementContext):
         if ctx.varDeclaration():
             return self.visitVarDeclaration(ctx.varDeclaration())
+        elif ctx.constDeclaration():
+            return self.visitConstDeclaration(ctx.constDeclaration())
         elif ctx.printFunction():
             return self.visitPrintFunction(ctx.printFunction())
         elif ctx.ifStatement():
@@ -115,42 +120,65 @@ class MithonVisitor(ParseTreeVisitor):
             print(value, end=' ')
         print()
 
+    def prepareVariable(self, ctx):
+        
+        t = ctx.type_()
+        ct = ctx.complexType()
+        i = ctx.IDENTIFIER()
+        e = ctx.expression()
+        
 
-    def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
-        var_name = None
-        var_type = None
-        expression_result = None
+        if t and i and e:
+            var_type = t.getText()
+            var_name = i.getText()
+            expression_result = self.visit(e)
+        elif ct and i and e:
+            var_type = ct.getText()
+            var_name = i.getText()
+            expression_result = self.visit(e)
 
-        if ctx.type_() and ctx.IDENTIFIER() and ctx.expression():
-            var_type = ctx.type_().getText()
-            var_name = ctx.IDENTIFIER().getText()
-            expression_result = self.visit(ctx.expression())
-        elif ctx.IDENTIFIER() and ctx.expression() and not ctx.type_():
-            var_name = ctx.IDENTIFIER().getText()
-            expression_result = self.visit(ctx.expression())
+            if not isinstance(expression_result, list):
+                raise DeclarationError(f"Invalid {var_type} declaration. Provided value has to be in [values] format.")
+
+        elif i and e and not t:
+            
+            var_name = i.getText()
+            expression_result = self.visit(e)
+
+            if not ct and isinstance(expression_result, list):
+                raise DeclarationError(f"ComplexType has to be specified: List[type], Matrix[type], Array[int, type].")
+
             var_type = type(expression_result).__name__  
-        elif ctx.type_() and ctx.IDENTIFIER() and not ctx.expression():
-            var_type = ctx.type_().getText()
-            var_name = ctx.IDENTIFIER().getText()
+
+        elif (t or ct) and i and not e:
+            var_type = t.getText() if t else ct.getText()
+            var_name = i.getText()
             expression_result = None 
         else:
-            raise Exception("Invalid variable declaration. Must include a type or initialization.")
+            raise DeclarationError("Invalid variable declaration. Must include a type or initialization.")
+        
+        return var_name, var_type, expression_result
+
+    def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
+    
+        var_name, var_type, expression_result = self.prepareVariable(ctx)
 
         if var_name:
             self.addVariable(var_name, var_type, expression_result)
         else:
-            raise Exception("Variable declaration error: Name required")
+            raise DeclarationError("Variable declaration error: Name required")
 
 
     # Visit a parse tree produced by MithonParser#constDeclaration.
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
-        return self.visitChildren(ctx)
+        
+        var_name, var_type, expression_result = self.prepareVariable(ctx.varDeclaration())
 
-
-    # Visit a parse tree produced by MithonParser#tempDeclaration.
-    def visitTempDeclaration(self, ctx:MithonParser.TempDeclarationContext):
-        return self.visitChildren(ctx)
-
+        if var_name:
+            self.addVariable(var_name, var_type, expression_result, "const")
+        else:
+            raise DeclarationError("Variable declaration error: Name required")
+        
 
     # Visit a parse tree produced by MithonParser#type.
     def visitType(self, ctx:MithonParser.TypeContext):
@@ -221,6 +249,8 @@ class MithonVisitor(ParseTreeVisitor):
     def updateVariable(self, name, value):
         for scope in reversed(self.scopes):
             if name in scope:
+                if scope[name][2] == 'const':
+                    raise TypeError("Cannot modify const variable.")
                 var_type = scope[name][0]  
                 scope[name] = (var_type, value) 
                 return
@@ -423,7 +453,6 @@ class MithonVisitor(ParseTreeVisitor):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
 
-        left = ctx.getChild(0).getText()  
         right = self.visit(ctx.getChild(2))  
         operator = ctx.getChild(1).getText() 
 
@@ -476,11 +505,13 @@ class MithonVisitor(ParseTreeVisitor):
         elif ctx.DOUBLE():
             return float(ctx.DOUBLE().getText())
         elif ctx.STRING():
-            return ctx.STRING().getText()[1:-1]  # Usunięcie cudzysłowów
+            return ctx.STRING().getText()[1:-1]
         elif ctx.getText() == 'true':
             return True
         elif ctx.getText() == 'false':
             return False
+        elif ctx.list_():
+            return [self.visitExpression(exp) for exp in ctx.list_().expressionList().expression()]
         elif ctx.getText() == 'break':
             if self.loop_depth > 0:
                 return 'break'
@@ -495,7 +526,7 @@ class MithonVisitor(ParseTreeVisitor):
             var_name = ctx.IDENTIFIER().getText()
             var_info = self.lookupVariable(var_name)  
             if var_info is not None:
-                var_type, var_value = var_info 
+                var_type, var_value, modifier = var_info 
                 return var_value
             else:
                 raise Exception(f"Variable '{var_name}' is not defined or has no value.")

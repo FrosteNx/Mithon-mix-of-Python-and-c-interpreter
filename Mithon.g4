@@ -6,7 +6,6 @@ statement:
            statement_list
          | varDeclaration 
          | constDeclaration 
-         | tempDeclaration 
          | forLoop
          | whileLoop
          | ifStatement
@@ -23,22 +22,19 @@ statement_list: '{' statement+ '}';
 
 printFunction: 'print' '(' expressionList ')';
 
-type: 'int' | 'double' | 'bool' | 'string' | complexType;
+type: 'int' | 'double' | 'bool' | 'string';
 
 complexType: 'List' '[' type ']' | 'Matrix' '[' type ']' | 'Array' '[' INTEGER ',' type ']';
 
-func_return_type: 'int' | 'double' | 'bool' | 'string' | 'None' | complexType;
+func_return_type: type | 'None' | complexType;
 
 varDeclaration: 
-                 type IDENTIFIER '=' expression
-              | complexType IDENTIFIER '=' list
-              | IDENTIFIER '=' (expression|list)
+                (type|complexType) IDENTIFIER '=' expression
+              | IDENTIFIER '=' expression
               | (type|complexType) IDENTIFIER
               ;
 
-constDeclaration: 'const' type IDENTIFIER '=' expression;
-
-tempDeclaration: 'temp' type IDENTIFIER '=' expression;
+constDeclaration: 'const' varDeclaration;
 
 forLoop: 
         'for' '(' type IDENTIFIER '=' expression ';' expression ';' expression ')' statement_list
