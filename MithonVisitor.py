@@ -5,8 +5,6 @@ if "." in __name__:
 else:
     from MithonParser import MithonParser
 
-# This class defines a complete generic visitor for a parse tree produced by MithonParser.
-
 class DeclarationError(Exception):
     pass
 
@@ -26,17 +24,13 @@ class MithonVisitor(ParseTreeVisitor):
             self.scopes.pop()
 
     def addVariable(self, name, type, value, modifier=None):
-        self.scopes[-1][name] = (type, value, modifier)  # Store as a tuple
+        self.scopes[-1][name] = (type, value, modifier)
 
     def lookupVariable(self, name):
-        #print(self.scopes)
-        # Check from the most recent scope to the outer scopes
         for scope in reversed(self.scopes):
             if name in scope:
                 return scope[name]
         raise Exception(f"Variable {name} not defined")
-
-    # self.visit(obiekt) -> self.visit[typ obiektu](context)
 
     def visitProgram(self, ctx:MithonParser.ProgramContext):
         for statement in ctx.statement():
@@ -127,7 +121,6 @@ class MithonVisitor(ParseTreeVisitor):
         i = ctx.IDENTIFIER()
         e = ctx.expression()
         
-
         if t and i and e:
             var_type = t.getText()
             var_name = i.getText()
@@ -178,12 +171,6 @@ class MithonVisitor(ParseTreeVisitor):
             self.addVariable(var_name, var_type, expression_result, "const")
         else:
             raise DeclarationError("Variable declaration error: Name required")
-        
-
-    # Visit a parse tree produced by MithonParser#type.
-    def visitType(self, ctx:MithonParser.TypeContext):
-        return self.visitChildren(ctx)
-
 
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         self.loop_depth += 1  
@@ -192,7 +179,7 @@ class MithonVisitor(ParseTreeVisitor):
 
         init_expr = ctx.expression(0)
         init_value = self.visit(init_expr)
-        self.addVariable(loop_var_name, type(init_value).__name__, init_value)
+        self.addVariable(loop_var_name, type(init_value).__name__, init_value, None)
 
         condition_expr = ctx.expression(1)
         condition = self.visit(condition_expr)
@@ -200,6 +187,7 @@ class MithonVisitor(ParseTreeVisitor):
         self.pushScope()
 
         while condition:
+
             return_value = self.visit(ctx.statement_list())
 
             if return_value == 'break':
@@ -215,7 +203,7 @@ class MithonVisitor(ParseTreeVisitor):
 
             increment_expr = ctx.expression(2)
             increment_value = self.visit(increment_expr)
-            self.updateVariable(loop_var_name, increment_value)
+            #self.updateVariable(loop_var_name, increment_value)
 
             condition = self.visit(condition_expr)
 
@@ -247,13 +235,16 @@ class MithonVisitor(ParseTreeVisitor):
             self.loop_depth -= 1
         
     def updateVariable(self, name, value):
+
         for scope in reversed(self.scopes):
             if name in scope:
                 if scope[name][2] == 'const':
                     raise TypeError("Cannot modify const variable.")
                 var_type = scope[name][0]  
-                scope[name] = (var_type, value) 
+                modifier = scope[name][-1]
+                scope[name] = (var_type, value, modifier) 
                 return
+            
         raise Exception(f"Variable {name} not defined")
 
     # Visit a parse tree produced by MithonParser#ifStatement.
@@ -391,7 +382,10 @@ class MithonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MithonParser#expression.
     def visitExpression(self, ctx:MithonParser.ExpressionContext):
-        return self.visitLogicalOrExpression(ctx.logicalOrExpression())
+        if ctx.logicalOrExpression():
+            return self.visitLogicalOrExpression(ctx.logicalOrExpression())
+        else:
+            return self.visitAugAssignment(ctx.augAssignment())
 
 
     # Visit a parse tree produced by MithonParser#logicalOrExpression.
@@ -512,6 +506,19 @@ class MithonVisitor(ParseTreeVisitor):
             return False
         elif ctx.list_():
             return [self.visitExpression(exp) for exp in ctx.list_().expressionList().expression()]
+        elif ctx.listIndexation():
+            index = self.visitExpression(ctx.listIndexation().expression())
+
+            values = self.lookupVariable(ctx.listIndexation().IDENTIFIER().getText())[1]
+
+            if not (isinstance(values, list) or isinstance(values, str)):
+                raise TypeError("Invalid type for indexation")
+
+            if index > len(values):
+                raise IndexError(f"index {index} out of range for length {len(values)}")
+            
+            return values[index]
+
         elif ctx.getText() == 'break':
             if self.loop_depth > 0:
                 return 'break'

@@ -64,7 +64,8 @@ expressionStatement: expression;
 returnStatement: 'return' expression;
 
 expression: 
-            logicalOrExpression
+              augAssignment
+            | logicalOrExpression
           ;
 
 logicalOrExpression:
@@ -105,6 +106,7 @@ primaryExpression:
           | DOUBLE
           | STRING
           | list
+          | listIndexation
           | 'true'
           | 'false'
           | 'break'
@@ -112,6 +114,8 @@ primaryExpression:
           ;
 
 list: '[' expressionList ']';
+
+listIndexation: IDENTIFIER '[' expression ']';
 
 augAssignment:
             IDENTIFIER '+=' expression
