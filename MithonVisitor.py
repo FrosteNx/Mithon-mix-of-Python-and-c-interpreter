@@ -155,6 +155,7 @@ class MithonVisitor(ParseTreeVisitor):
         
         t = ctx.type_()
         ct = ctx.complexType()
+        n = ctx.name()
         i = ctx.IDENTIFIER()
         e = ctx.expression()
 
@@ -190,15 +191,17 @@ class MithonVisitor(ParseTreeVisitor):
             modifiers["el_type"] = el_type
             modifiers["el_max_count"] = el_max_count
 
-        elif i and e and not t:
+        elif n and e and not t:
+
+            if n.IDENTIFIER():
             
-            var_name = i.getText()
-            expression_result = self.visit(e)
+                var_name = n.getText()
+                expression_result = self.visit(e)
 
-            if not ct and isinstance(expression_result, list):
-                raise Exception(f"complexType has to be specified: List[type], Matrix[type], Array[int, type]")
+                if not ct and isinstance(expression_result, list):
+                    raise Exception(f"complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
-            var_type = type(expression_result).__name__  
+                var_type = type(expression_result).__name__  
 
         elif (t or ct) and i and not e:
             var_type = t.getText() if t else ct.getText()
