@@ -5,15 +5,23 @@ if "." in __name__:
 else:
     from MithonParser import MithonParser
 
-class DeclarationError(Exception):
-    pass
+class MithonError(Exception):
+
+    def __init__(self, message, line_number, line_content):
+        self.message = message
+        self.line_number = line_number
+        self.line_content = line_content.strip('\n')
+
+    def __str__(self):
+        return f"Error at line: {self.line_number}. Line content: {self.line_content}.\nError message: {self.message}."
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self):
+    def __init__(self, lines):
         self.scopes = [{}]
         self.function_declarations = {}
         self.loop_depth = 0
+        self.lines = lines
         super().__init__()
         
     def pushScope(self):
@@ -37,26 +45,33 @@ class MithonVisitor(ParseTreeVisitor):
             self.visit(statement)
 
     def visitStatement(self, ctx:MithonParser.StatementContext):
-        if ctx.varDeclaration():
-            return self.visitVarDeclaration(ctx.varDeclaration())
-        elif ctx.constDeclaration():
-            return self.visitConstDeclaration(ctx.constDeclaration())
-        elif ctx.printFunction():
-            return self.visitPrintFunction(ctx.printFunction())
-        elif ctx.ifStatement():
-            return self.visitIfStatement(ctx.ifStatement())
-        elif ctx.forLoop():
-            return self.visitForLoop(ctx.forLoop())
-        elif ctx.whileLoop():
-            return self.visitWhileLoop(ctx.whileLoop())
-        elif ctx.expressionStatement():
-            return self.visitExpressionStatement(ctx.expressionStatement())
-        elif ctx.functionDeclaration():
-            return self.visitFunctionDeclaration(ctx.functionDeclaration())
-        elif ctx.returnStatement():
-            return self.visitReturnStatement(ctx.returnStatement())
-        elif ctx.augAssignment():
-            return self.visitAugAssignment(ctx.augAssignment())
+
+        line = ctx.start.line
+        line_content = self.lines[line - 1]
+
+        try:
+            if ctx.varDeclaration():
+                return self.visitVarDeclaration(ctx.varDeclaration())
+            elif ctx.constDeclaration():
+                return self.visitConstDeclaration(ctx.constDeclaration())
+            elif ctx.printFunction():
+                return self.visitPrintFunction(ctx.printFunction())
+            elif ctx.ifStatement():
+                return self.visitIfStatement(ctx.ifStatement())
+            elif ctx.forLoop():
+                return self.visitForLoop(ctx.forLoop())
+            elif ctx.whileLoop():
+                return self.visitWhileLoop(ctx.whileLoop())
+            elif ctx.expressionStatement():
+                return self.visitExpressionStatement(ctx.expressionStatement())
+            elif ctx.functionDeclaration():
+                return self.visitFunctionDeclaration(ctx.functionDeclaration())
+            elif ctx.returnStatement():
+                return self.visitReturnStatement(ctx.returnStatement())
+            elif ctx.augAssignment():
+                return self.visitAugAssignment(ctx.augAssignment())
+        except Exception as e:
+            raise MithonError(e, line, line_content)
         
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
 
@@ -166,11 +181,11 @@ class MithonVisitor(ParseTreeVisitor):
             expression_result = self.visit(e)
 
             if not isinstance(expression_result, list):
-                raise DeclarationError(f"Invalid {var_type} declaration. Provided value has to be in [values] format.")
+                raise Exception(f"invalid {var_type} declaration. Provided value has to be in [values] format")
             
             for exp in expression_result:
                 if type(exp).__name__ != el_type:
-                    raise DeclarationError(f"Invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}.")
+                    raise Exception(f"invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}")
                 
             modifiers["el_type"] = el_type
             modifiers["el_max_count"] = el_max_count
@@ -181,7 +196,7 @@ class MithonVisitor(ParseTreeVisitor):
             expression_result = self.visit(e)
 
             if not ct and isinstance(expression_result, list):
-                raise DeclarationError(f"ComplexType has to be specified: List[type], Matrix[type], Array[int, type].")
+                raise Exception(f"complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
             var_type = type(expression_result).__name__  
 
@@ -190,7 +205,7 @@ class MithonVisitor(ParseTreeVisitor):
             var_name = i.getText()
             expression_result = None 
         else:
-            raise DeclarationError("Invalid variable declaration. Must include a type or initialization.")
+            raise Exception("invalid variable declaration. Must include a type or initialization")
         
         return var_name, var_type, expression_result, modifiers
 
@@ -201,7 +216,7 @@ class MithonVisitor(ParseTreeVisitor):
         if var_name:
             self.addVariable(var_name, var_type, expression_result, modifier)
         else:
-            raise DeclarationError("Variable declaration error: Name required")
+            raise Exception("variable declaration error: Name required")
 
 
     # Visit a parse tree produced by MithonParser#constDeclaration.
@@ -214,7 +229,7 @@ class MithonVisitor(ParseTreeVisitor):
         if var_name:
             self.addVariable(var_name, var_type, expression_result, modifier)
         else:
-            raise DeclarationError("Variable declaration error: Name required")
+            raise Exception("Variable declaration error: Name required")
 
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         self.loop_depth += 1  
