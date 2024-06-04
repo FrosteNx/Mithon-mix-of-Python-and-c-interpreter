@@ -23,7 +23,7 @@ class MithonVisitor(ParseTreeVisitor):
         if len(self.scopes) > 1:
             self.scopes.pop()
 
-    def addVariable(self, name, type, value, modifier=None):
+    def addVariable(self, name, type, value, modifier={"const":False}):
         self.scopes[-1][name] = (type, value, modifier)
 
     def lookupVariable(self, name):
@@ -142,18 +142,38 @@ class MithonVisitor(ParseTreeVisitor):
         ct = ctx.complexType()
         i = ctx.IDENTIFIER()
         e = ctx.expression()
+
+        modifiers = {"const":False}
         
         if t and i and e:
             var_type = t.getText()
             var_name = i.getText()
             expression_result = self.visit(e)
         elif ct and i and e:
-            var_type = ct.getText()
+            var_declaration = ct.getText().split('[')
+            var_type = var_declaration[0]
+
+            el_max_count = 10e10
+
+            match var_type:
+                case "List" | "Matrix":
+                    el_type = var_declaration[1][:-1]
+                case "Array":
+                    el_type = var_declaration[1][:-1].split(',')[1]
+                    el_max_count = var_declaration[1][:-1].split(',')[0]
+
             var_name = i.getText()
             expression_result = self.visit(e)
 
             if not isinstance(expression_result, list):
                 raise DeclarationError(f"Invalid {var_type} declaration. Provided value has to be in [values] format.")
+            
+            for exp in expression_result:
+                if type(exp).__name__ != el_type:
+                    raise DeclarationError(f"Invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}.")
+                
+            modifiers["el_type"] = el_type
+            modifiers["el_max_count"] = el_max_count
 
         elif i and e and not t:
             
@@ -172,14 +192,14 @@ class MithonVisitor(ParseTreeVisitor):
         else:
             raise DeclarationError("Invalid variable declaration. Must include a type or initialization.")
         
-        return var_name, var_type, expression_result
+        return var_name, var_type, expression_result, modifiers
 
     def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
     
-        var_name, var_type, expression_result = self.prepareVariable(ctx)
+        var_name, var_type, expression_result, modifier = self.prepareVariable(ctx)
 
         if var_name:
-            self.addVariable(var_name, var_type, expression_result)
+            self.addVariable(var_name, var_type, expression_result, modifier)
         else:
             raise DeclarationError("Variable declaration error: Name required")
 
@@ -187,10 +207,12 @@ class MithonVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by MithonParser#constDeclaration.
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
         
-        var_name, var_type, expression_result = self.prepareVariable(ctx.varDeclaration())
+        var_name, var_type, expression_result, modifier = self.prepareVariable(ctx.varDeclaration())
+
+        modifier["const"] = True
 
         if var_name:
-            self.addVariable(var_name, var_type, expression_result, "const")
+            self.addVariable(var_name, var_type, expression_result, modifier)
         else:
             raise DeclarationError("Variable declaration error: Name required")
 
@@ -225,7 +247,6 @@ class MithonVisitor(ParseTreeVisitor):
 
             increment_expr = ctx.expression(2)
             increment_value = self.visit(increment_expr)
-            #self.updateVariable(loop_var_name, increment_value)
 
             condition = self.visit(condition_expr)
 
@@ -260,7 +281,7 @@ class MithonVisitor(ParseTreeVisitor):
 
         for scope in reversed(self.scopes):
             if name in scope:
-                if scope[name][2] == 'const':
+                if scope[name][2]["const"]:
                     raise TypeError("Cannot modify const variable.")
                 var_type = scope[name][0]  
                 modifier = scope[name][-1]
@@ -372,13 +393,16 @@ class MithonVisitor(ParseTreeVisitor):
             if not isinstance(values, list):
                 raise TypeError("cannot append to a non-complex type")
             
-            if modifier == 'const':
+            if modifier["const"]:
                 raise TypeError("cannot modify const variable")
+            
+            if len(values) + 1 > int(modifier["el_max_count"]):
+                raise IndexError(f"maximum size: {modifier['el_max_count']} of {t} reached")
             
             new_value = self.visit(argument_list.expression()[1])
 
-            if type(new_value).__name__ != t.split('[')[1][:-1]:
-                raise TypeError(f"cannot append {type(new_value)} to sequence of type: {t}")
+            if type(new_value).__name__ != modifier["el_type"]:
+                raise TypeError(f"cannot append: {type(new_value).__name__} to {t} of type: {modifier['el_type']}")
             
             values.append(new_value)
 
