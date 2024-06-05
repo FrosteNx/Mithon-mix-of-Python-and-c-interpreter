@@ -23,23 +23,28 @@ class MithonVisitor(ParseTreeVisitor):
         self.loop_depth = 0
         self.lines = lines
         super().__init__()
-        
+
+
     def pushScope(self):
         self.scopes.append({})
+
 
     def popScope(self):
         if len(self.scopes) > 1:
             self.scopes.pop()
 
+
     def addVariable(self, name, type, value, modifier={"const":False}):
         self.scopes[-1][name] = (type, value, modifier)
+
 
     def lookupVariable(self, name):
         for scope in reversed(self.scopes):
             if name in scope:
                 return scope[name]
         raise Exception(f"Variable {name} not defined")
-    
+
+
     def updateVariable(self, name, value):
 
         for scope in reversed(self.scopes):
@@ -53,9 +58,15 @@ class MithonVisitor(ParseTreeVisitor):
             
         raise Exception(f"Variable {name} not defined")
 
+
+    def is_variable(self, name):
+        return any(name in scope for scope in self.scopes)
+
+
     def visitProgram(self, ctx:MithonParser.ProgramContext):
         for statement in ctx.statement():
             self.visit(statement)
+
 
     def visitStatement(self, ctx:MithonParser.StatementContext):
 
@@ -85,7 +96,8 @@ class MithonVisitor(ParseTreeVisitor):
                 return self.visitAugAssignment(ctx.augAssignment())
         except Exception as e:
             raise MithonError(e, line, line_content)
-        
+
+
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
 
         left = ctx.getChild(0).getText()
@@ -137,7 +149,7 @@ class MithonVisitor(ParseTreeVisitor):
                 else:
                     raise ZeroDivisionError("integer modulo by zero")
 
-    # Visit a parse tree produced by MithonParser#statement_list.
+
     def visitStatement_list(self, ctx: MithonParser.Statement_listContext):
         return_value = None 
         
@@ -156,13 +168,13 @@ class MithonVisitor(ParseTreeVisitor):
         return return_value
 
 
-    # Visit a parse tree produced by MithonParser#printFunction.
     def visitPrintFunction(self, ctx:MithonParser.PrintFunctionContext):
         expressions = ctx.expressionList().expression()
         for expr in expressions:
             value = self.visit(expr)
             print(value, end=' ')
         print()
+
 
     def prepareVariable(self, ctx, modifiers = {"const":False}):
         
@@ -212,7 +224,7 @@ class MithonVisitor(ParseTreeVisitor):
                 expression_result = self.visit(e)
 
                 if not ct and isinstance(expression_result, list):
-                    raise Exception(f"complexType has to be specified: List[type], Matrix[type], Array[int, type]")
+                    raise Exception("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
                 var_type = type(expression_result).__name__
 
@@ -255,10 +267,11 @@ class MithonVisitor(ParseTreeVisitor):
     
         self.prepareVariable(ctx)
 
-    # Visit a parse tree produced by MithonParser#constDeclaration.
+
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
 
         self.prepareVariable(ctx.varDeclaration(), {"const" : True})
+
 
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         self.loop_depth += 1  
@@ -297,6 +310,7 @@ class MithonVisitor(ParseTreeVisitor):
         self.popScope()
         self.loop_depth -= 1 
 
+
     def visitWhileLoop(self, ctx: MithonParser.WhileLoopContext):
             self.loop_depth += 1
             condition = self.visit(ctx.expression())
@@ -321,7 +335,7 @@ class MithonVisitor(ParseTreeVisitor):
             self.popScope()
             self.loop_depth -= 1
 
-    # Visit a parse tree produced by MithonParser#ifStatement.
+
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
         if_condition = self.visit(ctx.expression(0))
         
@@ -356,7 +370,7 @@ class MithonVisitor(ParseTreeVisitor):
                     if return_value is not None:
                         return return_value
                     
-    # Visit a parse tree produced by MithonParser#functionDeclaration.
+
     def visitFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
         function_name = ctx.IDENTIFIER().getText()
         return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
@@ -375,7 +389,6 @@ class MithonVisitor(ParseTreeVisitor):
 
         return_type = return_type_ctx.getText() if return_type_ctx else None
 
-        # Store the function declaration information in the function_declarations dictionary
         self.function_declarations[tuple([function_name, tuple(parameters_count)])] = {
             'return_type': return_type,
             'parameters': parameter_list,
@@ -391,12 +404,11 @@ class MithonVisitor(ParseTreeVisitor):
                 return True
         return False
 
-    # Visit a parse tree produced by MithonParser#parameterList.
+
     def visitParameterList(self, ctx:MithonParser.ParameterListContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MithonParser#functionCall.
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
 
         function_name = ctx.IDENTIFIER().getText()
@@ -476,23 +488,19 @@ class MithonVisitor(ParseTreeVisitor):
         return_value = self.visit(ctx.expression())
         return return_value
 
-    # Visit a parse tree produced by MithonParser#argumentList.
+
     def visitArgumentList(self, ctx:MithonParser.ArgumentListContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MithonParser#expressionList.
     def visitExpressionList(self, ctx:MithonParser.ExpressionListContext):
         return self.visitChildren(ctx)
 
 
     def visitExpressionStatement(self, ctx:MithonParser.ExpressionStatementContext):
-        expression = ctx.expression()
-        # Default behavior for other expression statements
-        return self.visit(expression)
+        return self.visit(ctx.expression())
 
 
-    # Visit a parse tree produced by MithonParser#expression.
     def visitExpression(self, ctx:MithonParser.ExpressionContext):
         if ctx.logicalOrExpression():
             return self.visitLogicalOrExpression(ctx.logicalOrExpression())
@@ -500,7 +508,6 @@ class MithonVisitor(ParseTreeVisitor):
             return self.visitAugAssignment(ctx.augAssignment())
 
 
-    # Visit a parse tree produced by MithonParser#logicalOrExpression.
     def visitLogicalOrExpression(self, ctx:MithonParser.LogicalOrExpressionContext):
         if len(ctx.logicalAndExpression()) > 1:
             result = False
@@ -510,7 +517,7 @@ class MithonVisitor(ParseTreeVisitor):
         else:
             return self.visit(ctx.logicalAndExpression(0))
 
-    # Visit a parse tree produced by MithonParser#logicalAndExpression.
+
     def visitLogicalAndExpression(self, ctx:MithonParser.LogicalAndExpressionContext):
         if len(ctx.equalityExpression()) > 1:
             result = True
@@ -520,7 +527,7 @@ class MithonVisitor(ParseTreeVisitor):
         else:
             return self.visit(ctx.equalityExpression(0))
 
-    # Visit a parse tree produced by MithonParser#equalityExpression.
+
     def visitEqualityExpression(self, ctx:MithonParser.EqualityExpressionContext):
         left = self.visitRelationalExpression(ctx.relationalExpression(0))
 
@@ -535,11 +542,9 @@ class MithonVisitor(ParseTreeVisitor):
         return left
 
 
-    # Visit a parse tree produced by MithonParser#relationalExpression.
     def visitRelationalExpression(self, ctx:MithonParser.RelationalExpressionContext):
         left = self.visitAdditiveExpression(ctx.additiveExpression(0))
 
-        # jeżeli wyrażenie składa się z więcej niż 1 dziecka, czyli w ogóle mamy operator to wchodzimy dalej
         if ctx.getChildCount() > 1:
             operator = ctx.getChild(1).getText()
             right = self.visitAdditiveExpression(ctx.additiveExpression(1))
@@ -554,7 +559,7 @@ class MithonVisitor(ParseTreeVisitor):
             
         return left
 
-    # Visit a parse tree produced by MithonParser#additiveExpression.
+
     def visitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
@@ -570,11 +575,7 @@ class MithonVisitor(ParseTreeVisitor):
                 return left_value - right
         else:
             raise Exception("Unsupported operator: " + operator)
-
-    
         
-    def is_variable(self, name):
-        return any(name in scope for scope in self.scopes)
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
         left = self.visitUnaryExpression(ctx.unaryExpression(0))
@@ -592,6 +593,7 @@ class MithonVisitor(ParseTreeVisitor):
             
         return result
 
+
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visitPrimaryExpression(ctx.primaryExpression())
@@ -604,7 +606,6 @@ class MithonVisitor(ParseTreeVisitor):
         return None
 
 
-    # Visit a parse tree produced by MithonParser#primaryExpression.
     def visitPrimaryExpression(self, ctx:MithonParser.PrimaryExpressionContext):
         if ctx.INTEGER():
             return int(ctx.INTEGER().getText())
