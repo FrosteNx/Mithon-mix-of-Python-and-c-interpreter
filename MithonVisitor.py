@@ -39,6 +39,19 @@ class MithonVisitor(ParseTreeVisitor):
             if name in scope:
                 return scope[name]
         raise Exception(f"Variable {name} not defined")
+    
+    def updateVariable(self, name, value):
+
+        for scope in reversed(self.scopes):
+            if name in scope:
+                if scope[name][-1]["const"]:
+                    raise TypeError("Cannot modify const variable.")
+                var_type = scope[name][0]  
+                modifier = scope[name][-1]
+                scope[name] = (var_type, value, modifier) 
+                return
+            
+        raise Exception(f"Variable {name} not defined")
 
     def visitProgram(self, ctx:MithonParser.ProgramContext):
         for statement in ctx.statement():
@@ -151,7 +164,7 @@ class MithonVisitor(ParseTreeVisitor):
             print(value, end=' ')
         print()
 
-    def prepareVariable(self, ctx):
+    def prepareVariable(self, ctx, modifiers = {"const":False}):
         
         t = ctx.type_()
         ct = ctx.complexType()
@@ -159,7 +172,7 @@ class MithonVisitor(ParseTreeVisitor):
         i = ctx.IDENTIFIER()
         e = ctx.expression()
 
-        modifiers = {"const":False}
+        expression_result = None
         
         if t and i and e:
             var_type = t.getText()
@@ -201,7 +214,30 @@ class MithonVisitor(ParseTreeVisitor):
                 if not ct and isinstance(expression_result, list):
                     raise Exception(f"complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
-                var_type = type(expression_result).__name__  
+                var_type = type(expression_result).__name__
+
+                if self.is_variable(var_name):
+                    self.updateVariable(var_name, expression_result)
+                else:
+                    self.addVariable(var_name, var_type, expression_result, modifiers)
+
+                return
+            
+            elif n.listIndexation():
+
+                var_name = n.listIndexation().IDENTIFIER().getText()
+                var_type, variable_values, modifiers = self.lookupVariable(var_name)
+                index = self.visit(n.listIndexation().expression())
+
+                if index > len(variable_values):
+                    raise IndexError("index out of range")
+                
+                new_value = self.visit(e)
+
+                variable_values[index] = new_value
+
+                self.updateVariable(var_name, variable_values)
+                return 
 
         elif (t or ct) and i and not e:
             var_type = t.getText() if t else ct.getText()
@@ -210,29 +246,19 @@ class MithonVisitor(ParseTreeVisitor):
         else:
             raise Exception("invalid variable declaration. Must include a type or initialization")
         
-        return var_name, var_type, expression_result, modifiers
-
-    def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
-    
-        var_name, var_type, expression_result, modifier = self.prepareVariable(ctx)
-
         if var_name:
-            self.addVariable(var_name, var_type, expression_result, modifier)
+            self.addVariable(var_name, var_type, expression_result, modifiers)
         else:
             raise Exception("variable declaration error: Name required")
 
+    def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
+    
+        self.prepareVariable(ctx)
 
     # Visit a parse tree produced by MithonParser#constDeclaration.
     def visitConstDeclaration(self, ctx:MithonParser.ConstDeclarationContext):
-        
-        var_name, var_type, expression_result, modifier = self.prepareVariable(ctx.varDeclaration())
 
-        modifier["const"] = True
-
-        if var_name:
-            self.addVariable(var_name, var_type, expression_result, modifier)
-        else:
-            raise Exception("Variable declaration error: Name required")
+        self.prepareVariable(ctx.varDeclaration(), {"const" : True})
 
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         self.loop_depth += 1  
@@ -241,7 +267,7 @@ class MithonVisitor(ParseTreeVisitor):
 
         init_expr = ctx.expression(0)
         init_value = self.visit(init_expr)
-        self.addVariable(loop_var_name, type(init_value).__name__, init_value, None)
+        self.addVariable(loop_var_name, type(init_value).__name__, init_value, {"const" : False})
 
         condition_expr = ctx.expression(1)
         condition = self.visit(condition_expr)
@@ -294,19 +320,6 @@ class MithonVisitor(ParseTreeVisitor):
 
             self.popScope()
             self.loop_depth -= 1
-        
-    def updateVariable(self, name, value):
-
-        for scope in reversed(self.scopes):
-            if name in scope:
-                if scope[name][2]["const"]:
-                    raise TypeError("Cannot modify const variable.")
-                var_type = scope[name][0]  
-                modifier = scope[name][-1]
-                scope[name] = (var_type, value, modifier) 
-                return
-            
-        raise Exception(f"Variable {name} not defined")
 
     # Visit a parse tree produced by MithonParser#ifStatement.
     def visitIfStatement(self, ctx:MithonParser.IfStatementContext):
