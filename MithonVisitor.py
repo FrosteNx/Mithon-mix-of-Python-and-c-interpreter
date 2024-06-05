@@ -223,6 +223,8 @@ class MithonVisitor(ParseTreeVisitor):
                 var_name = n.getText()
                 expression_result = self.visit(e)
 
+                print(expression_result)
+
                 if not ct and isinstance(expression_result, list):
                     raise Exception("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
@@ -487,6 +489,12 @@ class MithonVisitor(ParseTreeVisitor):
                 raise Exception(f"Function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             self.handle_sort_function(var)
+        
+        elif function_name == 'sorted':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+            var = argument_list.expression(0).getText()
+            return self.handle_sorted_function(var) 
 
         elif function_name == 'pop':
             if len(argument_list.expression()) != 1:
@@ -583,6 +591,15 @@ class MithonVisitor(ParseTreeVisitor):
             raise TypeError(f"Function 'sort' is not applicable to type: {type(values).__name__}")
         values.sort()
         self.updateVariable(var, values)
+
+    def handle_sorted_function(self, var):
+        if not self.is_variable(var):
+            raise Exception(f"Variable '{var}' is not defined")
+        t, values, modifier = self.lookupVariable(var)
+        if not isinstance(values, list):
+            raise TypeError(f"Function 'sort' is not applicable to type: {type(values).__name__}")
+        new_values = sorted(values)
+        return new_values
 
     def handle_pop_function(self, var):
         if not self.is_variable(var):

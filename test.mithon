@@ -1,6 +1,8 @@
 List[int] l = [1, 2, 3, 10, 4, 7, 5, 8, 6]
 
-sort(l)
+List[int] b = sorted(l)
+
+print(b)
 
 print(l)
 
