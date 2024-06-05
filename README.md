@@ -1,6 +1,6 @@
 # Język Mithon
 
-Mithon to język programowania zaprojektowany z myślą o prostocie i wszechstronności. Jest to połączenie dobrze znanego każdemu programiscie Pythona oraz C++.
+Mithon to język programowania zaprojektowany z myślą o prostocie i wszechstronności. Jest to połączenie dobrze znane każdemu programiscie czyli Python oraz Go.
 
 # Przegląd języka
 
