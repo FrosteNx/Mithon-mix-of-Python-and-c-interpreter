@@ -450,6 +450,49 @@ class MithonVisitor(ParseTreeVisitor):
             values.append(new_value)
 
             self.updateVariable(var, values)
+            
+        elif function_name == 'sum':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'sum' expects 1 argument, but {len(argument_list.expression())} were provided")
+            arg_value = self.visit(argument_list.expression(0))
+            return self.handle_sum_function(arg_value)
+
+        elif function_name == 'max':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'max' expects 1 argument, but {len(argument_list.expression())} were provided")
+            arg_value = self.visit(argument_list.expression(0))
+            return self.handle_max_function(arg_value)
+
+        elif function_name == 'min':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
+            arg_value = self.visit(argument_list.expression(0))
+            return self.handle_min_function(arg_value)
+
+        elif function_name == 'reverse':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'reverse' expects 1 argument, but {len(argument_list.expression())} were provided")
+            var = argument_list.expression(0).getText()
+            self.handle_reverse_function(var)
+
+        elif function_name == 'remove':
+            if len(argument_list.expression()) != 2:
+                raise Exception(f"Function 'remove' expects 2 arguments, but {len(argument_list.expression())} were provided")
+            list_name = argument_list.expression(0).getText()
+            element = self.visit(argument_list.expression(1))
+            return self.handle_remove_function(list_name, element)
+        
+        elif function_name == 'sort':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+            var = argument_list.expression(0).getText()
+            self.handle_sort_function(var)
+
+        elif function_name == 'pop':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
+            var = argument_list.expression(0).getText()
+            return self.handle_pop_function(var)
 
         elif (function_name, argument_count) in self.function_declarations:
             function_info = self.function_declarations[function_name, argument_count]
@@ -483,6 +526,69 @@ class MithonVisitor(ParseTreeVisitor):
             return len(arg)
         else:
             raise Exception(f"Function 'len' is not applicable to type: {type(arg).__name__}")
+        
+    def handle_sum_function(self, arg):
+        if isinstance(arg, list):
+            return sum(arg)
+        else:
+            raise Exception(f"Function 'sum' is not applicable to type: {type(arg).__name__}")
+
+    def handle_max_function(self, arg):
+        if isinstance(arg, list):
+            return max(arg)
+        else:
+            raise Exception(f"Function 'max' is not applicable to type: {type(arg).__name__}")
+
+    def handle_min_function(self, arg):
+        if isinstance(arg, list):
+            return min(arg)
+        else:
+            raise Exception(f"Function 'min' is not applicable to type: {type(arg).__name__}")
+
+    def handle_reverse_function(self, var):
+        if not self.is_variable(var):
+            raise Exception(f"Variable '{var}' is not defined")
+        t, values, modifier = self.lookupVariable(var)
+        if not isinstance(values, list):
+            raise TypeError(f"Function 'reverse' is not applicable to type: {type(values).__name__}")
+        values.reverse()
+        self.updateVariable(var, values)
+
+    def handle_remove_function(self, list_name, element):
+        if not self.is_variable(list_name):
+            raise Exception(f"Variable '{list_name}' is not defined")
+        
+        var_type, values, modifier = self.lookupVariable(list_name)
+
+        if not isinstance(values, list):
+            raise TypeError(f"Function 'remove' is not applicable to type: {type(values).__name__}")
+
+        if element not in values:
+            raise ValueError(f"Element '{element}' not found in list '{list_name}'")
+
+        values.remove(element)
+        self.updateVariable(list_name, values)
+        
+    def handle_sort_function(self, var):
+        if not self.is_variable(var):
+            raise Exception(f"Variable '{var}' is not defined")
+        t, values, modifier = self.lookupVariable(var)
+        if not isinstance(values, list):
+            raise TypeError(f"Function 'sort' is not applicable to type: {type(values).__name__}")
+        values.sort()
+        self.updateVariable(var, values)
+
+    def handle_pop_function(self, var):
+        if not self.is_variable(var):
+            raise Exception(f"Variable '{var}' is not defined")
+        t, values, modifier = self.lookupVariable(var)
+        if not isinstance(values, list):
+            raise TypeError(f"Function 'pop' is not applicable to type: {type(values).__name__}")
+        if len(values) == 0:
+            raise IndexError("pop from empty list")
+        popped_value = values.pop()
+        self.updateVariable(var, values)
+        return popped_value
 
     def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
         return_value = self.visit(ctx.expression())

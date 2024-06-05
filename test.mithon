@@ -1,1 +1,13 @@
-int x  = 2;
+List[int] l = [1, 2, 3, 10, 4, 7, 5, 8, 6]
+
+sort(l)
+
+print(l)
+
+reverse(l)
+
+print(l)
+
+pop(l)
+
+print(l)

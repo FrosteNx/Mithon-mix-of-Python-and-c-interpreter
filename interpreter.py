@@ -15,7 +15,6 @@ class MyErrorListener(ErrorListener):
         else:
             raise SyntaxError(f"Error at line: {line}. Error message: {msg}")
 
-
 def main():
 
     with open("test.mithon", "r") as file:
