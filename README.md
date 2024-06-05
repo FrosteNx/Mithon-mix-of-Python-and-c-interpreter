@@ -105,11 +105,23 @@ if (x > 0) {
 ```
 ### Pętle
 
+1. Pętla ```for```. 
+2. Pętla ```while```
+
+
 ### Typy złożone
+
+Mithon obsługuje także typy:
+1. ```List``` Definiuje listę zawierającą elementy danego typu. ```Składnia: List[type]```, gdzie type określa typ elementów listy. Np:
+```List[int] nums = [1, 2, 3, 4, 5, 6, 7, 8, 9]```
+2. ```Matrix``` Definiuje macierz zawierającą elementy danego typu. ```Składnia: Matrix[type]```, gdzie type określa typ elementów macierzy
+```Matrix[int] a = [1, 2]```
+3. ```Array``` Definiuje tablice o określonym rozmiarze i typie elementów. ```Składnia: Array[size, type]```, gdzie size określa wielkość tablicy, a type określa typ jej elementów. Np:
+```Array[10, int] a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]```
 
 ### Wbudowane funkcje 
 
-Funkcja ```print``` służy do wyświetlania wartości na standardowym wyjściu. Może przyjmować jedną lub więcej wartości jako argumenty, które są następnie wyświetlane w kolejności podanej w wywołaniu funkcji.
+1. Funkcja ```print``` służy do wyświetlania wartości na standardowym wyjściu. Może przyjmować jedną lub więcej wartości jako argumenty, które są następnie wyświetlane w kolejności podanej w wywołaniu funkcji.
 Przykładowe użycie:
 ```
 print("Ala", "ma", 2, "koty")
@@ -118,7 +130,13 @@ Spodziewany output:
 ```
 Ala ma 2 koty
 ```
+2. Funkcja ```len``` zwracą długość ciągu lub listy. ```len("mama")```
+3. Funkcja ```append```  dodaje element do listy. ```append(lista, 10)```
+4. Funkcja ```sum``` zwraca sumę elementów w liście ```sum(lista)```
+5. Funkcja ```min``` zwraca minmalny element w liście ```min(lista)```
+6. Funkcja ```maz``` zwraca maksymalny element w liście ```max(lista)```
 
+7. 
 
 # Instalacja
 ```
