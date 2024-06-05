@@ -493,6 +493,12 @@ class MithonVisitor(ParseTreeVisitor):
                 raise Exception(f"Function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             return self.handle_pop_function(var)
+        
+        elif function_name == 'mean':
+            if len(argument_list.expression()) != 1:
+                raise Exception(f"Function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
+            arg_value = self.visit(argument_list.expression(0))
+            return self.handle_mean_function(arg_value)
 
         elif (function_name, argument_count) in self.function_declarations:
             function_info = self.function_declarations[function_name, argument_count]
@@ -589,6 +595,12 @@ class MithonVisitor(ParseTreeVisitor):
         popped_value = values.pop()
         self.updateVariable(var, values)
         return popped_value
+    
+    def handle_mean_function(self, arg):
+        if isinstance(arg, list) and all(isinstance(x, (int, float)) for x in arg):
+            return sum(arg) / len(arg) if len(arg) > 0 else 0
+        else:
+            raise Exception(f"Function 'mean' is not applicable to type: {type(arg).__name__} or list contains non-numeric elements")
 
     def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
         return_value = self.visit(ctx.expression())

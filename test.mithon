@@ -11,3 +11,14 @@ print(l)
 pop(l)
 
 print(l)
+
+Array[3, int] a = [1, 2, 3]
+
+print(a)
+
+reverse(a)
+
+print(a)
+
+print(mean(a))
+
