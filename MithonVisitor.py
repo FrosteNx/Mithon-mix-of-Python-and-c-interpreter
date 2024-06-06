@@ -805,11 +805,11 @@ class MithonVisitor(ParseTreeVisitor):
                     raise TypeError("types dont match")
                 
                 if operator == '+':
-                    for el in enumerate(l_values):
-                        el += r_value
+                    for i, el in enumerate(l_values):
+                        l_values[i] += r_value
                 elif operator == '-':
-                    for el in enumerate(l_values):
-                        el += r_value
+                    for i, el in enumerate(l_values):
+                        l_values[i] -= r_value
                 
                 self.updateVariable(l, l_values)
 
