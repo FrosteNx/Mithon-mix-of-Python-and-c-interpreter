@@ -186,16 +186,16 @@ class MithonVisitor(ParseTreeVisitor):
         i = ctx.IDENTIFIER()
         e = ctx.expression()
 
-        if not modifiers:
-            modifiers = {"const":False}
-
         expression_result = None
         
         if t and i and e:
+            modifiers = {"const":False}
             var_type = t.getText()
             var_name = i.getText()
             expression_result = self.visit(e)
         elif ct and i and e:
+            modifiers = {"const":False}
+
             var_declaration = ct.getText().split('[')
             var_type = var_declaration[0]
 
@@ -222,6 +222,8 @@ class MithonVisitor(ParseTreeVisitor):
             modifiers["el_max_count"] = el_max_count
 
         elif n and e and not t:
+
+            modifiers = {"const":False}
 
             if n.IDENTIFIER():
             
@@ -257,6 +259,12 @@ class MithonVisitor(ParseTreeVisitor):
                 return 
 
         elif (t or ct) and i and not e:
+            
+            if modifiers:
+                raise TypeError("cannot declare const variable without providing initial value")
+            else:
+                modifiers = {"const":False}
+
             var_type = t.getText() if t else ct.getText()
             var_name = i.getText()
             expression_result = None 
