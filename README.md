@@ -112,14 +112,14 @@ for(int x = 0; x < 10; x += 1){
 	ciało pętli
 }
 ```
-2. Pętla iterująca po kolekcji. Składnia:
+2. Pętla iterująca po kolekcji. Można nie podawać typu zmiennej. Składnia:
 
 ```
+for(int num in nums){
+	ciało funkcji for
+}
+```
 
-```
-3. Pętla ???. Składnia:
-```
-```
 4. Pętla ```while``` wykonuje kod wewnątrz niej tak długo, jak długo podany warunek jest spełniony. Składnia:
 ```
 int i = 0;
@@ -162,6 +162,12 @@ Ala ma 2 koty
 10. Funkcja ```mean``` oblicza średnią typu żłożonego ```mean(lista)```
 11. Funkcja ```sort``` sortuje rosnąco w miejscu elementy listy ```sort(lista)```
 12. Funkcja ```sorted``` zwraca posortowany nowy obiekt ```sorted(lista)```
+
+### Komentarze
+Komentarze w języku Mithon poprzedzone są dwoma slashami. Składnia
+```
+// Komentarz
+```
 
 # Instalacja
 ```
