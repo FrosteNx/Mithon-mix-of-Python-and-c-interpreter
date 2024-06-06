@@ -104,9 +104,30 @@ if (x > 0) {
 
 ```
 ### Pętle
+Język Mithon wspiera dwa rodzaje pętli: 
+1. Pętla zakresowa ```for```. Składnia :
 
-1. Pętla ```for```. 
-2. Pętla ```while```
+```
+for(int x = 0; x < 10; x += 1){
+	ciało pętli
+}
+```
+2. Pętla iterująca po kolekcji. Składnia:
+
+```
+
+```
+3. Pętla ???. Składnia:
+```
+```
+4. Pętla ```while``` wykonuje kod wewnątrz niej tak długo, jak długo podany warunek jest spełniony. Składnia:
+```
+int i = 0;
+while (i < 10) {
+    print(i);
+    i = i + 1;
+}
+```
 
 
 ### Typy złożone
@@ -134,9 +155,13 @@ Ala ma 2 koty
 3. Funkcja ```append```  dodaje element do listy. ```append(lista, 10)```
 4. Funkcja ```sum``` zwraca sumę elementów w liście ```sum(lista)```
 5. Funkcja ```min``` zwraca minmalny element w liście ```min(lista)```
-6. Funkcja ```maz``` zwraca maksymalny element w liście ```max(lista)```
-
-7. 
+6. Funkcja ```max``` zwraca maksymalny element w liście ```max(lista)```
+7. Funkcja ```reverse``` odwraca elementy listy ```reverse(lista)```
+8. Funkcja ```remove``` usuwa daną wartość z listy ```remove(lista, 2)```. W przypadku takich samych elementów usuwą pierwsze wystąpienie.
+9. Funkcja ```pop``` usuwa ostatni element listy ```pop(lista)```
+10. Funkcja ```mean``` oblicza średnią typu żłożonego ```mean(lista)```
+11. Funkcja ```sort``` sortuje rosnąco w miejscu elementy listy ```sort(lista)```
+12. Funkcja ```sorted``` zwraca posortowany nowy obiekt ```sorted(lista)```
 
 # Instalacja
 ```
