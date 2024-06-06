@@ -165,6 +165,33 @@ while (i < 10) {
 }
 ```
 
+### Sterowanie przepływem 
+W języku Mithon dostępne są również instrukcje break i continue, które umożliwiają sterowanie przepływem pętli.Są to:
+1. ```break```
+
+```
+for (int i = 0; i < 10; i += 1) {
+    if (i == 5) {
+	print(i)
+        break
+    }
+    
+}
+
+```
+2. ```continue```
+
+```
+for (int i = 0; i < 5; i += 1) {
+    if (i == 3) {
+        continue
+    }
+print(i)
+}
+
+```
+
+
 ### Funkcje 
 Definicja funkcji wymaga: słowa kluczowego ```def```, następnie nazwy funkcji, następnie listy parametrów (może być pusta) oraz typu zwranego (zapisywanego po ```->```).
 Składnia:
