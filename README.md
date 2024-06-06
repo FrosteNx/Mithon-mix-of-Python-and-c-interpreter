@@ -86,6 +86,7 @@ const int a = 3
     - Odejmowanie ``` - ```
     - Mnożene ``` * ```
     - Dzielenie ``` / ```
+    - Modulo ``` % ```
 2. Porównania
     - Równość ``` == ```
     - Nierówność ``` !=  ```
@@ -255,6 +256,74 @@ Ala ma 2 koty
 Komentarze w języku Mithon poprzedzone są dwoma slashami. Składnia
 ```
 // Komentarz
+```
+
+### Przykładowe programy
+1.Obliczanie silnii z podanej liczby n:
+```
+def factorial(int n) -> int {
+    if (n == 0) {
+        return 1
+    } else {
+        return n * factorial(n - 1)
+    }
+}
+
+int n = 5
+int result = factorial(n)
+print(result)
+```
+
+2.Obliczanie n-tego wyrazu ciągu Fibonacciego:
+```
+def fibonacci(int n) -> int {
+    if (n == 0) {
+        return 0
+    } elif (n == 1) {
+        return 1
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+
+int n = 6
+int result = fibonacci(n)
+print(result) 
+```
+3.Obliczanie NWD:
+```
+def gcd(int a, int b) -> int {
+    while (b != 0) {
+        int temp = b
+        b = a % b
+        a = temp
+    }
+    return a
+}
+
+int a = 56
+int b = 98
+int result = gcd(a, b)
+print(result)
+```
+
+4.Sprawdzenie czy liczba jest liczbą pierwszą:
+```
+def is_prime(int n) -> bool {
+    if (n <= 1) {
+        return False
+    }
+    for (int i = 2; i * i <= n; i += 1) {
+        if (n % i == 0) {
+            return False
+        }
+    }
+    return True
+}
+
+int num = 29
+bool result = is_prime(num)
+print(result)
 ```
 
 # Instalacja
