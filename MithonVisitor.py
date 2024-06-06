@@ -35,6 +35,8 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     def addVariable(self, name, type, value, modifier={"const":False}):
+        if any(name == func_name for func_name, func_type in self.function_declarations):
+            raise SyntaxError("cannot declare variable with identic name as a function")
         self.scopes[-1][name] = (type, value, modifier)
 
 
@@ -279,7 +281,7 @@ class MithonVisitor(ParseTreeVisitor):
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
         self.loop_depth += 1
 
-        if "in" in ctx.getText():
+        if len(ctx.IDENTIFIER()) > 1:
 
             content_var_name = ctx.IDENTIFIER(1).getText()
             content_type, content_values, content_modifier = self.lookupVariable(content_var_name)
@@ -441,6 +443,9 @@ class MithonVisitor(ParseTreeVisitor):
 
         if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
             raise SyntaxError("cannot declare 2 functions with identic names")
+        
+        if self.is_variable(function_name):
+            raise SyntaxError("cannot declare function with identic name as a variable")
 
         function_body = ctx.statement_list()
 
@@ -469,7 +474,7 @@ class MithonVisitor(ParseTreeVisitor):
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
 
         function_name = ctx.IDENTIFIER().getText()
-        argument_list = ctx.argumentList(0) if ctx.argumentList() else []
+        argument_list = ctx.argumentList() if ctx.argumentList() else []
 
         argument_count = tuple([type(self.visit(arg)).__name__ for arg in argument_list.expression()]) if argument_list else ()
 
@@ -498,7 +503,7 @@ class MithonVisitor(ParseTreeVisitor):
             
             if len(values) + 1 > int(modifier["el_max_count"]):
                 raise IndexError(f"maximum size: {modifier['el_max_count']} of {t} reached")
-            
+
             new_value = self.visit(argument_list.expression()[1])
 
             if type(new_value).__name__ != modifier["el_type"]:
@@ -753,35 +758,147 @@ class MithonVisitor(ParseTreeVisitor):
     def visitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
-
-        right = self.visit(ctx.getChild(2))  
+  
         operator = ctx.getChild(1).getText() 
 
-        if operator in ('+', '-'):
-            left_value = self.visit(ctx.getChild(0)) 
-            if operator == '+':
-                return left_value + right
-            elif operator == '-':
-                return left_value - right
+        l = ctx.getChild(0).getText()
+        if self.is_variable(l) and self.lookupVariable(l)[0] == "Matrix":
+            
+            l_t, l_values, l_modifier = self.lookupVariable(l)
+
+            r = ctx.getChild(2).getText()
+
+            if self.is_variable(r) and self.lookupVariable(r)[0] == "Matrix":
+
+                r_t, r_values, r_modifier = self.lookupVariable(r)
+                
+                if len(r_values) != len(l_values):
+                    raise Exception("lengths dont match")
+                
+                if l_modifier["el_type"] != r_modifier["el_type"]:
+                    raise TypeError("inner types dont match")
+                
+                if operator == '+':
+                    for i, el in enumerate(r_values):
+                        l_values[i] += el
+                elif operator == '-':
+                    for i, el in enumerate(r_values):
+                        l_values[i] -= el
+                
+                self.updateVariable(l, l_values)
+
+                return l_values
+
+            else:
+
+                r_value = self.visit(ctx.getChild(2))
+
+                if type(r_value).__name__ != l_modifier["el_type"]:
+                    raise TypeError("types dont match")
+                
+                if operator == '+':
+                    for el in enumerate(l_values):
+                        el += r_value
+                elif operator == '-':
+                    for el in enumerate(l_values):
+                        el += r_value
+                
+                self.updateVariable(l, l_values)
+
+                return l_values
+            
         else:
-            raise Exception("unsupported operator: " + operator)
+            right = self.visit(ctx.getChild(2))
+
+            if operator in ('+', '-'):
+                left_value = self.visit(ctx.getChild(0)) 
+                if operator == '+':
+                    return left_value + right
+                elif operator == '-':
+                    return left_value - right
+            else:
+                raise Exception("unsupported operator: " + operator)
         
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
-        left = self.visitUnaryExpression(ctx.unaryExpression(0))
-        result = left
-        for i in range(1, len(ctx.unaryExpression())):
-            operator = ctx.getChild(2*i - 1).getText()
-            right = self.visitUnaryExpression(ctx.unaryExpression(i))
-            if operator == '*':
-                result *= right
-            elif operator == '/':
-                if right != 0:
-                    result /= right
-                else:
-                    raise ZeroDivisionError
+
+        l = ctx.getChild(0).getText()
+        
+        if self.is_variable(l) and self.lookupVariable(l)[0] == "Matrix":
             
-        return result
+            l_t, l_values, l_modifier = self.lookupVariable(l)
+
+            for i in range(1, len(ctx.unaryExpression())):
+                operator = ctx.getChild(2*i - 1).getText()
+                r = ctx.unaryExpression(i).getText()
+
+                if self.is_variable(r) and self.lookupVariable(r)[0] == "Matrix":
+
+                    r_t, r_values, r_modifier = self.lookupVariable(r)
+                    
+                    if len(r_values) != len(l_values):
+                        raise Exception("lengths dont match")
+                    
+                    if l_modifier["el_type"] != r_modifier["el_type"]:
+                        raise TypeError("inner types dont match")
+                    
+                    if operator == '*':
+                        for i, el in enumerate(r_values):
+                            if l_t == "int":
+                                l_values[i] = int(l_values[i] * el)
+                            if l_t == "float":
+                                l_values[i] = float(l_values[i] * el)
+                    elif operator == '/':
+                        for i, el in enumerate(r_values):
+                            if l_t == "int":
+                                l_values[i] = int(l_values[i] / el)
+                            if l_t == "float":
+                                l_values[i] = float(l_values[i] / el)
+                    
+                    self.updateVariable(l, l_values)
+
+                else:
+
+                    r_value = self.visit(ctx.getChild(2))
+
+                    if type(r_value).__name__ != l_modifier["el_type"]:
+                        raise TypeError("types dont match")
+                    
+                    if operator == '*':
+                        for i, el in enumerate(l_values):
+                            if l_modifier["el_type"] == "int":
+                                l_values[i] = int(l_values[i] * r_value)
+                            if l_modifier["el_type"] == "float":
+                                
+                                l_values[i] = float(l_values[i] * r_value)
+                    elif operator == '/':
+                        for el in enumerate(l_values):
+                            if l_modifier["el_type"] == "int":
+                                l_values[i] = int(l_values[i] / r_value)
+                            if l_modifier["el_type"] == "float":
+                                l_values[i] = float(l_values[i] / r_value)
+
+                    self.updateVariable(l, l_values)
+
+            return l_values
+            
+        else:
+
+            left = self.visitUnaryExpression(ctx.unaryExpression(0))
+            result = left
+            
+            for i in range(1, len(ctx.unaryExpression())):
+                operator = ctx.getChild(2*i - 1).getText()
+                right = self.visitUnaryExpression(ctx.unaryExpression(i))
+                if operator == '*':
+                    result *= right
+                elif operator == '/':
+                    if right != 0:
+                        result /= right
+                    else:
+                        raise ZeroDivisionError
+                
+            return result
 
 
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
@@ -807,8 +924,7 @@ class MithonVisitor(ParseTreeVisitor):
             return True
         elif ctx.getText() == 'false':
             return False
-        elif ctx.list_():
-            return [self.visitExpression(exp) for exp in ctx.list_().expressionList().expression()]
+        
         elif ctx.listIndexation():
             index = self.visitExpression(ctx.listIndexation().expression())
 
@@ -821,6 +937,9 @@ class MithonVisitor(ParseTreeVisitor):
                 raise IndexError(f"index {index} out of range for length {len(values)}")
             
             return values[index]
+        
+        elif ctx.list_():
+            return [self.visitExpression(exp) for exp in ctx.list_().expressionList().expression()]
 
         elif ctx.getText() == 'break':
             if self.loop_depth > 0:

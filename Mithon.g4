@@ -52,9 +52,9 @@ functionDeclaration:
 
 parameterList: type IDENTIFIER (',' type IDENTIFIER)*;
 
-functionCall: IDENTIFIER '(' argumentList* ')';
+functionCall: IDENTIFIER '(' argumentList ')';
 
-argumentList: expression (',' expression)*;
+argumentList: expression* (',' expression)*;
 
 expressionList: expression* (',' expression)*;
 
