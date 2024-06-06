@@ -944,7 +944,11 @@ class MithonVisitor(ParseTreeVisitor):
                         result /= right
                     else:
                         raise ZeroDivisionError
-                
+                elif operator == '%':
+                    if right != 0:
+                        result %= right
+                    else:
+                        raise ZeroDivisionError
             return result
 
 

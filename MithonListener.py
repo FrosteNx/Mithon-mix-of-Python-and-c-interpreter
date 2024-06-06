@@ -269,6 +269,15 @@ class MithonListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MithonParser#name.
+    def enterName(self, ctx:MithonParser.NameContext):
+        pass
+
+    # Exit a parse tree produced by MithonParser#name.
+    def exitName(self, ctx:MithonParser.NameContext):
+        pass
+
+
     # Enter a parse tree produced by MithonParser#listIndexation.
     def enterListIndexation(self, ctx:MithonParser.ListIndexationContext):
         pass

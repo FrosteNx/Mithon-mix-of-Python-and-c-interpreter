@@ -88,7 +88,7 @@ additiveExpression:
           ;
 
 multiplicativeExpression:
-            unaryExpression (('*' | '/') unaryExpression)* 
+            unaryExpression (('*' | '/' | '%') unaryExpression)* 
           ;
 
 unaryExpression:
