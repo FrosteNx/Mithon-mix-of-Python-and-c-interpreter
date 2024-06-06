@@ -17,9 +17,9 @@ class MithonError(Exception):
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self, lines):
+    def __init__(self, lines, functions):
         self.scopes = [{}]
-        self.function_declarations = {}
+        self.function_declarations = functions
         self.loop_depth = 0
         self.lines = lines
         super().__init__()
@@ -37,6 +37,7 @@ class MithonVisitor(ParseTreeVisitor):
     def addVariable(self, name, type, value, modifier={"const":False}):
         if any(name == func_name for func_name, func_type in self.function_declarations):
             raise SyntaxError("cannot declare variable with identic name as a function")
+    
         self.scopes[-1][name] = (type, value, modifier)
 
 
@@ -73,9 +74,10 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     def visitProgram(self, ctx:MithonParser.ProgramContext):
+
         for statement in ctx.statement():
             self.visit(statement)
-
+            
 
     def visitStatement(self, ctx:MithonParser.StatementContext):
 
@@ -97,15 +99,16 @@ class MithonVisitor(ParseTreeVisitor):
                 return self.visitWhileLoop(ctx.whileLoop())
             elif ctx.expressionStatement():
                 return self.visitExpressionStatement(ctx.expressionStatement())
-            elif ctx.functionDeclaration():
-                return self.visitFunctionDeclaration(ctx.functionDeclaration())
+            #elif ctx.functionDeclaration():
+            #    return self.visitFunctionDeclaration(ctx.functionDeclaration())
             elif ctx.returnStatement():
                 return self.visitReturnStatement(ctx.returnStatement())
             elif ctx.augAssignment():
                 return self.visitAugAssignment(ctx.augAssignment())
+            
         except Exception as e:
             raise MithonError(e, line, line_content)
-
+        
 
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
 
@@ -272,15 +275,16 @@ class MithonVisitor(ParseTreeVisitor):
                 return 
 
         elif (t or ct) and i and not e:
-            
-            if modifiers:
-                raise TypeError("cannot declare const variable without providing initial value")
-            else:
-                modifiers = {"const":False}
 
             var_type = t.getText() if t else ct.getText()
             var_name = i.getText()
             expression_result = None 
+            
+            if modifiers:
+                raise TypeError(f"cannot declare const variable {var_name} without providing initial value")
+            else:
+                modifiers = {"const":False}
+
         else:
             raise Exception("invalid variable declaration. Must include a type or initialization")
         
@@ -459,7 +463,7 @@ class MithonVisitor(ParseTreeVisitor):
                     if return_value is not None:
                         return return_value
                     
-
+    '''
     def visitFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
         function_name = ctx.IDENTIFIER().getText()
         return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
@@ -495,7 +499,7 @@ class MithonVisitor(ParseTreeVisitor):
             if 'return' in statement.getText():
                 return True
         return False
-
+    '''
 
     def visitParameterList(self, ctx:MithonParser.ParameterListContext):
         return self.visitChildren(ctx)
@@ -631,7 +635,7 @@ class MithonVisitor(ParseTreeVisitor):
 
             return return_value
         else:
-            raise Exception(f"function '{function_name}' is not defined")
+            raise Exception(f"function '{function_name}' with {len(argument_count)} argument is not defined")
     
     def handle_len_function(self, arg):
         if isinstance(arg, (str, list)):

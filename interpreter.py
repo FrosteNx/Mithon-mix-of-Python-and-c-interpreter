@@ -1,8 +1,11 @@
 from antlr4 import FileStream, CommonTokenStream
+from antlr4 import ParseTreeWalker
 from antlr4.error.ErrorListener import ErrorListener
 from MithonLexer import MithonLexer
 from MithonParser import MithonParser
+from MithonListener import MithonListener
 from MithonVisitor import MithonVisitor, MithonError
+
 
     
 class MyErrorListener(ErrorListener):
@@ -34,7 +37,11 @@ def main():
         print(e)
         exit(1)
 
-    visitor = MithonVisitor(lines)
+    listener = MithonListener()
+    walker = ParseTreeWalker()
+    walker.walk(listener, tree)
+
+    visitor = MithonVisitor(lines, listener.function_declarations)
 
     try:
         visitor.visit(tree)

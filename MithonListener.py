@@ -8,6 +8,9 @@ else:
 # This class defines a complete listener for a parse tree produced by MithonParser.
 class MithonListener(ParseTreeListener):
 
+    def __init__(self):
+        self.function_declarations = {}
+
     # Enter a parse tree produced by MithonParser#program.
     def enterProgram(self, ctx:MithonParser.ProgramContext):
         pass
@@ -118,7 +121,38 @@ class MithonListener(ParseTreeListener):
 
     # Enter a parse tree produced by MithonParser#functionDeclaration.
     def enterFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
-        pass
+
+        function_name = ctx.IDENTIFIER().getText()
+        return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
+        parameter_list_ctx = ctx.parameterList(0) if ctx.parameterList() else None
+
+        parameter_list, parameters_count = [], []
+        if parameter_list_ctx:
+            for i in range(len(parameter_list_ctx.IDENTIFIER())):
+                parameter_list.append((parameter_list_ctx.type_()[i].getText(), parameter_list_ctx.IDENTIFIER()[i].getText()))
+                parameters_count.append(parameter_list_ctx.type_()[i].getText())
+
+        if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
+            raise SyntaxError("cannot declare 2 functions with identic names")
+
+        function_body = ctx.statement_list()
+
+        return_type = return_type_ctx.getText() if return_type_ctx else None
+
+        self.function_declarations[tuple([function_name, tuple(parameters_count)])] = {
+            'return_type': return_type,
+            'parameters': parameter_list,
+            'body': function_body
+        }
+        
+        if return_type != 'None' and not self.doesFunctionReturn(function_body):
+            raise Exception(f"function '{function_name}' must return a value of type {return_type}")
+        
+    def doesFunctionReturn(self, ctx):
+        for statement in ctx.statement():
+            if 'return' in statement.getText():
+                return True
+        return False
 
     # Exit a parse tree produced by MithonParser#functionDeclaration.
     def exitFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
