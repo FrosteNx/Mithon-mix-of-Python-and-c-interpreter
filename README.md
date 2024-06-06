@@ -257,6 +257,22 @@ Komentarze w języku Mithon poprzedzone są dwoma slashami. Składnia
 // Komentarz
 ```
 
+### Przykładowe programy
+1.Obliczanie silnii z podanej liczby n:
+```
+def factorial(int n) -> int {
+    if (n == 0) {
+        return 1
+    } else {
+        return n * factorial(n - 1)
+    }
+}
+
+int n = 5
+int result = factorial(n)
+print(result)
+```
+
 # Instalacja
 ```
 1. git clone git@github.com:FrosteNx/Mithon-mix-of-Python-and-cpp-interpreter.git
