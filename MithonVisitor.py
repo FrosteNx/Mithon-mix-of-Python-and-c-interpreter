@@ -553,16 +553,24 @@ class MithonVisitor(ParseTreeVisitor):
             return self.handle_remove_function(list_name, element)
         
         elif function_name == 'sort':
-            if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+            if len(argument_list.expression()) < 1 or len(argument_list.expression()) > 2:
+                raise Exception(f"function 'sort' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
-            self.handle_sort_function(var)
+            order = self.visit(argument_list.expression(1)) if len(argument_list.expression()) == 2 else 'ascending'
+            if isinstance(order, str):
+                self.handle_sort_function(var, order)
+            else:
+                raise TypeError(f"order must be a string, but got {type(order).__name__}")
         
         elif function_name == 'sorted':
-            if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+            if len(argument_list.expression()) < 1 or len(argument_list.expression()) > 2:
+                raise Exception(f"function 'sorted' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
-            return self.handle_sorted_function(var) 
+            order = self.visit(argument_list.expression(1)) if len(argument_list.expression()) == 2 else 'ascending'
+            if isinstance(order, str):
+                return self.handle_sorted_function(var, order)
+            else:
+                raise TypeError(f"order must be a string, but got {type(order).__name__}")
 
         elif function_name == 'pop':
             if len(argument_list.expression()) != 1:
@@ -651,22 +659,32 @@ class MithonVisitor(ParseTreeVisitor):
         values.remove(element)
         self.updateVariable(list_name, values)
         
-    def handle_sort_function(self, var):
+    def handle_sort_function(self, var, order='ascending'):
         if not self.is_variable(var):
             raise Exception(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
             raise TypeError(f"function 'sort' is not applicable to type: {type(values).__name__}")
-        values.sort()
+        if order == 'ascending':
+            values.sort()
+        elif order == 'descending':
+            values.sort(reverse=True)
+        else:
+            raise ValueError(f"invalid order: {order}. Use 'ascending' or 'descending'.")
         self.updateVariable(var, values)
 
-    def handle_sorted_function(self, var):
+    def handle_sorted_function(self, var, order='ascending'):
         if not self.is_variable(var):
             raise Exception(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
-            raise TypeError(f"function 'sort' is not applicable to type: {type(values).__name__}")
-        new_values = sorted(values)
+            raise TypeError(f"function 'sorted' is not applicable to type: {type(values).__name__}")
+        if order == 'ascending':
+            new_values = sorted(values)
+        elif order == 'descending':
+            new_values = sorted(values, reverse=True)
+        else:
+            raise ValueError(f"invalid order: {order}. Use 'ascending' or 'descending'.")
         return new_values
 
     def handle_pop_function(self, var):

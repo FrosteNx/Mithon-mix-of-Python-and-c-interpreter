@@ -1,26 +1,10 @@
-List[int] l = [1, 2, 3, 10, 4, 7, 5, 8, 6]
+List[int] nums = [5, 3, 1, 4, 2]
 
-List[int] b = sorted(l)
+List[int] sorted_nums = sorted(nums)
+print(sorted_nums) 
 
-print(b)
+List[int] sorted_nums = sorted(nums, "descending")
+print(sorted_nums) 
 
-print(l)
-
-reverse(l)
-
-print(l)
-
-pop(l)
-
-print(l)
-
-Array[3, int] a = [1, 2, 3]
-
-print(a)
-
-reverse(a)
-
-print(a)
-
-print(mean(a))
-
+List[int] sorted_nums = sorted(nums, "ascending")
+print(sorted_nums) 
