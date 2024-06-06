@@ -42,7 +42,7 @@ class MithonVisitor(ParseTreeVisitor):
         for scope in reversed(self.scopes):
             if name in scope:
                 return scope[name]
-        raise Exception(f"Variable {name} not defined")
+        raise Exception(f"variable {name} not defined")
 
 
     def updateVariable(self, name, value):
@@ -50,13 +50,13 @@ class MithonVisitor(ParseTreeVisitor):
         for scope in reversed(self.scopes):
             if name in scope:
                 if scope[name][-1]["const"]:
-                    raise TypeError("Cannot modify const variable.")
+                    raise TypeError("cannot modify const variable")
                 var_type = scope[name][0]  
                 modifier = scope[name][-1]
                 scope[name] = (var_type, value, modifier) 
                 return
             
-        raise Exception(f"Variable {name} not defined")
+        raise Exception(f"variable {name} not defined")
 
 
     def is_variable(self, name):
@@ -176,13 +176,16 @@ class MithonVisitor(ParseTreeVisitor):
         print()
 
 
-    def prepareVariable(self, ctx, modifiers = {"const":False}):
+    def prepareVariable(self, ctx, modifiers = None):
         
         t = ctx.type_()
         ct = ctx.complexType()
         n = ctx.name()
         i = ctx.IDENTIFIER()
         e = ctx.expression()
+
+        if not modifiers:
+            modifiers = {"const":False}
 
         expression_result = None
         
@@ -222,8 +225,6 @@ class MithonVisitor(ParseTreeVisitor):
             
                 var_name = n.getText()
                 expression_result = self.visit(e)
-
-                print(expression_result)
 
                 if not ct and isinstance(expression_result, list):
                     raise Exception("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
@@ -276,40 +277,94 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     def visitForLoop(self, ctx:MithonParser.ForLoopContext):
-        self.loop_depth += 1  
+        self.loop_depth += 1
 
-        loop_var_name = ctx.IDENTIFIER(0).getText()
+        if "in" in ctx.getText():
 
-        init_expr = ctx.expression(0)
-        init_value = self.visit(init_expr)
-        self.addVariable(loop_var_name, type(init_value).__name__, init_value, {"const" : False})
+            content_var_name = ctx.IDENTIFIER(1).getText()
+            content_type, content_values, content_modifier = self.lookupVariable(content_var_name)
+            content_inner_type = content_modifier["el_type"]
 
-        condition_expr = ctx.expression(1)
-        condition = self.visit(condition_expr)
-        
-        self.pushScope()
+            loop_var_name = ctx.IDENTIFIER(0).getText()
 
-        while condition:
+            if ctx.type_() and ctx.type_()[0].getText() != content_inner_type:
+                raise TypeError(f"provided type: {ctx.type_()[0].getText()} doesnt match with collection inner type: {content_inner_type}")
 
-            return_value = self.visit(ctx.statement_list())
+            loop_values = iter(content_values)
 
-            if return_value == 'break':
-                break
+            init_value = next(loop_values, -1)
 
-            if return_value == 'continue':
-                continue
+            self.addVariable(loop_var_name, content_inner_type, init_value)
 
-            if return_value is not None:
-                self.popScope()
-                self.loop_depth -= 1 
-                return return_value
+            i = 0
 
-            increment_expr = ctx.expression(2)
-            increment_value = self.visit(increment_expr)
+            self.pushScope()
 
+            while True:
+
+                temp = self.lookupVariable(loop_var_name)[1]
+                
+                return_value = self.visit(ctx.statement_list())
+
+                if return_value == 'break':
+                    break
+
+                if return_value == 'continue':
+                    continue
+
+                if return_value is not None:
+                    self.popScope()
+                    self.loop_depth -= 1 
+                    return return_value
+
+                if temp != self.lookupVariable(loop_var_name)[1]:
+                    content_values[i] = self.lookupVariable(loop_var_name)[1]
+                    self.updateVariable(content_var_name, content_values)    
+                
+                new_value = next(loop_values, "eof")
+                if new_value != "eof":
+                    self.updateVariable(loop_var_name, new_value)
+                else:
+                    break
+
+                i += 1
+            
+            self.popScope()
+
+        else:
+            loop_var_name = ctx.IDENTIFIER(0).getText()
+
+            init_expr = ctx.expression(0)
+            init_value = self.visit(init_expr)
+            self.addVariable(loop_var_name, type(init_value).__name__, init_value, {"const" : False})
+
+            condition_expr = ctx.expression(1)
             condition = self.visit(condition_expr)
+            
+            self.pushScope()
 
-        self.popScope()
+            while condition:
+
+                return_value = self.visit(ctx.statement_list())
+
+                if return_value == 'break':
+                    break
+
+                if return_value == 'continue':
+                    continue
+
+                if return_value is not None:
+                    self.popScope()
+                    self.loop_depth -= 1 
+                    return return_value
+
+                increment_expr = ctx.expression(2)
+                increment_value = self.visit(increment_expr)
+
+                condition = self.visit(condition_expr)
+
+            self.popScope()
+
         self.loop_depth -= 1 
 
 
@@ -385,7 +440,7 @@ class MithonVisitor(ParseTreeVisitor):
                 parameters_count.append(parameter_list_ctx.type_()[i].getText())
 
         if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
-            raise SyntaxError("Cannot declare 2 functions with identic names")
+            raise SyntaxError("cannot declare 2 functions with identic names")
 
         function_body = ctx.statement_list()
 
@@ -398,7 +453,7 @@ class MithonVisitor(ParseTreeVisitor):
         }
         
         if return_type != 'None' and not self.doesFunctionReturn(function_body):
-            raise Exception(f"Function '{function_name}' must return a value of type {return_type}")
+            raise Exception(f"function '{function_name}' must return a value of type {return_type}")
 
     def doesFunctionReturn(self, ctx):
         for statement in ctx.statement():
@@ -420,13 +475,13 @@ class MithonVisitor(ParseTreeVisitor):
 
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_len_function(arg_value)
         
         elif function_name == 'append':
             if len(argument_list.expression()) != 2:
-                raise Exception(f"Function 'append' expects 2 arguments, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'append' expects 2 arguments, but {len(argument_list.expression())} were provided")
             
             var = argument_list.expression()[0].getText()
 
@@ -455,56 +510,56 @@ class MithonVisitor(ParseTreeVisitor):
             
         elif function_name == 'sum':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'sum' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'sum' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_sum_function(arg_value)
 
         elif function_name == 'max':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'max' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'max' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_max_function(arg_value)
 
         elif function_name == 'min':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_min_function(arg_value)
 
         elif function_name == 'reverse':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'reverse' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'reverse' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             self.handle_reverse_function(var)
 
         elif function_name == 'remove':
             if len(argument_list.expression()) != 2:
-                raise Exception(f"Function 'remove' expects 2 arguments, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'remove' expects 2 arguments, but {len(argument_list.expression())} were provided")
             list_name = argument_list.expression(0).getText()
             element = self.visit(argument_list.expression(1))
             return self.handle_remove_function(list_name, element)
         
         elif function_name == 'sort':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             self.handle_sort_function(var)
         
         elif function_name == 'sorted':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'sort' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             return self.handle_sorted_function(var) 
 
         elif function_name == 'pop':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             return self.handle_pop_function(var)
         
         elif function_name == 'mean':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"Function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise Exception(f"function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_mean_function(arg_value)
 
@@ -533,71 +588,71 @@ class MithonVisitor(ParseTreeVisitor):
 
             return return_value
         else:
-            raise Exception(f"Function '{function_name}' is not defined")
+            raise Exception(f"function '{function_name}' is not defined")
     
     def handle_len_function(self, arg):
         if isinstance(arg, (str, list)):
             return len(arg)
         else:
-            raise Exception(f"Function 'len' is not applicable to type: {type(arg).__name__}")
+            raise Exception(f"function 'len' is not applicable to type: {type(arg).__name__}")
         
     def handle_sum_function(self, arg):
         if isinstance(arg, list):
             return sum(arg)
         else:
-            raise Exception(f"Function 'sum' is not applicable to type: {type(arg).__name__}")
+            raise Exception(f"function 'sum' is not applicable to type: {type(arg).__name__}")
 
     def handle_max_function(self, arg):
         if isinstance(arg, list):
             return max(arg)
         else:
-            raise Exception(f"Function 'max' is not applicable to type: {type(arg).__name__}")
+            raise Exception(f"function 'max' is not applicable to type: {type(arg).__name__}")
 
     def handle_min_function(self, arg):
         if isinstance(arg, list):
             return min(arg)
         else:
-            raise Exception(f"Function 'min' is not applicable to type: {type(arg).__name__}")
+            raise Exception(f"function 'min' is not applicable to type: {type(arg).__name__}")
 
     def handle_reverse_function(self, var):
         if not self.is_variable(var):
             raise Exception(f"Variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
-            raise TypeError(f"Function 'reverse' is not applicable to type: {type(values).__name__}")
+            raise TypeError(f"function 'reverse' is not applicable to type: {type(values).__name__}")
         values.reverse()
         self.updateVariable(var, values)
 
     def handle_remove_function(self, list_name, element):
         if not self.is_variable(list_name):
-            raise Exception(f"Variable '{list_name}' is not defined")
+            raise Exception(f"variable '{list_name}' is not defined")
         
         var_type, values, modifier = self.lookupVariable(list_name)
 
         if not isinstance(values, list):
-            raise TypeError(f"Function 'remove' is not applicable to type: {type(values).__name__}")
+            raise TypeError(f"function 'remove' is not applicable to type: {type(values).__name__}")
 
         if element not in values:
-            raise ValueError(f"Element '{element}' not found in list '{list_name}'")
+            raise ValueError(f"element '{element}' not found in list '{list_name}'")
 
         values.remove(element)
         self.updateVariable(list_name, values)
         
     def handle_sort_function(self, var):
         if not self.is_variable(var):
-            raise Exception(f"Variable '{var}' is not defined")
+            raise Exception(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
-            raise TypeError(f"Function 'sort' is not applicable to type: {type(values).__name__}")
+            raise TypeError(f"function 'sort' is not applicable to type: {type(values).__name__}")
         values.sort()
         self.updateVariable(var, values)
 
     def handle_sorted_function(self, var):
         if not self.is_variable(var):
-            raise Exception(f"Variable '{var}' is not defined")
+            raise Exception(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
-            raise TypeError(f"Function 'sort' is not applicable to type: {type(values).__name__}")
+            raise TypeError(f"function 'sort' is not applicable to type: {type(values).__name__}")
         new_values = sorted(values)
         return new_values
 
@@ -606,7 +661,7 @@ class MithonVisitor(ParseTreeVisitor):
             raise Exception(f"Variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
-            raise TypeError(f"Function 'pop' is not applicable to type: {type(values).__name__}")
+            raise TypeError(f"function 'pop' is not applicable to type: {type(values).__name__}")
         if len(values) == 0:
             raise IndexError("pop from empty list")
         popped_value = values.pop()
@@ -617,7 +672,7 @@ class MithonVisitor(ParseTreeVisitor):
         if isinstance(arg, list) and all(isinstance(x, (int, float)) for x in arg):
             return sum(arg) / len(arg) if len(arg) > 0 else 0
         else:
-            raise Exception(f"Function 'mean' is not applicable to type: {type(arg).__name__} or list contains non-numeric elements")
+            raise Exception(f"function 'mean' is not applicable to type: {type(arg).__name__} or list contains non-numeric elements")
 
     def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
         return_value = self.visit(ctx.expression())
@@ -709,7 +764,7 @@ class MithonVisitor(ParseTreeVisitor):
             elif operator == '-':
                 return left_value - right
         else:
-            raise Exception("Unsupported operator: " + operator)
+            raise Exception("unsupported operator: " + operator)
         
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
@@ -760,7 +815,7 @@ class MithonVisitor(ParseTreeVisitor):
             values = self.lookupVariable(ctx.listIndexation().IDENTIFIER().getText())[1]
 
             if not (isinstance(values, list) or isinstance(values, str)):
-                raise TypeError("Invalid type for indexation")
+                raise TypeError("invalid type for indexation")
 
             if index > len(values):
                 raise IndexError(f"index {index} out of range for length {len(values)}")
@@ -784,7 +839,7 @@ class MithonVisitor(ParseTreeVisitor):
                 var_type, var_value, modifier = var_info 
                 return var_value
             else:
-                raise Exception(f"Variable '{var_name}' is not defined or has no value.")
+                raise Exception(f"variable '{var_name}' is not defined or has no value")
         elif ctx.expression():
             return self.visit(ctx.expression()) 
         else:

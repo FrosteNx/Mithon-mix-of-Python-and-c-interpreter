@@ -39,7 +39,6 @@ constDeclaration: 'const' varDeclaration;
 forLoop: 
         'for' '(' type IDENTIFIER '=' expression ';' expression ';' expression ')' statement_list
       | 'for' '(' type* IDENTIFIER 'in' IDENTIFIER ')' statement_list
-      | 'for' statement_list
       ;
 
 whileLoop: 'while' '(' expression ')' statement_list;
