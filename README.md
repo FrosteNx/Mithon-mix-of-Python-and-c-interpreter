@@ -272,6 +272,22 @@ int n = 5
 int result = factorial(n)
 print(result)
 ```
+2.Obliczanie n-tego wyrazu ciągu Fibonacciego:
+```
+def fibonacci(int n) -> int {
+    if (n == 0) {
+        return 0
+    } elif (n == 1) {
+        return 1
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+
+int n = 6
+int result = fibonacci(n)
+print(result) 
+```
 
 # Instalacja
 ```
