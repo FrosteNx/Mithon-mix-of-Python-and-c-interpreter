@@ -146,7 +146,7 @@ class MithonListener(ParseTreeListener):
         }
         
         if return_type != 'None' and not self.doesFunctionReturn(function_body):
-            raise Exception(f"function '{function_name}' must return a value of type {return_type}")
+            raise SyntaxError(f"function '{function_name}' must return a value of type {return_type}")
         
     def doesFunctionReturn(self, ctx):
         for statement in ctx.statement():

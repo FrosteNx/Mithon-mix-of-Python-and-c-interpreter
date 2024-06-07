@@ -23,7 +23,9 @@ def main():
     with open("test.mithon", "r") as file:
         lines = file.readlines()
 
-    input_stream = FileStream("test.mithon")
+    input_file = "test.mithon"
+
+    input_stream = FileStream(input_file)
     lexer = MithonLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
     parser = MithonParser(token_stream)
@@ -45,9 +47,15 @@ def main():
 
     try:
         visitor.visit(tree)
-    except MithonError as me:
-        print(me)
-        exit(1)
+    except Exception as e:
+        print(f"Traceback (most recent call last):")
+        for e in visitor.errors[::-1]:
+            print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
+            print(f"    {e.line_content.lstrip()}")
+            print(f"  {' ' * (e.column_number+1)}^")
+        
+        e = visitor.errors[0]
+        print(f"{e.error_type}: {e.message}")
 
 if __name__ == '__main__':
     main()

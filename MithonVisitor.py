@@ -7,13 +7,12 @@ else:
 
 class MithonError(Exception):
 
-    def __init__(self, message, line_number, line_content):
+    def __init__(self, message, line_number, column_number, line_content, error_type):
         self.message = message
         self.line_number = line_number
+        self.column_number = column_number
         self.line_content = line_content.strip('\n')
-
-    def __str__(self):
-        return f"Error at line: {self.line_number}. Line content: {self.line_content}.\nError message: {self.message}."
+        self.error_type = error_type
 
 class MithonVisitor(ParseTreeVisitor):
 
@@ -22,8 +21,8 @@ class MithonVisitor(ParseTreeVisitor):
         self.function_declarations = functions
         self.loop_depth = 0
         self.lines = lines
+        self.errors = []
         super().__init__()
-
 
     def pushScope(self):
         self.scopes.append({})
@@ -76,12 +75,14 @@ class MithonVisitor(ParseTreeVisitor):
     def visitProgram(self, ctx:MithonParser.ProgramContext):
 
         for statement in ctx.statement():
-            self.visit(statement)
+            if not statement.functionDeclaration():
+                self.visit(statement)
             
 
     def visitStatement(self, ctx:MithonParser.StatementContext):
 
         line = ctx.start.line
+        column = ctx.start.column
         line_content = self.lines[line - 1]
 
         try:
@@ -91,6 +92,8 @@ class MithonVisitor(ParseTreeVisitor):
                 return self.visitConstDeclaration(ctx.constDeclaration())
             elif ctx.printFunction():
                 return self.visitPrintFunction(ctx.printFunction())
+            elif ctx.returnStatement():
+                return self.visitReturnStatement(ctx.returnStatement())
             elif ctx.ifStatement():
                 return self.visitIfStatement(ctx.ifStatement())
             elif ctx.forLoop():
@@ -99,16 +102,12 @@ class MithonVisitor(ParseTreeVisitor):
                 return self.visitWhileLoop(ctx.whileLoop())
             elif ctx.expressionStatement():
                 return self.visitExpressionStatement(ctx.expressionStatement())
-            #elif ctx.functionDeclaration():
-            #    return self.visitFunctionDeclaration(ctx.functionDeclaration())
-            elif ctx.returnStatement():
-                return self.visitReturnStatement(ctx.returnStatement())
             elif ctx.augAssignment():
                 return self.visitAugAssignment(ctx.augAssignment())
             
         except Exception as e:
-            raise MithonError(e, line, line_content)
-        
+            self.errors.append(MithonError(e, line, column, line_content, type(e).__name__))
+            raise
 
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
 
@@ -226,11 +225,11 @@ class MithonVisitor(ParseTreeVisitor):
             expression_result = self.visit(e)
 
             if not isinstance(expression_result, list):
-                raise Exception(f"invalid {var_type} declaration. Provided value has to be in [values] format")
+                raise SyntaxError(f"invalid {var_type} declaration. Provided value has to be in [values] format")
             
             for i, exp in enumerate(expression_result):
                 if type(exp).__name__ != el_type and el_type not in ("int", "float"):
-                    raise Exception(f"invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}")
+                    raise TypeError(f"invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}")
                 if el_type in ("int", "float"):
                     expression_result[i] = self.convert_to_numeric_type(el_type, exp)
                 
@@ -247,7 +246,7 @@ class MithonVisitor(ParseTreeVisitor):
                 expression_result = self.visit(e)
 
                 if not ct and isinstance(expression_result, list):
-                    raise Exception("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
+                    raise SyntaxError("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
                 var_type = type(expression_result).__name__
 
@@ -286,12 +285,12 @@ class MithonVisitor(ParseTreeVisitor):
                 modifiers = {"const":False}
 
         else:
-            raise Exception("invalid variable declaration. Must include a type or initialization")
+            raise SyntaxError("invalid variable declaration. Must include a type or initialization")
         
         if var_name:
             self.addVariable(var_name, var_type, expression_result, modifiers)
         else:
-            raise Exception("variable declaration error: Name required")
+            raise SyntaxError("variable declaration error: Name required")
         
     def convert_to_numeric_type(self, var_type, value):
         try:
@@ -514,18 +513,18 @@ class MithonVisitor(ParseTreeVisitor):
 
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_len_function(arg_value)
         
         elif function_name == 'append':
             if len(argument_list.expression()) != 2:
-                raise Exception(f"function 'append' expects 2 arguments, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'append' expects 2 arguments, but {len(argument_list.expression())} were provided")
             
             var = argument_list.expression()[0].getText()
 
             if not self.is_variable(var):
-                raise Exception("variable not defined")
+                raise NameError("variable not defined")
 
             t, values, modifier = self.lookupVariable(var)
 
@@ -549,38 +548,38 @@ class MithonVisitor(ParseTreeVisitor):
             
         elif function_name == 'sum':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'sum' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'sum' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_sum_function(arg_value)
 
         elif function_name == 'max':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'max' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'max' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_max_function(arg_value)
 
         elif function_name == 'min':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_min_function(arg_value)
 
         elif function_name == 'reverse':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'reverse' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'reverse' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             self.handle_reverse_function(var)
 
         elif function_name == 'remove':
             if len(argument_list.expression()) != 2:
-                raise Exception(f"function 'remove' expects 2 arguments, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'remove' expects 2 arguments, but {len(argument_list.expression())} were provided")
             list_name = argument_list.expression(0).getText()
             element = self.visit(argument_list.expression(1))
             return self.handle_remove_function(list_name, element)
         
         elif function_name == 'sort':
             if len(argument_list.expression()) < 1 or len(argument_list.expression()) > 2:
-                raise Exception(f"function 'sort' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'sort' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             order = self.visit(argument_list.expression(1)) if len(argument_list.expression()) == 2 else 'ascending'
             if isinstance(order, str):
@@ -590,7 +589,7 @@ class MithonVisitor(ParseTreeVisitor):
         
         elif function_name == 'sorted':
             if len(argument_list.expression()) < 1 or len(argument_list.expression()) > 2:
-                raise Exception(f"function 'sorted' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'sorted' expects 1 or 2 arguments, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             order = self.visit(argument_list.expression(1)) if len(argument_list.expression()) == 2 else 'ascending'
             if isinstance(order, str):
@@ -600,13 +599,13 @@ class MithonVisitor(ParseTreeVisitor):
 
         elif function_name == 'pop':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'pop' expects 1 argument, but {len(argument_list.expression())} were provided")
             var = argument_list.expression(0).getText()
             return self.handle_pop_function(var)
         
         elif function_name == 'mean':
             if len(argument_list.expression()) != 1:
-                raise Exception(f"function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_mean_function(arg_value)
 
@@ -616,7 +615,7 @@ class MithonVisitor(ParseTreeVisitor):
             function_body = function_info['body']
 
             if (not argument_list and parameter_list) or (argument_list and len(argument_list.expression()) != len(parameter_list)):
-                raise Exception(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
+                raise TypeError(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
 
             if argument_list:
                 argument_list = argument_list.expression()
@@ -626,7 +625,7 @@ class MithonVisitor(ParseTreeVisitor):
             for parameter, argument in zip(parameter_list, argument_list):
                 arg_value = self.visit(argument)
                 if type(arg_value).__name__ != parameter[0]:
-                    raise Exception(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
+                    raise TypeError(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
 
             return_value = self.visit(function_body)
@@ -635,35 +634,35 @@ class MithonVisitor(ParseTreeVisitor):
 
             return return_value
         else:
-            raise Exception(f"function '{function_name}' with {len(argument_count)} argument is not defined")
+            raise NameError(f"function '{function_name}' with {len(argument_count)} argument is not defined")
     
     def handle_len_function(self, arg):
         if isinstance(arg, (str, list)):
             return len(arg)
         else:
-            raise Exception(f"function 'len' is not applicable to type: {type(arg).__name__}")
+            raise TypeError(f"function 'len' is not applicable to type: {type(arg).__name__}")
         
     def handle_sum_function(self, arg):
         if isinstance(arg, list):
             return sum(arg)
         else:
-            raise Exception(f"function 'sum' is not applicable to type: {type(arg).__name__}")
+            raise TypeError(f"function 'sum' is not applicable to type: {type(arg).__name__}")
 
     def handle_max_function(self, arg):
         if isinstance(arg, list):
             return max(arg)
         else:
-            raise Exception(f"function 'max' is not applicable to type: {type(arg).__name__}")
+            raise TypeError(f"function 'max' is not applicable to type: {type(arg).__name__}")
 
     def handle_min_function(self, arg):
         if isinstance(arg, list):
             return min(arg)
         else:
-            raise Exception(f"function 'min' is not applicable to type: {type(arg).__name__}")
+            raise TypeError(f"function 'min' is not applicable to type: {type(arg).__name__}")
 
     def handle_reverse_function(self, var):
         if not self.is_variable(var):
-            raise Exception(f"Variable '{var}' is not defined")
+            raise NameError(f"Variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
             raise TypeError(f"function 'reverse' is not applicable to type: {type(values).__name__}")
@@ -672,7 +671,7 @@ class MithonVisitor(ParseTreeVisitor):
 
     def handle_remove_function(self, list_name, element):
         if not self.is_variable(list_name):
-            raise Exception(f"variable '{list_name}' is not defined")
+            raise NameError(f"variable '{list_name}' is not defined")
         
         var_type, values, modifier = self.lookupVariable(list_name)
 
@@ -687,7 +686,7 @@ class MithonVisitor(ParseTreeVisitor):
         
     def handle_sort_function(self, var, order='ascending'):
         if not self.is_variable(var):
-            raise Exception(f"variable '{var}' is not defined")
+            raise NameError(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
             raise TypeError(f"function 'sort' is not applicable to type: {type(values).__name__}")
@@ -701,7 +700,7 @@ class MithonVisitor(ParseTreeVisitor):
 
     def handle_sorted_function(self, var, order='ascending'):
         if not self.is_variable(var):
-            raise Exception(f"variable '{var}' is not defined")
+            raise NameError(f"variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
             raise TypeError(f"function 'sorted' is not applicable to type: {type(values).__name__}")
@@ -715,7 +714,7 @@ class MithonVisitor(ParseTreeVisitor):
 
     def handle_pop_function(self, var):
         if not self.is_variable(var):
-            raise Exception(f"Variable '{var}' is not defined")
+            raise NameError(f"Variable '{var}' is not defined")
         t, values, modifier = self.lookupVariable(var)
         if not isinstance(values, list):
             raise TypeError(f"function 'pop' is not applicable to type: {type(values).__name__}")
@@ -729,7 +728,7 @@ class MithonVisitor(ParseTreeVisitor):
         if isinstance(arg, list) and all(isinstance(x, (int, float)) for x in arg):
             return sum(arg) / len(arg) if len(arg) > 0 else 0
         else:
-            raise Exception(f"function 'mean' is not applicable to type: {type(arg).__name__} or list contains non-numeric elements")
+            raise TypeError(f"function 'mean' is not applicable to type: {type(arg).__name__} or list contains non-numeric elements")
 
     def visitReturnStatement(self, ctx: MithonParser.ReturnStatementContext):
         return_value = self.visit(ctx.expression())
@@ -825,7 +824,7 @@ class MithonVisitor(ParseTreeVisitor):
                 r_t, r_values, r_modifier = self.lookupVariable(r)
                 
                 if len(r_values) != len(l_values):
-                    raise Exception("lengths dont match")
+                    raise ValueError("lengths dont match")
                 
                 #if l_modifier["el_type"] != r_modifier["el_type"]:
                 #    raise TypeError("inner types dont match")
@@ -869,7 +868,7 @@ class MithonVisitor(ParseTreeVisitor):
                 elif operator == '-':
                     return left_value - right
             else:
-                raise Exception("unsupported operator: " + operator)
+                raise NameError("unsupported operator: " + operator)
         
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
@@ -889,7 +888,7 @@ class MithonVisitor(ParseTreeVisitor):
                     r_t, r_values, r_modifier = self.lookupVariable(r)
                     
                     if len(r_values) != len(l_values):
-                        raise Exception("lengths dont match")
+                        raise ValueError("lengths dont match")
                     
                     #if l_modifier["el_type"] != r_modifier["el_type"]:
                     #    raise TypeError("inner types dont match")
@@ -1000,12 +999,12 @@ class MithonVisitor(ParseTreeVisitor):
             if self.loop_depth > 0:
                 return 'break'
             else:
-                raise Exception("'break' is only allowed within a loop")
+                raise SyntaxError("'break' is only allowed within a loop")
         elif ctx.getText() == 'continue':
             if self.loop_depth > 0:
                 return 'continue'
             else:
-                raise Exception("'continue' is only allowed within a loop")
+                raise SyntaxError("'continue' is only allowed within a loop")
         elif ctx.IDENTIFIER():
             var_name = ctx.IDENTIFIER().getText()
             var_info = self.lookupVariable(var_name)  
@@ -1013,7 +1012,7 @@ class MithonVisitor(ParseTreeVisitor):
                 var_type, var_value, modifier = var_info 
                 return var_value
             else:
-                raise Exception(f"variable '{var_name}' is not defined or has no value")
+                raise NameError(f"variable '{var_name}' is not defined or has no value")
         elif ctx.expression():
             return self.visit(ctx.expression()) 
         else:
