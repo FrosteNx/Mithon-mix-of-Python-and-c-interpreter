@@ -22,7 +22,6 @@ class MithonVisitor(ParseTreeVisitor):
         self.loop_depth = 0
         self.lines = lines
         self.errors = []
-        self.available_function_scopes = []
         super().__init__()
 
     def pushScope(self):
@@ -515,8 +514,6 @@ class MithonVisitor(ParseTreeVisitor):
         argument_list = ctx.argumentList() if ctx.argumentList() else []
 
         argument_count = tuple([type(self.visit(arg)).__name__ for arg in argument_list.expression()]) if argument_list else ()
-
-        self.available_functions.append(self.function_declaration(function_name, argument_count))
 
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
