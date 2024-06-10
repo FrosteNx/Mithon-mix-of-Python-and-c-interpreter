@@ -133,7 +133,7 @@ class MithonListener(ParseTreeListener):
                 parameters_count.append(parameter_list_ctx.type_()[i].getText())
 
         if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
-            raise SyntaxError("cannot declare 2 functions with identic names")
+            raise SyntaxError(f"cannot declare 2 functions with identic names: {function_name}({','.join(tuple(parameters_count))}) in scope")
 
         function_body = ctx.statement_list()
 
