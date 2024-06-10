@@ -16,13 +16,48 @@ class MithonError(Exception):
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self, lines, functions):
+    def __init__(self, lines, funcTree):
         self.scopes = [{}]
-        self.function_declarations = functions
+    
         self.loop_depth = 0
         self.lines = lines
         self.errors = []
+
+        self.function_tree = funcTree
+        self.function_scope_stack = [("main", ())]
+
         super().__init__()
+
+    
+    def does_function_exist(self, scope_node, declaration):
+
+        for child in scope_node.children:
+            if child.declaration == declaration:
+                self.function_scope_stack.append(declaration)
+                return child
+        
+        if scope_node.parent:
+            self.function_scope_stack.remove(scope_node.declaration)
+            return self.does_function_exist(scope_node.parent, declaration)
+        
+        return None
+
+
+    def get_functionTree_node(self, declaration):
+
+        def dfs(node):
+            if not node:
+                return None
+                
+            if node.declaration == declaration:
+                return node
+            
+            for child in node.children:
+                return dfs(child)
+
+            return None
+        
+        return dfs(self.function_tree)
 
     def pushScope(self):
         self.scopes.append({})
@@ -34,8 +69,8 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     def addVariable(self, name, type, value, modifier={"const":False}):
-        if any(name == func_name for func_name, func_type in self.function_declarations):
-            raise SyntaxError("cannot declare variable with identic name as a function")
+        #if any(name == func_name for func_name, func_type in self.function_declarations):
+        #    raise SyntaxError("cannot declare variable with identic name as a function")
     
         self.scopes[-1][name] = (type, value, modifier)
 
@@ -503,10 +538,6 @@ class MithonVisitor(ParseTreeVisitor):
     def visitParameterList(self, ctx:MithonParser.ParameterListContext):
         return self.visitChildren(ctx)
 
-    
-    def is_function(self, name, parameters):
-        pass
-
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
 
         function_name = ctx.IDENTIFIER().getText()
@@ -514,6 +545,21 @@ class MithonVisitor(ParseTreeVisitor):
         argument_list = ctx.argumentList() if ctx.argumentList() else []
 
         argument_count = tuple([type(self.visit(arg)).__name__ for arg in argument_list.expression()]) if argument_list else ()
+
+        func_scope = self.function_scope_stack[-1]
+        func_scope_node = self.get_functionTree_node(func_scope)
+
+        func_node = self.does_function_exist(func_scope_node, (function_name, argument_count))
+
+        if not func_node:
+            error_code = f"function: {function_name} with {len(argument_count)} argument(s)"
+            if argument_count:
+                error_code += f" of type: {','.join(argument_count)}"
+            error_code += " not defined"
+            raise NameError(error_code)
+        
+        if (function_name, argument_count) not in self.function_scope_stack:
+            self.function_scope_stack.append((function_name, argument_count))
 
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
@@ -567,6 +613,7 @@ class MithonVisitor(ParseTreeVisitor):
                 raise TypeError(f"function 'min' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_min_function(arg_value)
+        
 
         elif function_name == 'reverse':
             if len(argument_list.expression()) != 1:
@@ -613,10 +660,9 @@ class MithonVisitor(ParseTreeVisitor):
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_mean_function(arg_value)
 
-        elif (function_name, argument_count) in self.function_declarations:
-            function_info = self.function_declarations[function_name, argument_count]
-            parameter_list = function_info['parameters']
-            function_body = function_info['body']
+        else:
+            parameter_list = func_node.func_body["parameters"]
+            function_body =  func_node.func_body["body"]
 
             if (not argument_list and parameter_list) or (argument_list and len(argument_list.expression()) != len(parameter_list)):
                 raise TypeError(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
@@ -636,9 +682,12 @@ class MithonVisitor(ParseTreeVisitor):
 
             self.popScope()
 
+            if (function_name, argument_count) in self.function_scope_stack:
+                self.function_scope_stack.remove((function_name, argument_count))
+
             return return_value
-        else:
-            raise NameError(f"function '{function_name}' with {len(argument_count)} argument is not defined")
+    
+        
     
     def handle_len_function(self, arg):
         if isinstance(arg, (str, list)):

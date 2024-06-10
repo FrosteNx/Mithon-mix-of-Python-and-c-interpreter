@@ -1,13 +1,7 @@
 def factorial(int n) -> int{
-
+    
     def one() -> int{
-        def one() -> int{
-            return 1
-        }
-    }
-
-    def two() -> int{
-        return 2
+        return 1
     }
 
     if (n == 0 or n == 1){
@@ -16,10 +10,5 @@ def factorial(int n) -> int{
         return n * factorial(n-1)
     }
 }
-
-def helper(int a, int b) -> int{
-    return a + b
-}
-
 
 print(factorial(5))
