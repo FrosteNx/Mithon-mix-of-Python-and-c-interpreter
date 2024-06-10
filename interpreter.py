@@ -43,6 +43,9 @@ def main():
     walker = ParseTreeWalker()
     walker.walk(listener, tree)
 
+    print(listener.function_declarations)
+    print(listener.function_scopes)
+
     visitor = MithonVisitor(lines, listener.function_declarations)
 
     try:

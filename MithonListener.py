@@ -1,5 +1,8 @@
 # Generated from Mithon.g4 by ANTLR 4.13.1
-from antlr4 import *
+import collections
+from antlr4 import ParseTreeListener
+from collections import defaultdict
+
 if "." in __name__:
     from .MithonParser import MithonParser
 else:
@@ -9,7 +12,16 @@ else:
 class MithonListener(ParseTreeListener):
 
     def __init__(self):
+        self.function_scopes_names = ["main"]
         self.function_declarations = {}
+        self.function_scopes = defaultdict(list)
+
+    def addFunctionScope(self, name):
+        self.function_scopes_names.append(name)
+
+    def popFunctionScope(self):
+        if len(self.function_scopes_names) > 1:
+            self.function_scopes_names.pop(-1)
 
     # Enter a parse tree produced by MithonParser#program.
     def enterProgram(self, ctx:MithonParser.ProgramContext):
@@ -118,6 +130,9 @@ class MithonListener(ParseTreeListener):
     def exitIfStatement(self, ctx:MithonParser.IfStatementContext):
         pass
 
+    
+    def is_function(self, function_declaration, function_scope):
+        return any(function_declaration in scope for scope in self.function_scopes[function_scope])
 
     # Enter a parse tree produced by MithonParser#functionDeclaration.
     def enterFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
@@ -132,18 +147,24 @@ class MithonListener(ParseTreeListener):
                 parameter_list.append((parameter_list_ctx.type_()[i].getText(), parameter_list_ctx.IDENTIFIER()[i].getText()))
                 parameters_count.append(parameter_list_ctx.type_()[i].getText())
 
-        if tuple([function_name, tuple(parameters_count)]) in self.function_declarations:
-            raise SyntaxError(f"cannot declare 2 functions with identic names: {function_name}({','.join(tuple(parameters_count))}) in scope")
-
         function_body = ctx.statement_list()
 
         return_type = return_type_ctx.getText() if return_type_ctx else None
 
-        self.function_declarations[tuple([function_name, tuple(parameters_count)])] = {
+        function_scope = self.function_scopes_names[-1]
+
+        if self.is_function((function_name, tuple(parameters_count)), function_scope):
+            raise NameError(f"cannot declare 2 functions with identic name and parameters: {function_name}({",".join(parameters_count)}) in 1 scope")
+
+        self.function_scopes[function_scope].append((function_name, tuple(parameters_count)))
+
+        self.function_declarations[(function_name, tuple(parameters_count))] = {
             'return_type': return_type,
             'parameters': parameter_list,
             'body': function_body
         }
+
+        self.addFunctionScope(function_name)
         
         if return_type != 'None' and not self.doesFunctionReturn(function_body):
             raise SyntaxError(f"function '{function_name}' must return a value of type {return_type}")
@@ -156,7 +177,7 @@ class MithonListener(ParseTreeListener):
 
     # Exit a parse tree produced by MithonParser#functionDeclaration.
     def exitFunctionDeclaration(self, ctx:MithonParser.FunctionDeclarationContext):
-        pass
+        self.popFunctionScope()
 
 
     # Enter a parse tree produced by MithonParser#parameterList.

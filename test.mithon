@@ -1,10 +1,25 @@
-List[int] nums = [5, 3, 1, 4, 2]
+def factorial(int n) -> int{
 
-List[int] sorted_nums = sorted(nums)
-print(sorted_nums) 
+    def one() -> int{
+        def one() -> int{
+            return 1
+        }
+    }
 
-List[int] sorted_nums = sorted(nums, "descending")
-print(sorted_nums) 
+    def two() -> int{
+        return 2
+    }
 
-List[int] sorted_nums = sorted(nums, "ascending")
-print(sorted_nums) 
+    if (n == 0 or n == 1){
+        return one()
+    } else {
+        return n * factorial(n-1)
+    }
+}
+
+def helper(int a, int b) -> int{
+    return a + b
+}
+
+
+print(factorial(5))
