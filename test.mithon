@@ -1,14 +1,18 @@
-def factorial(int n) -> int{
-    
-    def one() -> int{
-        return 1
-    }
-
-    if (n == 0 or n == 1){
-        return one()
-    } else {
-        return n * factorial(n-1)
-    }
+def f1() -> int{
+    return f3()
 }
 
-print(factorial(5))
+def f2() -> int{
+    return 1
+}
+
+def f3() -> int{
+    return f2()
+}
+
+def f4() -> None{
+    print("siema")
+}
+
+f4()
+print(f4())

@@ -53,7 +53,9 @@ class MithonVisitor(ParseTreeVisitor):
                 return node
             
             for child in node.children:
-                return dfs(child)
+                result = dfs(child)
+                if result:
+                    return result
 
             return None
         

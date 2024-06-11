@@ -20,7 +20,7 @@ class MyErrorListener(ErrorListener):
 
 def main():
 
-    with open("test.mithon", "r") as file:
+    with open("test.mithon", "r") as file: 
         lines = file.readlines()
 
     input_file = "test.mithon"
@@ -39,11 +39,21 @@ def main():
         print(e)
         exit(1)
 
-    listener = MithonListener()
+    listener = MithonListener(lines)
     walker = ParseTreeWalker()
-    walker.walk(listener, tree)
+
+    try:
+        walker.walk(listener, tree)
+    except Exception as e:
+        print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
+        print(f"    {e.line_content.lstrip()}")
+        print(f"  {' ' * (e.column_number+1)}^")
+        print(f"{e.error_type}: {e.message}")
+        exit(1)
 
     visitor = MithonVisitor(lines, listener.declaration_tree)
+
+    #visitor.visit(tree)
 
     try:
         visitor.visit(tree)
