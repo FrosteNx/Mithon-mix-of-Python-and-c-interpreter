@@ -130,5 +130,5 @@ IDENTIFIER: [a-zA-Z_][a-zA-Z_0-9]*;
 INTEGER: [0-9]+;
 DOUBLE: [0-9]+'.'[0-9]+;
 STRING: '"' .*? '"';
-COMMENT: '//' .*? '\n' -> skip; 
+COMMENT: '//' ~[\r\n]* -> skip;
 WS: [ \t\r\n]+ -> skip;

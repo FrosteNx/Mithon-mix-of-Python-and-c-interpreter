@@ -92,13 +92,6 @@ class MithonVisitor(ParseTreeVisitor):
                     raise TypeError("cannot modify const variable")
                 var_type = scope[name][0]  
                 modifier = scope[name][-1]
-
-                if var_type in ("int", "float"): 
-                    value = self.convert_to_numeric_type(var_type, value)
-                if modifier.get("el_type", -1) in ("int", "float"):
-                    for i, el in enumerate(value):
-                        value[i] = self.convert_to_numeric_type(modifier["el_type"], el)
-
                 scope[name] = (var_type, value, modifier) 
                 return
             
@@ -240,8 +233,12 @@ class MithonVisitor(ParseTreeVisitor):
             var_name = i.getText()
             expression_result = self.visit(e)
 
-            if var_type in ("int", "float"):
-                expression_result = self.convert_to_numeric_type(var_type, expression_result)
+            if self.is_variable(var_name):
+                t, values, modifier = self.lookupVariable(var_name)
+                raise NameError(f"cannot redeclare variable {var_name} of type {t}")
+            
+            if type(expression_result).__name__ != var_type:
+                raise TypeError(f"initial value: {expression_result} with type: {type(expression_result).__name__} doesnt match declared type: {var_type} for variable {var_name}")
 
         elif ct and i and e:
             modifiers = {"const":False}
@@ -265,10 +262,8 @@ class MithonVisitor(ParseTreeVisitor):
                 raise SyntaxError(f"invalid {var_type} declaration. Provided value has to be in [values] format")
             
             for i, exp in enumerate(expression_result):
-                if type(exp).__name__ != el_type and el_type not in ("int", "float"):
+                if type(exp).__name__ != el_type:
                     raise TypeError(f"invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}")
-                if el_type in ("int", "float"):
-                    expression_result[i] = self.convert_to_numeric_type(el_type, exp)
                 
             modifiers["el_type"] = el_type
             modifiers["el_max_count"] = el_max_count
@@ -315,6 +310,10 @@ class MithonVisitor(ParseTreeVisitor):
             var_type = t.getText() if t else ct.getText()
             var_name = i.getText()
             expression_result = None 
+
+            if self.is_variable(var_name):
+                t, values, modifier = self.lookupVariable(var_name)
+                raise NameError(f"cannot redeclare variable {var_name} of type {t}")
             
             if modifiers:
                 raise TypeError(f"cannot declare const variable {var_name} without providing initial value")
@@ -918,6 +917,10 @@ class MithonVisitor(ParseTreeVisitor):
 
             if operator in ('+', '-'):
                 left_value = self.visit(ctx.getChild(0)) 
+
+                if type(left_value) != type(right):
+                    raise TypeError(f"cannot add/subtract two values: {left_value, right} with types: {type(left_value).__name__, type(right).__name__}")
+
                 if operator == '+':
                     return left_value + right
                 elif operator == '-':
@@ -945,21 +948,18 @@ class MithonVisitor(ParseTreeVisitor):
                     if len(r_values) != len(l_values):
                         raise ValueError("lengths dont match")
                     
+                    if l_modifier["el_type"] != r_modifier["el_type"]:
+                        raise TypeError(f"cannot multiply/divide {l_t}: {l_values} by {r_values} with element type: {r_modifier['el_type']}")
+                    
                     #if l_modifier["el_type"] != r_modifier["el_type"]:
                     #    raise TypeError("inner types dont match")
                     
                     if operator == '*':
                         for i, el in enumerate(r_values):
-                            if l_modifier["el_type"] == "int":
-                                l_values[i] = int(l_values[i] * el)
-                            elif l_modifier["el_type"] == "float":
-                                l_values[i] = float(l_values[i] * el)
+                            l_values[i] = l_values[i] * el
                     elif operator == '/':
                         for i, el in enumerate(r_values):
-                            if l_modifier["el_type"] == "int":
-                                l_values[i] = int(l_values[i] / el)
-                            elif l_modifier["el_type"] == "float":
-                                l_values[i] = float(l_values[i] / el)
+                            l_values[i] = l_values[i] / el
                     
                     self.updateVariable(l, l_values)
 
@@ -967,21 +967,15 @@ class MithonVisitor(ParseTreeVisitor):
 
                     r_value = self.visit(ctx.getChild(2))
 
-                    #if type(r_value).__name__ != l_modifier["el_type"]:
-                    #    raise TypeError("types dont match")
+                    if l_modifier["el_type"] != type(r_value).__name__:
+                        raise TypeError(f"cannot multiply/divide {l_t}: {l_values} by {r_value} with type: {type(right).__name__}")
                     
                     if operator == '*':
                         for i, el in enumerate(l_values):
-                            if l_modifier["el_type"] == "int":
-                                l_values[i] = int(l_values[i] * r_value)
-                            if l_modifier["el_type"] == "float":
-                                l_values[i] = float(l_values[i] * r_value)
+                            l_values[i] = l_values[i] * r_value
                     elif operator == '/':
                         for el in enumerate(l_values):
-                            if l_modifier["el_type"] == "int":
-                                l_values[i] = int(l_values[i] / r_value)
-                            if l_modifier["el_type"] == "float":
-                                l_values[i] = float(l_values[i] / r_value)
+                            l_values[i] = l_values[i] / r_value
 
                     self.updateVariable(l, l_values)
 
@@ -995,6 +989,10 @@ class MithonVisitor(ParseTreeVisitor):
             for i in range(1, len(ctx.unaryExpression())):
                 operator = ctx.getChild(2*i - 1).getText()
                 right = self.visitUnaryExpression(ctx.unaryExpression(i))
+
+                if type(left) != type(right):
+                    raise TypeError(f"cannot add/subtract two values: {left, right} with types: {type(left).__name__, type(right).__name__}")
+
                 if operator == '*':
                     result *= right
                 elif operator == '/':

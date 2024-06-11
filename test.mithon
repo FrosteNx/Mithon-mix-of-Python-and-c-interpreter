@@ -1,18 +1,6 @@
-def f1() -> int{
-    return f3()
-}
+Matrix[float] a = [1.0,2.0]
+Matrix[float] b = [3.0,4.0]
 
-def f2() -> int{
-    return 1
-}
+// print("siema")
 
-def f3() -> int{
-    return f2()
-}
-
-def f4() -> None{
-    print("siema")
-}
-
-f4()
-print(f4())
+print(a*b)
