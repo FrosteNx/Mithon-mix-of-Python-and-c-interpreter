@@ -1009,7 +1009,9 @@ class MithonVisitor(ParseTreeVisitor):
 
 
     def visitUnaryExpression(self, ctx:MithonParser.UnaryExpressionContext):
-        if ctx.getChildCount() == 1:
+        if ctx.typeConversion():
+            return self.visitTypeConversion(ctx.typeConversion())
+        elif ctx.getChildCount() == 1:
             return self.visitPrimaryExpression(ctx.primaryExpression())
         elif ctx.getChild(0).getText() == 'not':
             operand = self.visitPrimaryExpression(ctx.primaryExpression())
@@ -1018,6 +1020,22 @@ class MithonVisitor(ParseTreeVisitor):
             operand = self.visitPrimaryExpression(ctx.primaryExpression())
             return -operand
         return None
+    
+
+    def visitTypeConversion(self, ctx):
+        target_type = ctx.type_().getText()
+        expression_value = self.visit(ctx.expression())
+
+        if target_type == 'int':
+            return int(expression_value)
+        elif target_type == 'float':
+            return float(expression_value)
+        elif target_type == 'bool':
+            return bool(expression_value)
+        elif target_type == 'str':
+            return str(expression_value)
+        else:
+            raise ValueError(f"Unsupported type conversion: {target_type}")
 
 
     def visitPrimaryExpression(self, ctx:MithonParser.PrimaryExpressionContext):

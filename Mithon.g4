@@ -95,6 +95,7 @@ unaryExpression:
           'not' primaryExpression
           | '-' primaryExpression
           | primaryExpression
+          | typeConversion 
           ;
           
 primaryExpression:
@@ -111,6 +112,8 @@ primaryExpression:
           | 'break'
           | 'continue'
           ;
+
+typeConversion: type '(' expression ')'; 
 
 list: '[' expressionList ']';
 
