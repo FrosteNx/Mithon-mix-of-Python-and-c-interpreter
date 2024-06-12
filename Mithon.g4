@@ -50,7 +50,7 @@ ifStatement:
 functionDeclaration: 
        'def' IDENTIFIER '(' parameterList* ')' '->' func_return_type statement_list;
 
-parameterList: type IDENTIFIER (',' type IDENTIFIER)*;
+parameterList: (type|complexType) IDENTIFIER (',' (type|complexType) IDENTIFIER)*;
 
 functionCall: IDENTIFIER '(' argumentList ')';
 
