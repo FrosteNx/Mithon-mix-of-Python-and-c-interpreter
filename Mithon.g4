@@ -101,12 +101,12 @@ unaryExpression:
 primaryExpression:
             '(' expression ')'
           | functionCall
+          | name
           | IDENTIFIER
           | INTEGER
           | DOUBLE
           | STRING
           | list
-          | listIndexation
           | 'true'
           | 'false'
           | 'break'
@@ -117,9 +117,7 @@ typeConversion: type '(' expression ')';
 
 list: '[' expressionList ']';
 
-name: listIndexation | IDENTIFIER;
-
-listIndexation: IDENTIFIER '[' expression ']';
+name: IDENTIFIER ('[' expression ']')*;
 
 augAssignment:
             name '+=' expression

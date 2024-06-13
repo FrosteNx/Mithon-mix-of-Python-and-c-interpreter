@@ -15,10 +15,11 @@ class MyErrorListener(ErrorListener):
             raise SyntaxError(f"Error at line: {line}. Error message: {msg}")
 
 def main():
-    with open("test.mithon", "r") as file:
-        lines = file.readlines()
+    
+    input_file = r"C:\Users\pc\Desktop\studia_sem4\tkk\Mithon-mix-of-Python-and-cpp-interpreter\test.mithon"
 
-    input_file = "test.mithon"
+    with open(input_file, "r") as file:
+        lines = file.readlines()
 
     input_stream = FileStream(input_file)
     lexer = MithonLexer(input_stream)
@@ -36,6 +37,8 @@ def main():
 
     listener = MithonListener(lines)
     walker = ParseTreeWalker()
+
+    input_file = "test.mithon"
 
     try:
         walker.walk(listener, tree)
