@@ -1,15 +1,87 @@
-def is_prime(int n) -> bool {
-    if (n <= 1) {
-        return false
-    }
-    for (int i = 2; i * i <= n; i += 1) {
-        if (n % i == 0) {
-            return false
-        }
-    }
-    return true
+Matrix[int] a = [1,2]
+Matrix[int] b = [3,4]
+
+a += b
+print(a)
+a -= b 
+print(a)
+a *= b
+print(a)
+a /= b
+print(a)
+
+a += 2
+print(a)
+a -= 2
+print(a)
+a *= 2
+print(a)
+a /= 2
+print(a)
+
+print(a*5)
+print(a/5)
+print(a+5)
+print(a-5)
+
+print(a)
+
+List[int] lista1 = [1,2]
+List[int] lista2 = [3,4]
+
+lista1 += lista2
+
+print(lista1)
+
+lista1[0] += 1000
+
+print(lista1)
+
+for (int i = 0; i < 4; i += 1){
+    print(lista1[i])
 }
 
-int num = 29
-bool result = is_prime(num)
-print(result)
+for (int i = len(lista1)-1; i >= 0; i -= 1){
+    print(lista1[i])
+}
+
+i = 0
+while (i < len(lista1)){
+    print(lista1[i])
+    i += 1
+}
+
+for (int i = 0; i < 4; i += 1){
+    lista1[i] += 10
+}
+print(lista1)
+
+def factorial(int n) -> int{
+
+    def one() -> int{
+        return 1
+    }
+    if (n == 0 or n == 1){
+        return one()
+    } else {
+        return n * factorial(n-1)
+    }
+}
+
+print(factorial(5))
+
+print(5*5)
+print(2+2)
+print(2-1)
+print(5/2)
+
+int zmienna = 5
+
+zmienna += 10
+print(zmienna)
+zmienna -= 10
+print(zmienna)
+zmienna *= 10
+print(zmienna)
+zmienna /= 10
+print(zmienna)

@@ -157,6 +157,13 @@ class MithonVisitor(ParseTreeVisitor):
 
             left_value = variable_values[final_index]
         else:
+            left_value_type = self.lookupVariable(var_name)[0]
+            operator = ctx.getChild(1).getText()
+            if left_value_type in ("List", "Matrix", "Array"):
+                right = ctx.getChild(2)
+                self.augAssignmentResultComplexTypes(var_name, right, operator)
+                return
+
             left_value = self.lookupVariable(var_name)[1]
 
         operator = ctx.getChild(1).getText()
@@ -165,7 +172,7 @@ class MithonVisitor(ParseTreeVisitor):
         if type(left_value) != type(right_value):
             raise TypeError(f"unsupported operand type(s) for {operator}: {type(left_value).__name__} and {type(right_value).__name__}")
 
-        new_value = self.augAssignmentResult(operator, left_value, right_value)
+        new_value = self.augAssignmentResult(operator, left_value, self.lookupVariable(var_name)[0], right_value)
 
         if indices:
             variable_values[final_index] = new_value
@@ -173,7 +180,7 @@ class MithonVisitor(ParseTreeVisitor):
         else:
             self.updateVariable(var_name, new_value)
 
-    def augAssignmentResult(self, operator, left_value, right_value):
+    def augAssignmentResult(self, operator, left_value, left_type, right_value):
         match operator:
             case "+=":
                 return left_value + right_value
@@ -183,7 +190,10 @@ class MithonVisitor(ParseTreeVisitor):
                 return left_value * right_value
             case "/=":
                 if right_value != 0:
-                    return left_value / right_value
+                    if left_type == "int":
+                        return int(left_value / right_value)
+                    elif left_type == "float":
+                        return float(left_value / right_value)
                 else:
                     raise ZeroDivisionError("division by zero")
             case "%=":
@@ -191,6 +201,127 @@ class MithonVisitor(ParseTreeVisitor):
                     return left_value % right_value
                 else:
                     raise ZeroDivisionError("integer modulo by zero")
+                
+
+    def augAssignmentResultComplexTypes(self, left, right, operator):
+        l_t, l_values, l_modifier = self.lookupVariable(left)
+
+        #print(left, right, operator)
+        
+        if operator in ("+=", "-="):
+            if l_t in ("Matrix", "Array", "List"):
+                right_expr_text = right.getText()
+                right_value = self.visit(right)
+
+                if l_t == "Matrix":
+                    if isinstance(right_expr_text, str) and self.is_variable(right_expr_text):
+                        r_t, r_values, r_modifier = self.lookupVariable(right_expr_text)
+
+                        if r_t != "Matrix":
+                            raise TypeError(f"Both operands must be Matrices. Right type: {r_t}")
+                        if len(r_values) != len(l_values):
+                            raise ValueError(f"Matrix lengths: {len(l_values)}, {len(r_values)} do not match")
+                        if l_modifier["el_type"] != r_modifier["el_type"]:
+                            raise TypeError(f"Matrix element types: {l_modifier['el_type']}, {r_modifier['el_type']} do not match")
+
+                        if operator == '+=':
+                            for i, el in enumerate(r_values):
+                                l_values[i] += el
+                        elif operator == '-=':
+                            for i, el in enumerate(r_values):
+                                l_values[i] -= el
+
+                        self.updateVariable(left, l_values)
+                        return l_values
+                    else:
+                        if type(right_value).__name__ != l_modifier["el_type"]:
+                            raise TypeError(f"Matrix element types: {l_modifier['el_type']} and right value type: {type(right_value).__name__ } do not match")
+
+                        if operator == '+=':
+                            for i in range(len(l_values)):
+                                l_values[i] += right_value
+                        elif operator == '-=':
+                            for i in range(len(l_values)):
+                                l_values[i] -= right_value
+
+                        self.updateVariable(left, l_values)
+                        return l_values
+
+                elif l_t in ("List", "Array"):
+                    if operator == '-':
+                        raise TypeError(f"Cannot subtract from a variable of type {l_t}")
+
+                    if isinstance(right_value, str) and self.is_variable(right_value):
+                        r_t, r_values, r_modifier = self.lookupVariable(right_value)
+
+                        if l_t != r_t:
+                            raise TypeError(f"Cannot add variables of types {l_t} and {r_t}")
+                        if l_modifier["el_type"] != r_modifier["el_type"]:
+                            raise TypeError("List element types do not match")
+
+                        if l_t == "Array" and len(l_values) + len(r_values) > l_modifier['max_el_count']:
+                            raise ValueError(f"Array size exceeds maximum of {l_modifier['max_el_count']}")
+
+                        l_values += r_values
+                        self.updateVariable(left, l_values)
+                    elif isinstance(right_value, list):
+                        if any(type(el).__name__ != l_modifier["el_type"] for el in right_value):
+                            raise TypeError("List element types do not match")
+
+                        if l_t == "Array" and len(l_values) + len(right_value) > l_modifier['max_el_count']:
+                            raise ValueError(f"Array size exceeds maximum of {l_modifier['max_el_count']}")
+
+                        l_values += right_value
+                        self.updateVariable(left, l_values)
+                    else:
+                        raise TypeError("Cannot add non-list value to a List or Array")
+
+                    return l_values
+                
+        elif operator in ("*=", "/=", "%="):
+            if l_t in ("List", "Matrix", "Array"):
+                l_t, l_values, l_modifier = self.lookupVariable(left)
+
+                right_expr_text = right.getText()
+                right_value = self.visit(right)
+
+                if isinstance(right_expr_text, str) and self.is_variable(right_expr_text) and self.lookupVariable(right_expr_text)[0] == "Matrix":
+                    r_t, r_values, r_modifier = self.lookupVariable(right_expr_text)
+
+                    if len(r_values) != len(l_values):
+                        raise ValueError("Matrix dimensions do not match")
+                    if l_modifier["el_type"] != r_modifier["el_type"]:
+                        raise TypeError("Matrix element types do not match")
+
+                    if operator == '*=':
+                        for i in range(len(l_values)):
+                            l_values[i] *= r_values[i]
+                    elif operator == '/=':
+                        for i in range(len(l_values)):
+                            if l_modifier["el_type"] == "int":
+                                l_values[i] = int(l_values[i] / r_values[i])
+                            elif l_modifier["el_type"] == "float":
+                                l_values[i] = float(l_values[i] / r_values[i])
+
+                    self.updateVariable(left, l_values)
+                else:
+                    if l_modifier["el_type"] != type(right_value).__name__:
+                        raise TypeError("Matrix element types do not match")
+
+                    if operator == '*=':
+                        for i in range(len(l_values)):
+                            l_values[i] *= right_value
+                    elif operator == '/=':
+                        for i in range(len(l_values)):
+                            if l_modifier["el_type"] == "int":
+                                l_values[i] = int(l_values[i] / right_value)
+                            elif l_modifier["el_type"] == "float":
+                                l_values[i] = float(l_values[i] / right_value)
+                                
+                    self.updateVariable(left, l_values)
+
+            return l_values
+
 
 
     def visitStatement_list(self, ctx: MithonParser.Statement_listContext):
@@ -276,7 +407,7 @@ class MithonVisitor(ParseTreeVisitor):
                 var_name = n.getText()
                 expression_result = self.visit(e)
 
-                if not ct and isinstance(expression_result, list):
+                if not ct and isinstance(expression_result, list) and not self.is_variable(var_name):
                     raise SyntaxError("complexType has to be specified: List[type], Matrix[type], Array[int, type]")
 
                 var_type = type(expression_result).__name__
@@ -904,29 +1035,36 @@ class MithonVisitor(ParseTreeVisitor):
     def visitAdditiveExpression(self, ctx: MithonParser.AdditiveExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
-
+        
         operator = ctx.getChild(1).getText()
         left_expr = ctx.getChild(0)
+        left_expr_text = left_expr.getText()
         left_value = self.visit(left_expr)
 
-        # Check if the left operand is a variable and retrieve its value
-        if isinstance(left_value, str) and self.is_variable(left_value):
-            l_t, l_values, l_modifier = self.lookupVariable(left_value)
+        #print(left_expr_text, left_value, operator)
 
+        # Check if the left operand is a variable and retrieve its value
+        if self.is_variable(left_expr_text) and self.lookupVariable(left_expr_text)[0] in ("Matrix", "Array", "List"):
+            l_t, l_val, l_modifier = self.lookupVariable(left_expr_text)
+
+            #print(l_t, l_val, l_modifier)
+            
             if l_t in ("Matrix", "Array", "List"):
+                l_values = l_val.copy()
                 right_expr = ctx.getChild(2)
+                right_expr_text = right_expr.getText()
                 right_value = self.visit(right_expr)
 
                 if l_t == "Matrix":
-                    if isinstance(right_value, str) and self.is_variable(right_value):
-                        r_t, r_values, r_modifier = self.lookupVariable(right_value)
+                    if isinstance(right_expr_text, str) and self.is_variable(right_expr_text):
+                        r_t, r_values, r_modifier = self.lookupVariable(right_expr_text)
 
                         if r_t != "Matrix":
-                            raise TypeError("Both operands must be Matrices")
+                            raise TypeError(f"Both operands must be Matrices. Right type: {r_t}")
                         if len(r_values) != len(l_values):
-                            raise ValueError("Matrix dimensions do not match")
+                            raise ValueError(f"Matrix lengths: {len(l_values)}, {len(r_values)} do not match")
                         if l_modifier["el_type"] != r_modifier["el_type"]:
-                            raise TypeError("Matrix element types do not match")
+                            raise TypeError(f"Matrix element types: {l_modifier['el_type']}, {r_modifier['el_type']} do not match")
 
                         if operator == '+':
                             for i, el in enumerate(r_values):
@@ -935,11 +1073,11 @@ class MithonVisitor(ParseTreeVisitor):
                             for i, el in enumerate(r_values):
                                 l_values[i] -= el
 
-                        self.updateVariable(left_value, l_values)
+                        #self.updateVariable(left_expr_text, l_values)
                         return l_values
                     else:
                         if type(right_value).__name__ != l_modifier["el_type"]:
-                            raise TypeError("Matrix element types do not match")
+                            raise TypeError(f"Matrix element types: {l_modifier['el_type']} and right value type: {type(right_value).__name__ } do not match")
 
                         if operator == '+':
                             for i in range(len(l_values)):
@@ -948,7 +1086,7 @@ class MithonVisitor(ParseTreeVisitor):
                             for i in range(len(l_values)):
                                 l_values[i] -= right_value
 
-                        self.updateVariable(left_value, l_values)
+                        #self.updateVariable(left_expr_text, l_values)
                         return l_values
 
                 elif l_t in ("List", "Array"):
@@ -967,7 +1105,7 @@ class MithonVisitor(ParseTreeVisitor):
                             raise ValueError(f"Array size exceeds maximum of {l_modifier['max_el_count']}")
 
                         l_values += r_values
-                        self.updateVariable(left_value, l_values)
+                        #self.updateVariable(left_value, l_values)
                     elif isinstance(right_value, list):
                         if any(type(el).__name__ != l_modifier["el_type"] for el in right_value):
                             raise TypeError("List element types do not match")
@@ -976,11 +1114,20 @@ class MithonVisitor(ParseTreeVisitor):
                             raise ValueError(f"Array size exceeds maximum of {l_modifier['max_el_count']}")
 
                         l_values += right_value
-                        self.updateVariable(left_value, l_values)
+                        #self.updateVariable(left_value, l_values)
                     else:
                         raise TypeError("Cannot add non-list value to a List or Array")
 
                     return l_values
+                
+            else:
+                right_value = self.visit(ctx.getChild(2))
+
+                if operator == '+':
+                    return left_value + right_value
+                elif operator == '-':
+                    return left_value - right_value
+
         else:
             right_value = self.visit(ctx.getChild(2))
             if operator in ('+', '-'):
@@ -1001,18 +1148,21 @@ class MithonVisitor(ParseTreeVisitor):
             return self.visit(ctx.getChild(0))
         
         left_expr = ctx.getChild(0)
+        left_expr_text = left_expr.getText()
         left_value = self.visit(left_expr)
 
-        if isinstance(left_value, str) and self.is_variable(left_value) and self.lookupVariable(left_value)[0] == "Matrix":
-            l_t, l_values, l_modifier = self.lookupVariable(left_value)
+        if isinstance(left_expr_text, str) and self.is_variable(left_expr_text) and self.lookupVariable(left_expr_text)[0] == "Matrix":
+            l_t, l_val, l_modifier = self.lookupVariable(left_expr_text)
+            l_values = l_val.copy()
 
             for i in range(1, len(ctx.unaryExpression())):
                 operator = ctx.getChild(2 * i - 1).getText()
                 right_expr = ctx.unaryExpression(i)
+                right_expr_text = right_expr.getText()
                 right_value = self.visit(right_expr)
 
-                if isinstance(right_value, str) and self.is_variable(right_value) and self.lookupVariable(right_value)[0] == "Matrix":
-                    r_t, r_values, r_modifier = self.lookupVariable(right_value)
+                if isinstance(right_expr_text, str) and self.is_variable(right_expr_text) and self.lookupVariable(right_expr_text)[0] == "Matrix":
+                    r_t, r_values, r_modifier = self.lookupVariable(right_expr_text)
 
                     if len(r_values) != len(l_values):
                         raise ValueError("Matrix dimensions do not match")
@@ -1026,7 +1176,7 @@ class MithonVisitor(ParseTreeVisitor):
                         for i in range(len(l_values)):
                             l_values[i] /= r_values[i]
 
-                    self.updateVariable(left_value, l_values)
+                    #self.updateVariable(left_expr_text, l_values)
                 else:
                     if l_modifier["el_type"] != type(right_value).__name__:
                         raise TypeError("Matrix element types do not match")
@@ -1038,7 +1188,7 @@ class MithonVisitor(ParseTreeVisitor):
                         for i in range(len(l_values)):
                             l_values[i] /= right_value
 
-                    self.updateVariable(left_value, l_values)
+                    #self.updateVariable(left_expr_text, l_values)
 
             return l_values
         else:
