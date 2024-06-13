@@ -51,7 +51,7 @@ def main():
 
     visitor = MithonVisitor(lines, listener.declaration_tree, listener.declaration_stack)
     
-    visitor.visit(tree)
+    #visitor.visit(tree)
     
     try:
         visitor.visit(tree)

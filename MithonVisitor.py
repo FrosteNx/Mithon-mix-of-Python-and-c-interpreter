@@ -537,9 +537,9 @@ class MithonVisitor(ParseTreeVisitor):
         for i in range(len(argument_list.expression())):
             argument_count.append(self.get_type(argument_list.expression(i).getText()))
 
-        print(argument_count)
+        #print(argument_count)
         argument_count = tuple(argument_count)
-        print(argument_count)
+        #print(argument_count)
         
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
@@ -644,7 +644,7 @@ class MithonVisitor(ParseTreeVisitor):
             func_scope = self.function_scope_stack[-1]
             func_scope_node = self.get_functionTree_node(func_scope)
             
-            print(func_scope_node)
+            #print(func_scope_node)
 
             func_node = self.does_function_exist(func_scope_node, (function_name, argument_count))
 
@@ -669,10 +669,12 @@ class MithonVisitor(ParseTreeVisitor):
 
             self.pushScope()
 
+            #print(parameter_list, argument_list)
+
             for parameter, argument in zip(parameter_list, argument_list):
                 arg_value = self.visit(argument)
-                if not self.match_type(parameter[0], arg_value):
-                    raise TypeError(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {self.get_type(arg_value)} instead.")
+                #if not self.match_type(parameter[0], arg_value):
+                #    raise TypeError(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {self.get_type(arg_value)} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
 
             return_value = self.visit(function_body)
@@ -685,7 +687,7 @@ class MithonVisitor(ParseTreeVisitor):
             return return_value
         
     def get_type(self, argument):
-        print(argument)
+        #print(argument)
         if self.is_variable(argument):
             t, value, modifier = self.lookupVariable(argument)
             if t in ("List", "Matrix"):
@@ -693,7 +695,7 @@ class MithonVisitor(ParseTreeVisitor):
             else:
                 return t
         else:
-            return type(self.visit(argument)).__name__
+            return type(argument).__name__
 
     def match_type(self, param_type, arg_value):
         if param_type.startswith('List[') and isinstance(arg_value, list):

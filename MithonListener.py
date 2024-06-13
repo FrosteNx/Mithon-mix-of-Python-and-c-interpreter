@@ -58,16 +58,13 @@ class MithonListener(ParseTreeListener):
         return dfs(self.declaration_tree)
 
     def enterFunctionDeclaration(self, ctx: MithonParser.FunctionDeclarationContext):
-        print("Debug: Entering function declaration")
         line = ctx.start.line
         column = ctx.start.column
         line_content = self.lines[line - 1]
 
         function_name = ctx.IDENTIFIER().getText()
-        print(f"Debug: Function name: {function_name}")
         return_type_ctx = ctx.func_return_type() if ctx.func_return_type() else None
         parameter_list_ctx = ctx.parameterList()
-        print(f"Debug: Parameter list context: {parameter_list_ctx}")
 
         parameter_list, parameters_count = [], []
         if parameter_list_ctx:
@@ -82,13 +79,10 @@ class MithonListener(ParseTreeListener):
                         parameters_count.append(param_type)
 
         func_declaration = (function_name, tuple(parameters_count))
-        print(f"Debug: Function declaration: {func_declaration}")
 
         func_scope_decl = self.declaration_stack[-1]
-        print(f"Debug: Function scope declaration: {func_scope_decl}")
 
         parent_node = self.get_declarationTree_node(func_scope_decl)
-        print(f"Debug: Parent node: {parent_node}")
 
         if self.does_function_exits(func_scope_decl, func_declaration):
             error_code = f"cannot declare 2 functions with identic name: {function_name} and {len(parameters_count)} parameter(s) "
@@ -98,10 +92,8 @@ class MithonListener(ParseTreeListener):
             raise MithonError(error_code, line, column, line_content, "SyntaxError")
 
         function_body = ctx.statement_list()
-        print(f"Debug: Function body: {function_body}")
 
         return_type = return_type_ctx.getText() if return_type_ctx else None
-        print(f"Debug: Return type: {return_type}")
 
         func = FunctionDeclarationNode(
             func_declaration,
@@ -116,10 +108,8 @@ class MithonListener(ParseTreeListener):
         )
 
         parent_node.children.append(func)
-        print(f"Debug: Appended function node to parent")
 
         self.declaration_stack.append(func_declaration)
-        print(f"Debug: Updated declaration stack: {self.declaration_stack}")
 
         if return_type != 'None' and not self.does_function_return(function_body):
             raise MithonError(f"function with return type: {return_type} doesnt return anything", line, column, line_content, "TypeError")
