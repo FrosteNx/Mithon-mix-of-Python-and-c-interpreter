@@ -563,6 +563,8 @@ class MithonVisitor(ParseTreeVisitor):
                     break
 
                 if return_value == 'continue':
+                    increment_expr = ctx.expression(2)
+                    increment_value = self.visit(increment_expr)
                     continue
 
                 if return_value is not None:
