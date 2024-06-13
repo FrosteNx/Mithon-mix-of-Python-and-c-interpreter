@@ -39,30 +39,28 @@ def main():
 
     try:
         walker.walk(listener, tree)
-    except MithonError as e:
-        print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
+    except Exception as e:
+        print(f"  File \"{input_file}\", line {e.line_number}, in <{e.ctx}>")
         print(f"    {e.line_content.lstrip()}")
-        print(f"  {' ' * (e.column_number + 1)}^")
+        print(f"  {' ' * (e.column_number+1)}^")
         print(f"{e.error_type}: {e.message}")
         exit(1)
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        exit(1)
 
-    visitor = MithonVisitor(lines, listener.declaration_tree, listener.declaration_stack)
-    
+    visitor = MithonVisitor(lines, listener.declaration_tree)
+
     #visitor.visit(tree)
-    
+
     try:
         visitor.visit(tree)
-    except MithonError as e:
-        print(f"{e.error_type} at line {e.line_number}, column {e.column_number}: {e.message}")
-        print(f"  {e.line_content}")
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        if hasattr(e, 'line_number') and hasattr(e, 'column_number'):
-            print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
-            print(f"  {e.line_content}")
+        print(f"Traceback (most recent call last):")
+        for e in visitor.errors[::-1]:
+            print(f"  File \"{input_file}\", line {e.line_number}, in <{e.ctx}>")
+            print(f"    {e.line_content.lstrip()}")
+            print(f"  {' ' * (e.column_number+1)}^")
+        
+        e = visitor.errors[0]
+        print(f"{e.error_type}: {e.message}")
 
 if __name__ == '__main__':
     main()

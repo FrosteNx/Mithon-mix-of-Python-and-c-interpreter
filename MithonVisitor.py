@@ -7,25 +7,24 @@ else:
 
 class MithonError(Exception):
 
-    def __init__(self, message, line_number, column_number, line_content, error_type):
+    def __init__(self, message, line_number, column_number, line_content, error_type, context):
         self.message = message
         self.line_number = line_number
         self.column_number = column_number
         self.line_content = line_content.strip('\n')
         self.error_type = error_type
+        self.ctx = context
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self, lines, funcTree, declaration_stack):
+    def __init__(self, lines, funcTree):
         self.scopes = [{}]
         self.loop_depth = 0
         self.lines = lines
         self.errors = []
         self.function_tree = funcTree
         self.function_scope_stack = [("main", ())]
-        self.declaration_stack = declaration_stack  # Initialize declaration_stack
-        self.current_function_context = None  # Track current function context
-        self.expected_argument_types = []  # Track expected argument types
+
         super().__init__()
 
     
@@ -133,7 +132,8 @@ class MithonVisitor(ParseTreeVisitor):
                 return self.visitAugAssignment(ctx.augAssignment())
             
         except Exception as e:
-            self.errors.append(MithonError(e, line, column, line_content, type(e).__name__))
+            self.errors.append(MithonError(e, line, column, line_content, type(e).__name__, self.function_scope_stack[-1][0]))
+            self.function_scope_stack.pop(-1)
             raise
 
     def visitAugAssignment(self, ctx: MithonParser.augAssignment):
@@ -692,6 +692,8 @@ class MithonVisitor(ParseTreeVisitor):
             t, value, modifier = self.lookupVariable(argument)
             if t in ("List", "Matrix"):
                 return t + '[' + modifier["el_type"] + ']'
+            elif t == "Array":
+                return t + '[' + modifier["el_max_count"] + "," + modifier["el_type"] + "]"
             else:
                 return t
         else:
@@ -879,31 +881,95 @@ class MithonVisitor(ParseTreeVisitor):
     def visitAdditiveExpression(self, ctx: MithonParser.AdditiveExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
+  
+        operator = ctx.getChild(1).getText() 
+        l = ctx.getChild(0).getText()
+        l_t, l_values, l_modifier = self.lookupVariable(l)
+        
+        if self.is_variable(l) and l_t in ("Matrix", "Array", "List"):
 
-        operator = ctx.getChild(1).getText()
+            if l_t == "Matrix":
+                r = ctx.getChild(2).getText()
+                if self.is_variable(r) and self.lookupVariable(r)[0] == "Matrix":
+                    r_t, r_values, r_modifier = self.lookupVariable(r)
+                    
+                    if len(r_values) != len(l_values):
+                        raise ValueError("lengths dont match")
+                    
+                    if l_modifier["el_type"] != r_modifier["el_type"]:
+                        raise TypeError("inner types dont match")
+                    
+                    if operator == '+':
+                        for i, el in enumerate(r_values):
+                            l_values[i] += el
+                    elif operator == '-':
+                        for i, el in enumerate(r_values):
+                            l_values[i] -= el
+                    
+                    self.updateVariable(l, l_values)
+                    return l_values
+                else:
+                    r_value = self.visit(ctx.getChild(2))
+                    if type(r_value).__name__ != l_modifier["el_type"]:
+                        raise TypeError("types dont match")
+                    
+                    if operator == '+':
+                        for i, el in enumerate(l_values):
+                            l_values[i] += r_value
+                    elif operator == '-':
+                        for i, el in enumerate(l_values):
+                            l_values[i] -= r_value
+                    
+                    self.updateVariable(l, l_values)
+                    return l_values
+            
+            elif l_t in ("List", "Array"):
 
-        left = self.visit(ctx.getChild(0))
-        right = self.visit(ctx.getChild(2))
+                if operator == "-":
+                    raise TypeError(f"cannot subtract from variable {l} of type {l_t}")
 
-        if isinstance(left, list) and isinstance(right, list):
-            if len(left) != len(right):
-                raise ValueError("Lists or Matrices must have the same length for addition/subtraction")
-            if operator == '+':
-                if all(isinstance(item, bool) for item in left) and all(isinstance(item, bool) for item in right):
-                    return [left[i] or right[i] for i in range(len(left))]
-                return [left[i] + right[i] for i in range(len(left))]
-            elif operator == '-':
-                if all(isinstance(item, bool) for item in left) and all(isinstance(item, bool) for item in right):
-                    return [left[i] and not right[i] for i in range(len(left))]
-                return [left[i] - right[i] for i in range(len(left))]
+                r = ctx.getChild(2).getText()
+                if self.is_variable(r):
+                    r_t, r_values, r_modifier = self.lookupVariable(r)
+
+                    if l_t != r_t:
+                        raise TypeError(f"cannot add variables {l}, {r} of type: {l_t}, {r_t}")
+                    
+                    if l_modifier["el_type"] != r_modifier["el_type"]:
+                        raise TypeError(f"right inner types {r_modifier['el_type']} dont match {l_t} type {l_modifier['el_type']}")
+                    
+                    if l_t == "Array" and len(l_values) + len(r_values) > l_modifier['max_el_count']:
+                        raise ValueError(f"maximum size: {l_modifier['max_el_count']} of Array {l} reached")
+
+                    l_values += r_values
+                    self.updateVariable(l, l_values)
+
+                elif isinstance(r, list):
+                    r_values = self.visit(r)
+
+                    if any(type(el).__name__ != l_modifier["el_type"] for el in r_values):
+                        raise TypeError(f"inner types dont match {l_t} type {l_modifier['el_type']}")
+
+                    if l_t == "Array" and len(l_values) + len(r_values) > l_modifier['max_el_count']:
+                        raise ValueError(f"maximum size: {l_modifier['max_el_count']} of Array {l} reached")
+                    
+                    l_values += r_values
+                    self.updateVariable(l, l_values)
+                else:
+                    raise TypeError(f"cannot add non-list value to {l_t}")
+            
         else:
-            if type(left) != type(right):
-                raise TypeError(f"unsupported operand type(s) for {operator}: {type(left).__name__} and {type(right).__name__}")
-            if operator == '+':
-                return left + right
-            elif operator == '-':
-                return left - right
-        raise NameError(f"unsupported operator: {operator}")
+            right = self.visit(ctx.getChild(2))
+            if operator in ('+', '-'):
+                left_value = self.visit(ctx.getChild(0)) 
+                if type(left_value) != type(right):
+                    raise TypeError(f"cannot add/subtract two values: {left_value, right} with types: {type(left_value).__name__, type(right).__name__}")
+                if operator == '+':
+                    return left_value + right
+                elif operator == '-':
+                    return left_value - right
+            else:
+                raise NameError("unsupported operator: " + operator)
         
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):
@@ -1034,6 +1100,8 @@ class MithonVisitor(ParseTreeVisitor):
 
             if not (isinstance(values, list) or isinstance(values, str)):
                 raise TypeError("invalid type for indexation")
+            
+            print(index, values, len(values))
 
             if index > len(values):
                 raise IndexError(f"index {index} out of range for length {len(values)}")

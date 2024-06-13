@@ -89,7 +89,7 @@ class MithonListener(ParseTreeListener):
             if parameters_count:
                 error_code += f"{','.join(parameters_count)} "
             error_code += f"in one scope: {func_scope_decl}"
-            raise MithonError(error_code, line, column, line_content, "SyntaxError")
+            raise MithonError(error_code, line, column, line_content, "SyntaxError", func_scope_decl)
 
         function_body = ctx.statement_list()
 
@@ -112,7 +112,7 @@ class MithonListener(ParseTreeListener):
         self.declaration_stack.append(func_declaration)
 
         if return_type != 'None' and not self.does_function_return(function_body):
-            raise MithonError(f"function with return type: {return_type} doesnt return anything", line, column, line_content, "TypeError")
+            raise MithonError(f"function with return type: {return_type} doesnt return anything", line, column, line_content, "TypeError", func_scope_decl)
         
     def does_function_return(self, ctx):
         for statement in ctx.statement():
