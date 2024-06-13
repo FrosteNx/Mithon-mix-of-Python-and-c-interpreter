@@ -1,6 +1,24 @@
-Matrix[float] a = [1.0,2.0]
-Matrix[float] b = [3.0,4.0]
 
-// print("siema")
+Matrix[int] a = [1, 3]
+Matrix[int] b = [2, 1]
+print(a + b)
 
-print(a*b)
+print(sum(a))
+
+str q = "siema"
+print(q)
+
+int x = 8
+int y = 7
+print(x + y)
+
+def fun(Matrix[int] zmienna, Matrix[int] zmienna1, int a, int b) -> None {
+    Matrix[int] c = zmienna - zmienna1
+    print(sum(c))
+    append(c, 1)
+    print(c)
+    print(zmienna + zmienna1)
+    print(a + b)
+}
+
+fun(a, b, x, y)

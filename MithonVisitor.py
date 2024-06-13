@@ -16,16 +16,16 @@ class MithonError(Exception):
 
 class MithonVisitor(ParseTreeVisitor):
 
-    def __init__(self, lines, funcTree):
+    def __init__(self, lines, funcTree, declaration_stack):
         self.scopes = [{}]
-    
         self.loop_depth = 0
         self.lines = lines
         self.errors = []
-
         self.function_tree = funcTree
         self.function_scope_stack = [("main", ())]
-
+        self.declaration_stack = declaration_stack  # Initialize declaration_stack
+        self.current_function_context = None  # Track current function context
+        self.expected_argument_types = []  # Track expected argument types
         super().__init__()
 
     
@@ -70,18 +70,15 @@ class MithonVisitor(ParseTreeVisitor):
             self.scopes.pop()
 
 
-    def addVariable(self, name, type, value, modifier={"const":False}):
-        #if any(name == func_name for func_name, func_type in self.function_declarations):
-        #    raise SyntaxError("cannot declare variable with identic name as a function")
-    
-        self.scopes[-1][name] = (type, value, modifier)
+    def addVariable(self, name, var_type, value, modifier={"const":False}):
+        self.scopes[-1][name] = (var_type, value, modifier)
 
 
     def lookupVariable(self, name):
         for scope in reversed(self.scopes):
             if name in scope:
                 return scope[name]
-        raise Exception(f"variable {name} not defined")
+        raise NameError(f"variable {name} not defined")
 
 
     def updateVariable(self, name, value):
@@ -217,8 +214,7 @@ class MithonVisitor(ParseTreeVisitor):
         print()
 
 
-    def prepareVariable(self, ctx, modifiers = None):
-        
+    def prepareVariable(self, ctx, modifiers=None):
         t = ctx.type_()
         ct = ctx.complexType()
         n = ctx.name()
@@ -226,9 +222,9 @@ class MithonVisitor(ParseTreeVisitor):
         e = ctx.expression()
 
         expression_result = None
-        
+
         if t and i and e:
-            modifiers = {"const":False}
+            modifiers = {"const": False}
             var_type = t.getText()
             var_name = i.getText()
             expression_result = self.visit(e)
@@ -236,12 +232,12 @@ class MithonVisitor(ParseTreeVisitor):
             if self.is_variable(var_name):
                 t, values, modifier = self.lookupVariable(var_name)
                 raise NameError(f"cannot redeclare variable {var_name} of type {t}")
-            
+
             if type(expression_result).__name__ != var_type:
                 raise TypeError(f"initial value: {expression_result} with type: {type(expression_result).__name__} doesnt match declared type: {var_type} for variable {var_name}")
 
         elif ct and i and e:
-            modifiers = {"const":False}
+            modifiers = {"const": False}
 
             var_declaration = ct.getText().split('[')
             var_type = var_declaration[0]
@@ -260,20 +256,18 @@ class MithonVisitor(ParseTreeVisitor):
 
             if not isinstance(expression_result, list):
                 raise SyntaxError(f"invalid {var_type} declaration. Provided value has to be in [values] format")
-            
+
             for i, exp in enumerate(expression_result):
                 if type(exp).__name__ != el_type:
                     raise TypeError(f"invalid element type: {type(exp).__name__} for {var_type} with element type: {el_type}")
-                
+
             modifiers["el_type"] = el_type
             modifiers["el_max_count"] = el_max_count
 
         elif n and e and not t:
-
-            modifiers = {"const":False}
+            modifiers = {"const": False}
 
             if n.IDENTIFIER():
-            
                 var_name = n.getText()
                 expression_result = self.visit(e)
 
@@ -286,43 +280,38 @@ class MithonVisitor(ParseTreeVisitor):
                     self.updateVariable(var_name, expression_result)
                 else:
                     self.addVariable(var_name, var_type, expression_result, modifiers)
-
                 return
-            
-            elif n.listIndexation():
 
+            elif n.listIndexation():
                 var_name = n.listIndexation().IDENTIFIER().getText()
                 var_type, variable_values, modifiers = self.lookupVariable(var_name)
                 index = self.visit(n.listIndexation().expression())
 
                 if index > len(variable_values):
                     raise IndexError("index out of range")
-                
+
                 new_value = self.visit(e)
-
                 variable_values[index] = new_value
-
                 self.updateVariable(var_name, variable_values)
-                return 
+                return
 
         elif (t or ct) and i and not e:
-
             var_type = t.getText() if t else ct.getText()
             var_name = i.getText()
-            expression_result = None 
+            expression_result = None
 
             if self.is_variable(var_name):
                 t, values, modifier = self.lookupVariable(var_name)
                 raise NameError(f"cannot redeclare variable {var_name} of type {t}")
-            
+
             if modifiers:
                 raise TypeError(f"cannot declare const variable {var_name} without providing initial value")
             else:
-                modifiers = {"const":False}
+                modifiers = {"const": False}
 
         else:
             raise SyntaxError("invalid variable declaration. Must include a type or initialization")
-        
+
         if var_name:
             self.addVariable(var_name, var_type, expression_result, modifiers)
         else:
@@ -338,7 +327,6 @@ class MithonVisitor(ParseTreeVisitor):
             raise TypeError(f"Cannot convert {value} to {var_type}")
 
     def visitVarDeclaration(self, ctx:MithonParser.VarDeclarationContext):
-    
         self.prepareVariable(ctx)
 
 
@@ -540,28 +528,19 @@ class MithonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
     def visitFunctionCall(self, ctx: MithonParser.FunctionCallContext):
-
         function_name = ctx.IDENTIFIER().getText()
-
         argument_list = ctx.argumentList() if ctx.argumentList() else []
 
-        argument_count = tuple([type(self.visit(arg)).__name__ for arg in argument_list.expression()]) if argument_list else ()
-
-        func_scope = self.function_scope_stack[-1]
-        func_scope_node = self.get_functionTree_node(func_scope)
-
-        func_node = self.does_function_exist(func_scope_node, (function_name, argument_count))
-
-        if not func_node:
-            error_code = f"function: {function_name} with {len(argument_count)} argument(s)"
-            if argument_count:
-                error_code += f" of type: {','.join(argument_count)}"
-            error_code += " not defined"
-            raise NameError(error_code)
+        # Determine the argument types
+        argument_count = []
         
-        if (function_name, argument_count) not in self.function_scope_stack:
-            self.function_scope_stack.append((function_name, argument_count))
+        for i in range(len(argument_list.expression())):
+            argument_count.append(self.get_type(argument_list.expression(i).getText()))
 
+        print(argument_count)
+        argument_count = tuple(argument_count)
+        print(argument_count)
+        
         if function_name == 'len':
             if len(argument_list.expression()) != 1:
                 raise TypeError(f"function 'len' expects 1 argument, but {len(argument_list.expression())} were provided")
@@ -660,10 +639,27 @@ class MithonVisitor(ParseTreeVisitor):
                 raise TypeError(f"function 'mean' expects 1 argument, but {len(argument_list.expression())} were provided")
             arg_value = self.visit(argument_list.expression(0))
             return self.handle_mean_function(arg_value)
-
+        
         else:
+            func_scope = self.function_scope_stack[-1]
+            func_scope_node = self.get_functionTree_node(func_scope)
+            
+            print(func_scope_node)
+
+            func_node = self.does_function_exist(func_scope_node, (function_name, argument_count))
+
+            if not func_node:
+                error_code = f"function: {function_name} with {len(argument_count)} argument(s)"
+                if argument_count:
+                    error_code += f" of type: {','.join(argument_count)}"
+                error_code += " not defined"
+                raise NameError(error_code)
+
+            if (function_name, argument_count) not in self.function_scope_stack:
+                self.function_scope_stack.append((function_name, argument_count))
+
             parameter_list = func_node.func_body["parameters"]
-            function_body =  func_node.func_body["body"]
+            function_body = func_node.func_body["body"]
 
             if (not argument_list and parameter_list) or (argument_list and len(argument_list.expression()) != len(parameter_list)):
                 raise TypeError(f"Function '{function_name}' expects {len(parameter_list)} arguments, but {len(argument_list.expression())} were provided")
@@ -675,8 +671,8 @@ class MithonVisitor(ParseTreeVisitor):
 
             for parameter, argument in zip(parameter_list, argument_list):
                 arg_value = self.visit(argument)
-                if type(arg_value).__name__ != parameter[0]:
-                    raise TypeError(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {type(arg_value).__name__} instead.")
+                if not self.match_type(parameter[0], arg_value):
+                    raise TypeError(f"Argument {parameter[1]} expected type: {parameter[0]}. Got: {self.get_type(arg_value)} instead.")
                 self.addVariable(parameter[1], parameter[0], arg_value)
 
             return_value = self.visit(function_body)
@@ -687,8 +683,26 @@ class MithonVisitor(ParseTreeVisitor):
                 self.function_scope_stack.remove((function_name, argument_count))
 
             return return_value
-    
         
+    def get_type(self, argument):
+        print(argument)
+        if self.is_variable(argument):
+            t, value, modifier = self.lookupVariable(argument)
+            if t in ("List", "Matrix"):
+                return t + '[' + modifier["el_type"] + ']'
+            else:
+                return t
+        else:
+            return type(self.visit(argument)).__name__
+
+    def match_type(self, param_type, arg_value):
+        if param_type.startswith('List[') and isinstance(arg_value, list):
+            element_type = param_type[5:-1]  # Extract the type within 'List[...]'
+            return all(isinstance(item, eval(element_type)) for item in arg_value)
+        elif param_type.startswith('Matrix[') and isinstance(arg_value, list) and all(isinstance(item, list) for item in arg_value):
+            element_type = param_type[7:-1]  # Extract the type within 'Matrix[...]'
+            return all(self.match_type('List[' + element_type + ']', item) for item in arg_value)
+        return param_type == self.get_type(arg_value)
     
     def handle_len_function(self, arg):
         if isinstance(arg, (str, list)):
@@ -860,73 +874,34 @@ class MithonVisitor(ParseTreeVisitor):
         return left
 
 
-    def visitAdditiveExpression(self, ctx:MithonParser.AdditiveExpressionContext):
+    def visitAdditiveExpression(self, ctx: MithonParser.AdditiveExpressionContext):
         if ctx.getChildCount() == 1:
             return self.visit(ctx.getChild(0))
-  
-        operator = ctx.getChild(1).getText() 
 
-        l = ctx.getChild(0).getText()
-        if self.is_variable(l) and self.lookupVariable(l)[0] == "Matrix":
-            
-            l_t, l_values, l_modifier = self.lookupVariable(l)
+        operator = ctx.getChild(1).getText()
 
-            r = ctx.getChild(2).getText()
+        left = self.visit(ctx.getChild(0))
+        right = self.visit(ctx.getChild(2))
 
-            if self.is_variable(r) and self.lookupVariable(r)[0] == "Matrix":
-
-                r_t, r_values, r_modifier = self.lookupVariable(r)
-                
-                if len(r_values) != len(l_values):
-                    raise ValueError("lengths dont match")
-                
-                #if l_modifier["el_type"] != r_modifier["el_type"]:
-                #    raise TypeError("inner types dont match")
-                
-                if operator == '+':
-                    for i, el in enumerate(r_values):
-                        l_values[i] += el
-                elif operator == '-':
-                    for i, el in enumerate(r_values):
-                        l_values[i] -= el
-                
-                self.updateVariable(l, l_values)
-
-                return l_values
-
-            else:
-
-                r_value = self.visit(ctx.getChild(2))
-
-                #if type(r_value).__name__ != l_modifier["el_type"]:
-                #    raise TypeError("types dont match")
-                
-                if operator == '+':
-                    for i, el in enumerate(l_values):
-                        l_values[i] += r_value
-                elif operator == '-':
-                    for i, el in enumerate(l_values):
-                        l_values[i] -= r_value
-                
-                self.updateVariable(l, l_values)
-
-                return l_values
-            
+        if isinstance(left, list) and isinstance(right, list):
+            if len(left) != len(right):
+                raise ValueError("Lists or Matrices must have the same length for addition/subtraction")
+            if operator == '+':
+                if all(isinstance(item, bool) for item in left) and all(isinstance(item, bool) for item in right):
+                    return [left[i] or right[i] for i in range(len(left))]
+                return [left[i] + right[i] for i in range(len(left))]
+            elif operator == '-':
+                if all(isinstance(item, bool) for item in left) and all(isinstance(item, bool) for item in right):
+                    return [left[i] and not right[i] for i in range(len(left))]
+                return [left[i] - right[i] for i in range(len(left))]
         else:
-            right = self.visit(ctx.getChild(2))
-
-            if operator in ('+', '-'):
-                left_value = self.visit(ctx.getChild(0)) 
-
-                if type(left_value) != type(right):
-                    raise TypeError(f"cannot add/subtract two values: {left_value, right} with types: {type(left_value).__name__, type(right).__name__}")
-
-                if operator == '+':
-                    return left_value + right
-                elif operator == '-':
-                    return left_value - right
-            else:
-                raise NameError("unsupported operator: " + operator)
+            if type(left) != type(right):
+                raise TypeError(f"unsupported operand type(s) for {operator}: {type(left).__name__} and {type(right).__name__}")
+            if operator == '+':
+                return left + right
+            elif operator == '-':
+                return left - right
+        raise NameError(f"unsupported operator: {operator}")
         
 
     def visitMultiplicativeExpression(self, ctx:MithonParser.MultiplicativeExpressionContext):

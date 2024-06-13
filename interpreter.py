@@ -1,15 +1,11 @@
-from antlr4 import FileStream, CommonTokenStream
-from antlr4 import ParseTreeWalker
+from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 from antlr4.error.ErrorListener import ErrorListener
 from MithonLexer import MithonLexer
 from MithonParser import MithonParser
 from MithonListener import MithonListener
 from MithonVisitor import MithonVisitor, MithonError
 
-
-    
 class MyErrorListener(ErrorListener):
-    
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         if "extraneous input" in msg:
             raise SyntaxError(f"Error at line: {line}. Unexpected symbol {offendingSymbol.text}")
@@ -19,8 +15,7 @@ class MyErrorListener(ErrorListener):
             raise SyntaxError(f"Error at line: {line}. Error message: {msg}")
 
 def main():
-
-    with open("test.mithon", "r") as file: 
+    with open("test.mithon", "r") as file:
         lines = file.readlines()
 
     input_file = "test.mithon"
@@ -44,28 +39,30 @@ def main():
 
     try:
         walker.walk(listener, tree)
-    except Exception as e:
+    except MithonError as e:
         print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
         print(f"    {e.line_content.lstrip()}")
-        print(f"  {' ' * (e.column_number+1)}^")
+        print(f"  {' ' * (e.column_number + 1)}^")
         print(f"{e.error_type}: {e.message}")
         exit(1)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        exit(1)
 
-    visitor = MithonVisitor(lines, listener.declaration_tree)
-
-    #visitor.visit(tree)
-
+    visitor = MithonVisitor(lines, listener.declaration_tree, listener.declaration_stack)
+    
+    visitor.visit(tree)
+    
     try:
         visitor.visit(tree)
+    except MithonError as e:
+        print(f"{e.error_type} at line {e.line_number}, column {e.column_number}: {e.message}")
+        print(f"  {e.line_content}")
     except Exception as e:
-        print(f"Traceback (most recent call last):")
-        for e in visitor.errors[::-1]:
+        print(f"An error occurred: {str(e)}")
+        if hasattr(e, 'line_number') and hasattr(e, 'column_number'):
             print(f"  File \"{input_file}\", line {e.line_number}, in <module>")
-            print(f"    {e.line_content.lstrip()}")
-            print(f"  {' ' * (e.column_number+1)}^")
-        
-        e = visitor.errors[0]
-        print(f"{e.error_type}: {e.message}")
+            print(f"  {e.line_content}")
 
 if __name__ == '__main__':
     main()
