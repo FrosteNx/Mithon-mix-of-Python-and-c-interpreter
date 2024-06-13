@@ -80,6 +80,13 @@ Deklaracja stałych odbywa się poprzez podanie słowa kluczowego ```const```. W
 const int a = 3
 ```
 
+### Castowanie Zmiennych
+Mithon obsługuje statyczne castowanie typów
+```
+float a = 4.0
+int x = (int) a
+```
+
 ### Operatory
 1. Arytmetyczne
     - Dodawanie ``` + ```
@@ -315,10 +322,10 @@ def is_prime(int n) -> bool {
     }
     for (int i = 2; i * i <= n; i += 1) {
         if (n % i == 0) {
-            return False
+            return false
         }
     }
-    return True
+    return true
 }
 
 int num = 29
