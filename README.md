@@ -84,7 +84,7 @@ const int a = 3
 Mithon obsługuje statyczne castowanie typów
 ```
 float a = 4.0
-int x = (int) a
+int x = int(a)
 ```
 
 ### Operatory
